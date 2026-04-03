@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mathematics | Quiz Carnival</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            color: #333;
+        }
+
+        /* NAVBAR */
+        .main-nav {
+            background: #fff;
+            border-bottom: 1px solid #d1d5db;
+            padding: 12px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #4b5563;
+            margin-right: 15px;
+        }
+
+        /* CONTAINER */
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        h1 {
+            font-size: 2rem;
+        }
+
+        /* TABS */
+        .tabs-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: -1px;
+        }
+
+        .tab-btn {
+            background-color: #f8f9fa;
+            border: 1px solid #ccc;
+            border-bottom: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            color: #7f8c8d;
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tab-btn.active {
+            background-color: white;
+            color: #3498db;
+            font-weight: bold;
+        }
+
+        /* CARD STYLE */
+        .card {
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 12px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            border-bottom: 1px solid #eee;
+            gap: 8px;
+        }
+
+        .card-header h2 {
+            margin: 0 8px;
+            flex-grow: 1;
+            font-size: 1rem;
+        }
+
+        .collapse-text {
+            color: #3498db;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        .arrow-circle {
+            width: 28px;
+            height: 28px;
+            background-color: #ecf0f1;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .collapsible-wrapper {
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+            border-radius: 12px;
+        }
+
+        .card-body {
+            padding: 15px 20px;
+        }
+
+        /* STYLING FOR WEEK CONTENT */
+        .week-strip {
+            color: white;
+            padding: 8px 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            margin: 10px 15px;
+            border-radius: 8px;
+        }
+
+        .strip-purple { background-color: #8e44ad; }
+        .strip-green { background-color: #27ae60; }
+
+        /* ITEM ROWS (QUIZ / LAB / UPLOAD) */
+        .item-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 15px;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            margin: 8px 15px;
+            background-color: #fff;
+            transition: border 0.3s ease;
+        }
+
+        .item-row:hover {
+            border: 1px solid #3498db;
+        }
+
+        /* ITEM INFO ICONS */
+        .item-info {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .item-info i {
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            background-color: transparent; 
+            text-align: center;
+            line-height: 28px;
+        }
+
+        .icon-quiz { color: #e91e63; }
+
+        .item-text a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .todo-btn {
+            background: transparent;
+            border: 1px solid #ccc;
+            color: #2e7d32;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            justify-content: center; /* Ensure content is centered horizontally */
+            width: auto; /* Ensure the button adapts to content size */
+        }
+
+        .timestamp { color: #e67e22; font-family: monospace; margin-bottom: 15px; }
+        .time { font-size: 1.5rem; }
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 20px; }
+        .objectives-header { background-color: #f1c40f; color: white; text-align: center; padding: 6px; font-weight: bold; border-radius: 8px; }
+        ol { padding: 15px 30px; }
+
+        #week1-wrapper {
+            border-radius: 12px;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+
+<header class="main-nav">
+    <nav>
+        <a href="#">Home</a>
+        <a href="#">Dashboard</a>
+        <a href="#">Courses</a>
+    </nav>
+</header>
+
+<div class="container">
+    <h1>Mathematics</h1>
+
+    <div class="tabs-container">
+        <button class="tab-btn active" onclick="openTab(event, 'class-tab')">
+            <i class='bx bx-book'></i> Class
+        </button>
+        <button class="tab-btn">
+            <i class='bx bx-male-female'></i> Participants
+        </button>
+        <button class="tab-btn">
+            <i class='bx bx-bar-chart-alt-2'></i> Grades
+        </button>
+    </div>
+
+    <!-- GENERAL CARD -->
+    <section class="card">
+        <div class="card-header">
+            <div class="arrow-circle" id="gen-arrow" onclick="toggleSection('gen-wrapper')">
+                <i class='bx bx-chevron-down'></i>
+            </div>
+            <h2>General</h2>
+            <span class="collapse-text" id="gen-btn" onclick="toggleSection('gen-wrapper', 'gen-btn', 'gen-arrow', true)">Collapse</span>
+        </div>
+
+        <div class="collapsible-wrapper" id="gen-wrapper">
+            <div class="card-body">
+                <div class="timestamp">
+                    <span id="date"></span><br>
+                    <span class="time" id="time"></span>
+                </div>
+                <div class="info-grid">
+                    <div><strong>Class Name:</strong> Mathematics</div>
+                    <div><strong>Instructor:</strong> Mr. Darell Mason</div>
+                    <div><strong>Email:</strong> DarellM@gss.edu.gd</div>
+                </div>
+                <div class="objectives-header">Course Objectives</div>
+                <ol>
+                    <li>Learn about Algebra</li>
+                    <li>Do Quizzes</li>
+                    <li>Get a clearer vision of Maths</li>
+                </ol>
+            </div>
+        </div>
+    </section>
+
+    <!-- WEEK 1 CARD -->
+    <section class="card">
+        <div class="card-header">
+            <div class="arrow-circle" id="week1-arrow" onclick="toggleSection('week1-wrapper')">
+                <i class='bx bx-chevron-down'></i>
+            </div>
+            <h2>12 January - 18 January</h2>
+        </div>
+
+        <div class="collapsible-wrapper" id="week1-wrapper">
+            <div class="week-strip strip-purple">
+                <i class='bx bxs-spreadsheet'></i> Quizzes
+            </div>
+
+            <!-- Quiz 1 (Original Icon) -->
+            <div class="item-row">
+                <div class="item-info">
+                    <i class='bx bx-search-alt-2 icon-quiz'></i>
+                    <div class="item-text"><a href="#">Quiz 1</a></div>
+                </div>
+                <div class="todo-btn"><i class='bx bx-hourglass'></i> To Do</div>
+            </div>
+
+            <!-- Quiz 2 (Updated Icon) -->
+            <div class="item-row">
+                <div class="item-info">
+                    <i class='bx bxs-invader icon-quiz'></i> <!-- New icon for Quiz 2 -->
+                    <div class="item-text"><a href="#">Quiz 2</a></div>
+                </div>
+                <div class="todo-btn"><i class='bx bx-hourglass'></i> To Do</div>
+            </div>
+
+            <!-- Second Quizzes Strip (Quiz 3-5) -->
+            <div class="week-strip strip-green">
+                <i class='bx bxs-spreadsheet'></i> Quizzes
+            </div>
+
+            <!-- Quiz 3 (Updated Icon) -->
+            <div class="item-row">
+                <div class="item-info">
+                    <i class='bx bx-male icon-quiz'></i> <!-- New icon for Quiz 3 -->
+                    <div class="item-text"><a href="#">Quiz 3</a></div>
+                </div>
+                <div class="todo-btn"><i class='bx bx-hourglass'></i> To Do</div>
+            </div>
+
+            <!-- Quiz 4 (Updated Icon) -->
+            <div class="item-row">
+                <div class="item-info">
+                    <i class='bx bx-color-fill icon-quiz'></i> <!-- New icon for Quiz 4 -->
+                    <div class="item-text"><a href="#">Quiz 4</a></div>
+                </div>
+                <div class="todo-btn"><i class='bx bx-hourglass'></i> To Do</div>
+            </div>
+
+            <!-- Quiz 5 (Updated Icon) -->
+            <div class="item-row">
+                <div class="item-info">
+                    <i class='bx bx-detail icon-quiz'></i> <!-- New icon for Quiz 5 -->
+                    <div class="item-text"><a href="#">Quiz 5</a></div>
+                </div>
+                <div class="todo-btn"><i class='bx bx-hourglass'></i> To Do</div>
+            </div>
+
+        </div>
+    </section>
+
+</div>
+
+<script>
+    // CLOCK LOGIC
+    function updateClock() {
+        const now = new Date();
+        document.getElementById("date").textContent = now.toDateString();
+        document.getElementById("time").textContent = now.toLocaleTimeString();
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // COLLAPSE LOGIC
+    const state = {};
+
+    function toggleSection(wrapperId, btnId = null, arrowId = null, collapseAll = false) {
+        const sections = collapseAll ? ['gen-wrapper', 'week1-wrapper'] : [wrapperId];
+
+        sections.forEach(id => {
+            const wrapper = document.getElementById(id);
+            const arrow = document.getElementById(id.replace('-wrapper', '-arrow'));
+            
+            const isExpanded = state[id] === undefined ? true : state[id];
+
+            if (isExpanded) {
+                wrapper.style.maxHeight = "0px";
+                if(id === 'gen-wrapper' && btnId) document.getElementById(btnId).textContent = "Expand";
+                if(arrow) arrow.style.transform = "rotate(-90deg)";
+            } else {
+                wrapper.style.maxHeight = wrapper.scrollHeight + "px";
+                if(id === 'gen-wrapper' && btnId) document.getElementById(btnId).textContent = "Collapse";
+                if(arrow) arrow.style.transform = "rotate(0deg)";
+            }
+            state[id] = !isExpanded;
+        });
+    }
+
+    // INITIALIZE HEIGHTS
+    window.onload = () => {
+        const sections = ['gen-wrapper', 'week1-wrapper'];
+        sections.forEach(id => {
+            const el = document.getElementById(id);
+            el.style.maxHeight = el.scrollHeight + "px";
+            state[id] = false; // false = expanded
+        });
+    };
+</script>
+
+</body>
+</html>
