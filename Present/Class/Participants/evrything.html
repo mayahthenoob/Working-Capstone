@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Participants Management</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <style>
+        :root {
+            --border: #f0f0f0;
+            --text-main: #1a1a1a;
+            --text-muted: #888;
+            --bg-light: #fafafa;
+            --primary-blue: #004fb0;
+            --border-color: #d1d5db;
+            --text-gray: #4b5563;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            color: var(--text-main);
+            background: #ffffff;
+            padding: 40px 20px;
+        }
+
+        .app-container {
+            max-width: 900px;
+            margin: auto;
+        }
+
+        /* Header & Search Area */
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .header-top h2 { font-size: 22px; margin: 0; }
+
+        .icon-btn {
+            background: none;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 8px;
+            cursor: pointer;
+            color: #666;
+            display: flex;
+            align-items: center;
+            transition: all 0.2s;
+        }
+
+        .icon-btn.active {
+            background: var(--primary-blue);
+            color: white;
+            border-color: var(--primary-blue);
+        }
+
+        .search-container {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .search-container input {
+            width: 100%;
+            padding: 12px 12px 12px 40px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg-light);
+            outline: none;
+            font-size: 14px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 12px;
+            color: #aaa;
+        }
+
+        /* Advanced Filter Panel */
+        .filter-panel {
+            display: none; 
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            background: #fff;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .filter-panel.show {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .condition-wrapper {
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .match-label { font-size: 14px; font-weight: 600; min-width: 45px; }
+
+        select {
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 13px;
+            background: white;
+        }
+
+        .input-wrapper {
+            position: relative;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            padding: 8px 30px 8px 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+        }
+
+        .clear-search-icon {
+            position: absolute;
+            right: 8px;
+            cursor: pointer;
+            color: #9ca3af;
+        }
+
+        .filter-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn-apply {
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .btn-reset {
+            background: #f3f4f6;
+            color: var(--text-gray);
+            border: 1px solid var(--border-color);
+            padding: 8px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        /* Alphabet Selectors */
+        .alphabet-row {
+            display: flex;
+            align-items: center;
+            margin-top: 15px;
+        }
+
+        .alphabet-row label {
+            width: 90px;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-gray);
+        }
+
+        .letters {
+            display: flex;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+            flex-wrap: wrap;
+        }
+
+        .letters button {
+            background: white;
+            border: none;
+            border-right: 1px solid var(--border-color);
+            padding: 4px 8px;
+            font-size: 11px;
+            color: var(--primary-blue);
+            cursor: pointer;
+        }
+
+        .letters button.active { background: var(--primary-blue); color: white; }
+        .letters button:last-child { border-right: none; }
+
+        /* Participants Table */
+        .participants-list {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        .participants-header {
+            display: flex;
+            padding: 14px 20px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #666;
+            border-bottom: 1px solid var(--border);
+            background: #fafafa;
+        }
+
+        .participants-header div, .participants-item > div { flex: 1; }
+
+        .participants-item {
+            display: flex;
+            padding: 14px 20px;
+            border-bottom: 1px solid #f5f5f5;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        .name-col { display: flex; align-items: center; gap: 12px; }
+        .avatar { width: 32px; height: 32px; border-radius: 50%; overflow: hidden; }
+        .avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-left: 6px; }
+        .status-online { background: #22c55e; }
+        .status-recent { background: #ffcc00; }
+        .status-never  { background: #ff4d4d; }
+
+        .results-count { margin: 20px 0 10px; font-size: 14px; font-weight: 600; color: var(--text-gray); }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <section class="participants-section">
+        
+        <div class="header-top">
+            <h2>Participants</h2>
+            <button class="icon-btn" id="toggleFilterBtn">
+                <i class='bx bx-filter-alt'></i>
+            </button>
+        </div>
+
+        <div class="filter-panel" id="filterPanel">
+            <div class="condition-wrapper">
+                <span class="match-label">Match</span>
+                <select id="matchType">
+                    <option value="all">All</option>
+                    <option value="any">Any</option>
+                </select>
+                <select id="searchField">
+                    <option value="name">Name</option>
+                    <option value="role">Role</option>
+                    <option value="group">Group</option>
+                </select>
+                <div class="input-wrapper">
+                    <input type="text" id="filter-input" placeholder="Search keywords...">
+                    <i class='bx bx-x-circle clear-search-icon' id="clear-input-btn"></i>
+                </div>
+            </div>
+
+            <div class="alphabet-row">
+                <label>FIRST NAME</label>
+                <div class="letters" id="first-name-letters">
+                    <button class="active" data-letter="all">All</button>
+                </div>
+            </div>
+
+            <div class="alphabet-row">
+                <label>LAST NAME</label>
+                <div class="letters" id="last-name-letters">
+                    <button class="active" data-letter="all">All</button>
+                </div>
+            </div>
+
+            <div class="filter-actions">
+                <button class="btn-reset" id="reset-filters-btn">Reset</button>
+                <button class="btn-apply" id="apply-filters-btn">Apply Filters</button>
+            </div>
+        </div>
+
+        <div class="search-container">
+            <span class="search-icon"><i class='bx bx-search'></i></span>
+            <input type="text" id="participantsSearch" placeholder="Quick search participants...">
+        </div>
+
+        <p class="results-count" id="results-count">0 participants found</p>
+
+        <div class="participants-list">
+            <div class="participants-header">
+                <div>Name</div>
+                <div>Role</div>
+                <div>Group</div>
+                <div>Status</div>
+            </div>
+            <div id="participantsList"></div>
+        </div>
+    </section>
+</div>
+
+<script>
+    const participantsData = [
+        { id: 1, name: "Joe Doe", avatar: "https://randomuser.me/api/portraits/men/1.jpg", role: "Student", group: "IT1A", status: "online" },
+        { id: 2, name: "Jhon Els", avatar: "https://randomuser.me/api/portraits/men/2.jpg", role: "Student", group: "IT1B", status: "recent" },
+        { id: 3, name: "Darell Mason", avatar: "https://randomuser.me/api/portraits/men/3.jpg", role: "Teacher", group: "", status: "online" },
+        { id: 4, name: "Alex Dolla", avatar: "https://randomuser.me/api/portraits/women/4.jpg", role: "Student", group: "IT1C", status: "online" },
+        { id: 5, name: "Maria Lee", avatar: "https://randomuser.me/api/portraits/women/5.jpg", role: "Student", group: "IT1A", status: "recent" },
+        { id: 6, name: "Kevin Smith", avatar: "https://randomuser.me/api/portraits/men/6.jpg", role: "Student", group: "IT1B", status: "never" }
+    ];
+
+    const listEl = document.getElementById('participantsList');
+    const quickSearchInput = document.getElementById('participantsSearch');
+    const filterPanel = document.getElementById('filterPanel');
+    const toggleFilterBtn = document.getElementById('toggleFilterBtn');
+    const filterInput = document.getElementById('filter-input');
+
+    // Toggle Filter Visibility
+    toggleFilterBtn.addEventListener('click', () => {
+        filterPanel.classList.toggle('show');
+        toggleFilterBtn.classList.toggle('active');
+    });
+
+    function getStatusLabel(status) {
+        const dots = { online: 'status-online', recent: 'status-recent', never: 'status-never' };
+        const labels = { online: 'Online', recent: 'Recently', never: 'Never' };
+        return `${labels[status]} <span class="status-dot ${dots[status]}"></span>`;
+    }
+
+    function renderParticipants(data) {
+        document.getElementById('results-count').textContent = `${data.length} participants found`;
+        
+        if (data.length === 0) {
+            listEl.innerHTML = `<div style="padding:40px; text-align:center; color:#888;">No results found</div>`;
+            return;
+        }
+
+        listEl.innerHTML = data.map(item => `
+            <div class="participants-item">
+                <div class="name-col">
+                    <div class="avatar"><img src="${item.avatar}"></div>
+                    ${item.name}
+                </div>
+                <div>${item.role}</div>
+                <div>${item.group || "No Group"}</div>
+                <div>${getStatusLabel(item.status)}</div>
+            </div>
+        `).join('');
+    }
+
+    // Alphabet Setup
+    function setupAlphabet(containerId) {
+        const container = document.getElementById(containerId);
+        'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(letter => {
+            const btn = document.createElement('button');
+            btn.textContent = letter;
+            btn.setAttribute('data-letter', letter);
+            btn.onclick = () => {
+                container.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            };
+            container.appendChild(btn);
+        });
+
+        // Set up the "All" button logic specifically
+        const allBtn = container.querySelector('button[data-letter="all"]');
+        allBtn.onclick = () => {
+            container.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+            allBtn.classList.add('active');
+        };
+    }
+
+    // Core Filtering Logic
+    function applyFilters() {
+        const matchType = document.getElementById('matchType').value; // all or any
+        const searchField = document.getElementById('searchField').value; // name, role, group
+        const keyword = filterInput.value.toLowerCase();
+        
+        const firstLetterActive = document.querySelector('#first-name-letters .active').getAttribute('data-letter');
+        const lastLetterActive = document.querySelector('#last-name-letters .active').getAttribute('data-letter');
+
+        const filtered = participantsData.filter(p => {
+            const nameParts = p.name.split(' ');
+            const firstName = nameParts[0] || "";
+            const lastName = nameParts[1] || "";
+
+            // Check conditions
+            const matchesKeyword = keyword === "" || String(p[searchField] || "").toLowerCase().includes(keyword);
+            const matchesFirst = firstLetterActive === 'all' || firstName.toUpperCase().startsWith(firstLetterActive);
+            const matchesLast = lastLetterActive === 'all' || lastName.toUpperCase().startsWith(lastLetterActive);
+
+            if (matchType === "all") {
+                return matchesKeyword && matchesFirst && matchesLast;
+            } else {
+                // If user selected "Any", show if at least one specific filter matches 
+                // (Note: we ignore "all" status as a match criteria to keep results clean)
+                const hasActiveFirstFilter = firstLetterActive !== 'all';
+                const hasActiveLastFilter = lastLetterActive !== 'all';
+                const hasKeywordFilter = keyword !== "";
+
+                if (!hasActiveFirstFilter && !hasActiveLastFilter && !hasKeywordFilter) return true;
+
+                return (hasKeywordFilter && matchesKeyword) || 
+                       (hasActiveFirstFilter && matchesFirst) || 
+                       (hasActiveLastFilter && matchesLast);
+            }
+        });
+
+        renderParticipants(filtered);
+    }
+
+    // Initial Load
+    document.addEventListener('DOMContentLoaded', () => {
+        setupAlphabet('first-name-letters');
+        setupAlphabet('last-name-letters');
+        renderParticipants(participantsData);
+
+        // Quick search (independent of advanced filter)
+        quickSearchInput.addEventListener('input', (e) => {
+            const val = e.target.value.toLowerCase();
+            const filtered = participantsData.filter(p => p.name.toLowerCase().includes(val));
+            renderParticipants(filtered);
+        });
+
+        // Apply advanced filters
+        document.getElementById('apply-filters-btn').onclick = applyFilters;
+
+        // Reset advanced filters
+        document.getElementById('reset-filters-btn').onclick = () => {
+            filterInput.value = '';
+            document.querySelectorAll('.letters button').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.letters button[data-letter="all"]').forEach(b => b.classList.add('active'));
+            document.getElementById('matchType').value = 'all';
+            document.getElementById('searchField').value = 'name';
+            renderParticipants(participantsData);
+        };
+
+        // Clear keyword input
+        document.getElementById('clear-input-btn').onclick = () => {
+            filterInput.value = '';
+        };
+    });
+</script>
+
+</body>
+</html>

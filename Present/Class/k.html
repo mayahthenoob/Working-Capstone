@@ -41,7 +41,7 @@
             font-size: 2rem;
         }
 
-        /* TABS LOGIC */
+        /* TABS */
         .tabs-container {
             display: flex;
             gap: 0;
@@ -61,7 +61,6 @@
             align-items: center;
             gap: 8px;
             margin-right: 5px;
-            transition: all 0.2s ease;
         }
 
         .tab-btn.active {
@@ -132,6 +131,7 @@
         .collapsible-wrapper {
             overflow: hidden;
             transition: max-height 0.5s ease;
+            border-radius: 12px;
         }
 
         .card-body {
@@ -184,6 +184,9 @@
             height: 28px;
             border: 1px solid #ccc;
             border-radius: 6px;
+            background-color: transparent; 
+            text-align: center;
+            line-height: 28px;
         }
 
         .icon-quiz { color: #e91e63; }
@@ -205,6 +208,8 @@
             align-items: center;
             gap: 5px;
             cursor: pointer;
+            justify-content: center;
+            width: auto;
         }
 
         .timestamp { color: #e67e22; font-family: monospace; margin-bottom: 15px; }
@@ -212,11 +217,6 @@
         .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 20px; }
         .objectives-header { background-color: #f1c40f; color: white; text-align: center; padding: 6px; font-weight: bold; border-radius: 8px; }
         ol { padding: 15px 30px; }
-
-        /* TABLE STYLING FOR GRADES */
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #eee; }
-        th { color: #7f8c8d; font-size: 0.9rem; }
     </style>
 </head>
 <body>
@@ -233,18 +233,18 @@
     <h1>Mathematics</h1>
 
     <div class="tabs-container">
-        <button class="tab-btn active" onclick="switchTab(event, 'tab-class')">
+        <button class="tab-btn active" onclick="openTab(event, 'class-tab')">
             <i class='bx bx-book'></i> Class
         </button>
-        <button class="tab-btn" onclick="switchTab(event, 'tab-participants')">
+        <button class="tab-btn" onclick="openTab(event, 'participants-tab')">
             <i class='bx bx-male-female'></i> Participants
         </button>
-        <button class="tab-btn" onclick="switchTab(event, 'tab-grades')">
+        <button class="tab-btn" onclick="openTab(event, 'grades-tab')">
             <i class='bx bx-bar-chart-alt-2'></i> Grades
         </button>
     </div>
 
-    <div id="tab-class" class="tab-content active">
+    <div id="class-tab" class="tab-content active">
         <section class="card connected-card">
             <div class="card-header">
                 <div class="arrow-circle" id="gen-arrow" onclick="toggleSection('gen-wrapper')">
@@ -315,63 +315,75 @@
                     </div>
                     <div class="todo-btn"><i class='bx bx-hourglass'></i> To Do</div>
                 </div>
+
+                <div class="item-row">
+                    <div class="item-info">
+                        <i class='bx bx-color-fill icon-quiz'></i>
+                        <div class="item-text"><a href="#">Quiz 4</a></div>
+                    </div>
+                    <div class="todo-btn"><i class='bx bx-hourglass'></i> To Do</div>
+                </div>
+
+                <div class="item-row">
+                    <div class="item-info">
+                        <i class='bx bx-detail icon-quiz'></i>
+                        <div class="item-text"><a href="#">Quiz 5</a></div>
+                    </div>
+                    <div class="todo-btn"><i class='bx bx-hourglass'></i> To Do</div>
+                </div>
             </div>
         </section>
     </div>
 
-    <div id="tab-participants" class="tab-content">
+    <div id="participants-tab" class="tab-content">
         <section class="card connected-card">
-            <div class="card-header"><h2>Enrolled Participants</h2></div>
+            <div class="card-header">
+                <h2>Participants</h2>
+            </div>
             <div class="card-body">
-                <div class="item-row">
-                    <div class="item-info"><i class='bx bx-user-circle'></i> Mr. Darell Mason</div>
-                    <div style="font-size: 0.8rem; color: #7f8c8d;">Teacher</div>
-                </div>
-                <div class="item-row">
-                    <div class="item-info"><i class='bx bx-user'></i> Student 1</div>
-                    <div style="font-size: 0.8rem; color: #7f8c8d;">Student</div>
-                </div>
-                <div class="item-row">
-                    <div class="item-info"><i class='bx bx-user'></i> Student 2</div>
-                    <div style="font-size: 0.8rem; color: #7f8c8d;">Student</div>
-                </div>
+                <p><strong>Teacher:</strong> Mr. Darell Mason</p>
+                <hr style="border: 0; border-top: 1px solid #eee; margin: 15px 0;">
+                <p><strong>Students:</strong></p>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="padding: 8px 0; border-bottom: 1px solid #f9f9f9;"><i class='bx bx-user'></i> Alice Johnson</li>
+                    <li style="padding: 8px 0; border-bottom: 1px solid #f9f9f9;"><i class='bx bx-user'></i> Bob Smith</li>
+                    <li style="padding: 8px 0; border-bottom: 1px solid #f9f9f9;"><i class='bx bx-user'></i> Charlie Davis</li>
+                </ul>
             </div>
         </section>
     </div>
 
-    <div id="tab-grades" class="tab-content">
+    <div id="grades-tab" class="tab-content">
         <section class="card connected-card">
-            <div class="card-header"><h2>Grade Overview</h2></div>
+            <div class="card-header">
+                <h2>Grade Overview</h2>
+            </div>
             <div class="card-body">
-                <table>
+                <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
                     <thead>
-                        <tr>
-                            <th>Activity Name</th>
-                            <th>Grade</th>
-                            <th>Percentage</th>
+                        <tr style="text-align: left; background: #f8f9fa;">
+                            <th style="padding: 12px; border: 1px solid #eee;">Quiz Item</th>
+                            <th style="padding: 12px; border: 1px solid #eee;">Status</th>
+                            <th style="padding: 12px; border: 1px solid #eee;">Grade</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>Quiz 1: Algebra Basics</td>
-                            <td>18 / 20</td>
-                            <td style="color: #27ae60; font-weight: bold;">90%</td>
+                            <td style="padding: 12px; border: 1px solid #eee;">Quiz 1</td>
+                            <td style="padding: 12px; border: 1px solid #eee; color: #27ae60;">Completed</td>
+                            <td style="padding: 12px; border: 1px solid #eee; font-weight: bold;">95/100</td>
                         </tr>
                         <tr>
-                            <td>Quiz 2: Equations</td>
-                            <td>15 / 20</td>
-                            <td style="color: #27ae60; font-weight: bold;">75%</td>
-                        </tr>
-                        <tr>
-                            <td>Quiz 3: Geometry Intro</td>
-                            <td>-</td>
-                            <td style="color: #e67e22;">Pending</td>
+                            <td style="padding: 12px; border: 1px solid #eee;">Quiz 2</td>
+                            <td style="padding: 12px; border: 1px solid #eee; color: #e67e22;">Pending</td>
+                            <td style="padding: 12px; border: 1px solid #eee;">-</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </section>
     </div>
+
 </div>
 
 <script>
@@ -386,23 +398,27 @@
     setInterval(updateClock, 1000);
     updateClock();
 
-    // TAB SWITCH LOGIC
-    function switchTab(event, tabId) {
-        // Hide all content
-        const contents = document.querySelectorAll('.tab-content');
-        contents.forEach(content => content.classList.remove('active'));
+    // TAB LOGIC
+    function openTab(evt, tabId) {
+        // Hide all tab content
+        const tabContents = document.getElementsByClassName("tab-content");
+        for (let i = 0; i < tabContents.length; i++) {
+            tabContents[i].classList.remove("active");
+        }
 
         // Deactivate all buttons
-        const buttons = document.querySelectorAll('.tab-btn');
-        buttons.forEach(btn => btn.classList.remove('active'));
+        const tabBtns = document.getElementsByClassName("tab-btn");
+        for (let i = 0; i < tabBtns.length; i++) {
+            tabBtns[i].classList.remove("active");
+        }
 
-        // Show selected tab content and active button
-        document.getElementById(tabId).classList.add('active');
-        event.currentTarget.classList.add('active');
-
-        // Re-initialize heights if switching to Class tab (due to scrollHeight calculation)
-        if(tabId === 'tab-class') {
-            refreshCollapsibles();
+        // Show selected tab and activate button
+        document.getElementById(tabId).classList.add("active");
+        evt.currentTarget.classList.add("active");
+        
+        // Recalculate heights for class tab if re-opened
+        if(tabId === 'class-tab') {
+            refreshHeights();
         }
     }
 
@@ -415,6 +431,7 @@
         sections.forEach(id => {
             const wrapper = document.getElementById(id);
             const arrow = document.getElementById(id.replace('-wrapper', '-arrow'));
+            
             const isExpanded = state[id] === undefined ? true : state[id];
 
             if (isExpanded) {
@@ -430,20 +447,22 @@
         });
     }
 
-    function refreshCollapsibles() {
+    function refreshHeights() {
         const sections = ['gen-wrapper', 'week1-wrapper'];
         sections.forEach(id => {
             const el = document.getElementById(id);
-            if (el && state[id] === false) { // If it's supposed to be expanded
+            if (state[id] === false || state[id] === undefined) {
                 el.style.maxHeight = el.scrollHeight + "px";
             }
         });
     }
 
+    // INITIALIZE HEIGHTS
     window.onload = () => {
-        state['gen-wrapper'] = false; // start expanded
+        refreshHeights();
+        // Initialize state as expanded (false means not collapsed)
+        state['gen-wrapper'] = false;
         state['week1-wrapper'] = false;
-        refreshCollapsibles();
     };
 </script>
 
