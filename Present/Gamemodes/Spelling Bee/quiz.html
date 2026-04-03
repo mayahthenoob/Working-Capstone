@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz Carnival - Spelling Bee</title>
+<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+<style>
+:root {
+    --bg-color: #ffffff;
+    --text-main: #333333;
+    --text-light: #888888;
+    --border-color: #ccc;
+}
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-main);
+}
+
+/* NAVBAR */
+.navbar {
+    background-color: #111827;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.2rem;
+    color: white;
+}
+
+.logo img {
+    height: 35px;
+}
+
+/* TIMER OUTSIDE BOX */
+#timer {
+    font-size: 1.2rem;
+    color: #007bff;
+    margin: 20px auto;
+    font-weight: bold;
+    max-width: 500px; 
+    text-align: right;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Centers content within the timer bar */
+    gap: 8px; 
+    padding: 10px;
+    border: 2px solid #007bff;
+    border-radius: 8px;
+    background-color: transparent; /* Make background transparent */
+}
+
+#timer i {
+    font-size: 1.5rem;
+    color: #007bff;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/* QUIZ CARD */
+.test-box {
+    padding: 30px;
+    max-width: 500px;
+    margin: 10px auto 30px auto;
+    border: 2px solid var(--border-color); /* 2px border added to the entire test-box */
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    background-color: #fdfdfd;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* HEADER INSIDE QUIZ BOX */
+.test-box .box-header {
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #111827;
+    margin-bottom: 15px;
+}
+
+/* CONTAINER FOR ALL NUMBERED ITEMS */
+.items-container {
+    padding: 20px; /* Optional: Add padding for better spacing */
+}
+
+/* EACH ITEM ROW */
+.row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px; /* Optional: Add padding for better visual spacing */
+}
+
+/* ITEM NUMBER */
+.item-number {
+    font-weight: bold;
+    width: 25px;
+    text-align: right;
+}
+
+/* INPUT CONTAINER */
+.input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+
+.input-container input {
+    flex: 1;
+    padding: 8px 10px;
+    padding-right: 30px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 16px;
+    outline: none;
+}
+
+.input-container i {
+    position: absolute;
+    right: 8px;
+    cursor: pointer;
+    color: var(--text-light);
+    font-size: 18px;
+}
+
+/* NAVIGATION BUTTONS */
+.nav-buttons {
+    margin: 10px auto 30px auto;
+    display: flex;
+    justify-content: space-between;
+    max-width: 500px;
+}
+
+button {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.2s;
+}
+
+.btn-primary { background-color: #007bff; color: white; }
+.btn-primary:hover { background-color: #0056b3; }
+.btn-secondary { background-color: #adb5bd; color: #333; }
+.btn-secondary:hover { background-color: #8e9499; }
+
+button:disabled {
+    background: #999;
+    cursor: not-allowed;
+    color: #eee;
+}
+</style>
+</head>
+
+<body>
+
+<header class="navbar">
+    <div class="logo">
+        <img src="logo.png" alt="Logo">
+        <span>Quiz Carnival</span>
+    </div>
+</header>
+
+<div id="timer"><i class='bx bx-time'></i> Time: 05:00</div>
+
+<div class="test-box" id="testBox">
+    <div class="box-header">Spelling Bee</div>
+    <div class="items-container" id="itemsContainer"></div> <!-- Container for all the numbered items -->
+</div>
+
+<div class="nav-buttons">
+    <button onclick="prevPage()" id="prevBtn" class="btn btn-secondary">Previous</button>
+    <button onclick="nextPage()" id="nextBtn" class="btn btn-primary">Next</button>
+</div>
+
+<script>
+let currentPage = 1;
+const totalPages = 3;
+const itemsPerPage = 10;
+
+// TIMER
+let totalTime = 5 * 60; 
+let timerInterval;
+
+function startTimer() {
+    const timerEl = document.getElementById("timer");
+    timerInterval = setInterval(() => {
+        let minutes = Math.floor(totalTime / 60);
+        let seconds = totalTime % 60;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+        
+        // Update HTML to include the icon and the new time
+        timerEl.innerHTML = `<i class='bx bx-time'></i> Time: ${minutes}:${seconds}`;
+        
+        if (totalTime <= 0) {
+            clearInterval(timerInterval);
+            alert("Time's up! Quiz Finished.");
+            document.querySelectorAll('.input-field').forEach(input => input.disabled = true);
+            document.getElementById('nextBtn').disabled = true;
+        }
+        
+        totalTime--;
+    }, 1000);
+}
+
+function renderPage() {
+    const itemsContainer = document.getElementById("itemsContainer");
+    
+    // Clear the existing items before re-rendering
+    itemsContainer.innerHTML = '';
+
+    let start = (currentPage - 1) * itemsPerPage + 1;
+    let end = start + itemsPerPage - 1;
+
+    for (let i = start; i <= end; i++) {
+        itemsContainer.innerHTML += ` 
+            <div class="row">
+                <span class="item-number">${i}.</span>
+                <div class="input-container">
+                    <input type="text" class="input-field" placeholder="Spell here">
+                    <i class='bx bx-volume-full'></i>
+                </div>
+            </div>
+        `;
+    }
+
+    const prevBtn = document.getElementById("prevBtn");
+    prevBtn.style.display = currentPage === 1 ? "none" : "inline-block";
+
+    const nextBtn = document.getElementById("nextBtn");
+    if (currentPage === totalPages) {
+        nextBtn.textContent = "Finish";
+        nextBtn.onclick = () => alert("Quiz Finished!"); 
+    } else {
+        nextBtn.textContent = "Next";
+        nextBtn.onclick = nextPage;
+    }
+}
+
+function nextPage() {
+    if (currentPage < totalPages) {
+        currentPage++;
+        renderPage();
+    }
+}
+
+function prevPage() {
+    if (currentPage > 1) {
+        currentPage--;
+        renderPage();
+    }
+}
+
+// Initialize
+renderPage();
+startTimer();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spelling Test Interface</title>
+
+<style>
+:root {
+    --bg-color: #ffffff;
+    --text-main: #333333;
+    --text-light: #888888;
+    --border-color: #ccc;
+}
+
+/* Full page layout */
+body {
+    background-color: var(--bg-color);
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 40px 20px;
+    color: var(--text-main);
+}
+
+/* Test container */
+.test-box {
+    width: 100%;
+}
+
+/* Row layout (no horizontal lines) */
+.row {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 0;
+}
+
+/* Number */
+.item-number {
+    font-size: 18px;
+    width: 35px;
+}
+
+/* Input field */
+.input-field {
+    flex: 1;
+    max-width: 250px;
+    padding: 8px 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 16px;
+    font-style: italic;
+    color: var(--text-main);
+    background: transparent;
+    outline: none;
+}
+
+.input-field::placeholder {
+    color: var(--text-light);
+}
+</style>
+</head>
+
+<body>
+
+<div class="test-box">
+
+    <div class="row"><span class="item-number">1.</span><input type="text" class="input-field" placeholder="Spell here"></div>
+    <div class="row"><span class="item-number">2.</span><input type="text" class="input-field" placeholder="Spell here"></div>
+    <div class="row"><span class="item-number">3.</span><input type="text" class="input-field" placeholder="Spell here"></div>
+    <div class="row"><span class="item-number">4.</span><input type="text" class="input-field" placeholder="Spell here"></div>
+    <div class="row"><span class="item-number">5.</span><input type="text" class="input-field" placeholder="Spell here"></div>
+    <div class="row"><span class="item-number">6.</span><input type="text" class="input-field" placeholder="Spell here"></div>
+    <div class="row"><span class="item-number">7.</span><input type="text" class="input-field" placeholder="Spell here"></div>
+    <div class="row"><span class="item-number">8.</span><input type="text" class="input-field" placeholder="Spell here"></div>
+    <div class="row"><span class="item-number">9.</span><input type="text" class="input-field" placeholder="Spell here"></div>
+    <div class="row"><span class="item-number">10.</span><input type="text" class="input-field" placeholder="Spell here"></div>
+
+</div>
+
+</body>
+</html>
