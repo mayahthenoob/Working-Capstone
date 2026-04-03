@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mathematics | Quiz Carnival</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            color: #333;
+        }
+
+        /* NAVBAR */
+        .main-nav {
+            background: #fff;
+            border-bottom: 1px solid #d1d5db;
+            padding: 12px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #4b5563;
+            margin-right: 15px;
+        }
+
+        /* CONTAINER */
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        h1 {
+            font-size: 2rem;
+        }
+
+        /* TABS */
+        .tabs-container {
+            display: flex;
+            gap: 0;
+            margin-bottom: 0;
+            position: relative;
+            z-index: 2;
+        }
+
+        .tab-btn {
+            background-color: #f8f9fa;
+            border: 1px solid #ccc;
+            padding: 10px 15px;
+            cursor: pointer;
+            color: #7f8c8d;
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-right: 5px;
+        }
+
+        .tab-btn.active {
+            background-color: white;
+            color: #3498db;
+            font-weight: bold;
+            border-bottom: 1px solid white;
+            margin-bottom: -1px;
+        }
+
+        /* TAB CONTENT VISIBILITY */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* CARD STYLE */
+        .card {
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 12px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .connected-card {
+            border-top-left-radius: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            border-bottom: 1px solid #eee;
+            gap: 8px;
+        }
+
+        .card-header h2 {
+            margin: 0 8px;
+            flex-grow: 1;
+            font-size: 1rem;
+        }
+
+        .collapse-text {
+            color: #3498db;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        .arrow-circle {
+            width: 28px;
+            height: 28px;
+            background-color: #ecf0f1;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .collapsible-wrapper {
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+            border-radius: 12px;
+        }
+
+        .card-body {
+            padding: 15px 20px;
+        }
+
+        /* WEEK CONTENT STYLES */
+        .week-strip {
+            color: white;
+            padding: 8px 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            margin: 10px 15px;
+            border-radius: 8px;
+        }
+
+        .strip-purple { background-color: #8e44ad; }
+        .strip-green { background-color: #27ae60; }
+
+        .item-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 15px;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            margin: 8px 15px;
+            background-color: #fff;
+            transition: border 0.3s ease;
+        }
+
+        .item-row:hover {
+            border: 1px solid #3498db;
+        }
+
+        .item-info {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .item-info i {
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            background-color: transparent; 
+            text-align: center;
+            line-height: 28px;
+        }
+
+        .icon-quiz { color: #e91e63; }
+
+        .item-text a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .todo-btn {
+            background: transparent;
+            border: 1px solid #ccc;
+            color: #2e7d32;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            justify-content: center;
+            width: auto;
+        }
+
+        .timestamp { color: #e67e22; font-family: monospace; margin-bottom: 15px; }
+        .time { font-size: 1.5rem; }
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 20px; }
+        .objectives-header { background-color: #f1c40f; color: white; text-align: center; padding: 6px; font-weight: bold; border-radius: 8px; }
+        ol { padding: 15px 30px; }
+
+        /* ===== PARTICIPANTS TAB STYLES ===== */
+        :root {
+            --border: #f0f0f0;
+            --text-main: #1a1a1a;
+            --text-muted: #888;
+            --bg-light: #fafafa;
+            --primary-blue: #004fb0;
+            --border-color: #d1d5db;
+            --text-gray: #4b5563;
+        }
+
+        #participants-tab {
+            font-family: 'Inter', sans-serif;
+        }
+
+        #participants-tab .app-container {
+            max-width: 100%;
+            margin: auto;
+        }
+
+        #participants-tab .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        #participants-tab .header-top h2 { font-size: 22px; margin: 0; }
+
+        #participants-tab .icon-btn {
+            background: none;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 8px;
+            cursor: pointer;
+            color: #666;
+            display: flex;
+            align-items: center;
+            transition: all 0.2s;
+        }
+
+        #participants-tab .icon-btn.active {
+            background: var(--primary-blue);
+            color: white;
+            border-color: var(--primary-blue);
+        }
+
+        #participants-tab .search-container {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        #participants-tab .search-container input {
+            width: 100%;
+            padding: 12px 12px 12px 40px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg-light);
+            outline: none;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        #participants-tab .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 12px;
+            color: #aaa;
+        }
+
+        #participants-tab .filter-panel {
+            display: none; 
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            background: #fff;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        #participants-tab .filter-panel.show {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        #participants-tab .condition-wrapper {
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        #participants-tab .match-label { font-size: 14px; font-weight: 600; min-width: 45px; }
+
+        #participants-tab select {
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 13px;
+            background: white;
+        }
+
+        #participants-tab .input-wrapper {
+            position: relative;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+        }
+
+        #participants-tab .input-wrapper input {
+            width: 100%;
+            padding: 8px 30px 8px 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+
+        #participants-tab .clear-search-icon {
+            position: absolute;
+            right: 8px;
+            cursor: pointer;
+            color: #9ca3af;
+        }
+
+        #participants-tab .filter-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        #participants-tab .btn-apply {
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        #participants-tab .btn-reset {
+            background: #f3f4f6;
+            color: var(--text-gray);
+            border: 1px solid var(--border-color);
+            padding: 8px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        #participants-tab .alphabet-row {
+            display: flex;
+            align-items: center;
+            margin-top: 15px;
+        }
+
+        #participants-tab .alphabet-row label {
+            width: 90px;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-gray);
+        }
+
+        #participants-tab .letters {
+            display: flex;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+            flex-wrap: wrap;
+        }
+
+        #participants-tab .letters button {
+            background: white;
+            border: none;
+            border-right: 1px solid var(--border-color);
+            padding: 4px 8px;
+            font-size: 11px;
+            color: var(--primary-blue);
+            cursor: pointer;
+        }
+
+        #participants-tab .letters button.active { background: var(--primary-blue); color: white; }
+        #participants-tab .letters button:last-child { border-right: none; }
+
+        #participants-tab .participants-list {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        #participants-tab .participants-header {
+            display: flex;
+            padding: 14px 20px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #666;
+            border-bottom: 1px solid var(--border);
+            background: #fafafa;
+        }
+
+        #participants-tab .participants-header div,
+        #participants-tab .participants-item > div { flex: 1; }
+
+        #participants-tab .participants-item {
+            display: flex;
+            padding: 14px 20px;
+            border-bottom: 1px solid #f5f5f5;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        #participants-tab .name-col { display: flex; align-items: center; gap: 12px; }
+        #participants-tab .avatar { width: 32px; height: 32px; border-radius: 50%; overflow: hidden; }
+        #participants-tab .avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+        #participants-tab .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-left: 6px; }
+        #participants-tab .status-online { background: #22c55e; }
+        #participants-tab .status-recent { background: #ffcc00; }
+        #participants-tab .status-never  { background: #ff4d4d; }
+
+        #participants-tab .results-count { margin: 20px 0 10px; font-size: 14px; font-weight: 600; color: var(--text-gray); }
+
+        #participants-tab .card.connected-card {
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<header class="main-nav">
+    <nav>
+        <a href="#">Home</a>
+        <a href="#">Dashboard</a>
+        <a href="#">Courses</a>
+    </nav>
+</header>
+
+<div class="container">
+    <h1>Mathematics</h1>
+
+    <div class="tabs-container">
+        <button class="tab-btn active" onclick="openTab(event, 'class-tab')">
+            <i class='bx bx-book'></i> Class
+        </button>
+        <button class="tab-btn" onclick="openTab(event, 'participants-tab')">
+            <i class='bx bx-male-female'></i> Participants
+        </button>
+        <button class="tab-btn" onclick="openTab(event, 'grades-tab')">
+            <i class='bx bx-bar-chart-alt-2'></i> Grades
+        </button>
+    </div>
+
+    <div id="class-tab" class="tab-content active">
+        <section class="card connected-card">
+            <div class="card-header">
+                <div class="arrow-circle" id="gen-arrow" onclick="toggleSection('gen-wrapper')">
+                    <i class='bx bx-chevron-down'></i>
+                </div>
+                <h2>General</h2>
+                <span class="collapse-text" id="gen-btn" onclick="toggleSection('gen-wrapper', 'gen-btn', 'gen-arrow', true)">Collapse</span>
+            </div>
+
+            <div class="collapsible-wrapper" id="gen-wrapper">
+                <div class="card-body">
+                    <div class="timestamp">
+                        <span id="date"></span><br>
+                        <span class="time" id="time"></span>
+                    </div>
+                    <div class="info-grid">
+                        <div><strong>Class Name:</strong> Mathematics</div>
+                        <div><strong>Instructor:</strong> Mr. Darell Mason</div>
+                        <div><strong>Email:</strong> DarellM@gss.edu.gd</div>
+                    </div>
+                    <div class="objectives-header">Course Objectives</div>
+                    <ol>
+                        <li>Learn about Algebra</li>
+                        <li>Do Quizzes</li>
+                        <li>Get a clearer vision of Maths</li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+        <section class="card">
+            <div class="card-header">
+                <div class="arrow-circle" id="week1-arrow" onclick="toggleSection('week1-wrapper')">
+                    <i class='bx bx-chevron-down'></i>
+                </div>
+                <h2>12 January - 18 January</h2>
+            </div>
+
+            <div class="collapsible-wrapper" id="week1-wrapper">
+                <div class="week-strip strip-purple">
+                    <i class='bx bxs-spreadsheet'></i> Quizzes
+                </div>
+
+                <div class="item-row">
+                    <div class="item-info">
+                        <i class='bx bx-search-alt-2 icon-quiz'></i>
+                        <div class="item-text"><a href="#">Quiz 1</a></div>
+                    </div>
+                    <div class="todo-btn"><i class='bx bx-hourglass'></i> To Do</div>
+                </div>
+
+                <div class="item-row">
+                    <div class="item-info">
+                        <i class='bx bxs-invader icon-quiz'></i>
+                        <div class="item-text"><a href="#">Quiz 2</a></div>
+                    </div>
+                    <div class="todo-btn"><i class='bx bx-hourglass'></i> To Do</div>
+                </div>
+
+                <div class="week-strip strip-green">
+                    <i class='bx bxs-spreadsheet'></i> Quizzes
+                </div>
+
+                <div class="item-row">
+                    <div class="item-info">
+                        <i class='bx bx-male icon-quiz'></i>
+                        <div class="item-text"><a href="#">Quiz 3</a></div>
+                    </div>
+                    <div class="todo-btn"><i class='bx bx-hourglass'></i> To Do</div>
+                </div>
+
+                <div class="item-row">
+                    <div class="item-info">
+                        <i class='bx bx-color-fill icon-quiz'></i>
+                        <div class="item-text"><a href="#">Quiz 4</a></div>
+                    </div>
+                    <div class="todo-btn"><i class='bx bx-hourglass'></i> To Do</div>
+                </div>
+
+                <div class="item-row">
+                    <div class="item-info">
+                        <i class='bx bx-detail icon-quiz'></i>
+                        <div class="item-text"><a href="#">Quiz 5</a></div>
+                    </div>
+                    <div class="todo-btn"><i class='bx bx-hourglass'></i> To Do</div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- PARTICIPANTS TAB - replaced with second page content -->
+    <div id="participants-tab" class="tab-content">
+        <div class="card connected-card">
+            <div class="app-container">
+                <section class="participants-section">
+                    
+                    <div class="header-top">
+                        <h2>Participants</h2>
+                        <button class="icon-btn" id="toggleFilterBtn">
+                            <i class='bx bx-filter-alt'></i>
+                        </button>
+                    </div>
+
+                    <div class="filter-panel" id="filterPanel">
+                        <div class="condition-wrapper">
+                            <span class="match-label">Match</span>
+                            <select id="matchType">
+                                <option value="all">All</option>
+                                <option value="any">Any</option>
+                            </select>
+                            <select id="searchField">
+                                <option value="name">Name</option>
+                                <option value="role">Role</option>
+                                <option value="group">Group</option>
+                            </select>
+                            <div class="input-wrapper">
+                                <input type="text" id="filter-input" placeholder="Search keywords...">
+                                <i class='bx bx-x-circle clear-search-icon' id="clear-input-btn"></i>
+                            </div>
+                        </div>
+
+                        <div class="alphabet-row">
+                            <label>FIRST NAME</label>
+                            <div class="letters" id="first-name-letters">
+                                <button class="active" data-letter="all">All</button>
+                            </div>
+                        </div>
+
+                        <div class="alphabet-row">
+                            <label>LAST NAME</label>
+                            <div class="letters" id="last-name-letters">
+                                <button class="active" data-letter="all">All</button>
+                            </div>
+                        </div>
+
+                        <div class="filter-actions">
+                            <button class="btn-reset" id="reset-filters-btn">Reset</button>
+                            <button class="btn-apply" id="apply-filters-btn">Apply Filters</button>
+                        </div>
+                    </div>
+
+                    <div class="search-container">
+                        <span class="search-icon"><i class='bx bx-search'></i></span>
+                        <input type="text" id="participantsSearch" placeholder="Quick search participants...">
+                    </div>
+
+                    <p class="results-count" id="results-count">0 participants found</p>
+
+                    <div class="participants-list">
+                        <div class="participants-header">
+                            <div>Name</div>
+                            <div>Role</div>
+                            <div>Group</div>
+                            <div>Status</div>
+                        </div>
+                        <div id="participantsList"></div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <div id="grades-tab" class="tab-content">
+        <section class="card connected-card">
+            <div class="card-header">
+                <h2>Grade Overview</h2>
+            </div>
+            <div class="card-body">
+                <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+                    <thead>
+                        <tr style="text-align: left; background: #f8f9fa;">
+                            <th style="padding: 12px; border: 1px solid #eee;">Quiz Item</th>
+                            <th style="padding: 12px; border: 1px solid #eee;">Status</th>
+                            <th style="padding: 12px; border: 1px solid #eee;">Grade</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding: 12px; border: 1px solid #eee;">Quiz 1</td>
+                            <td style="padding: 12px; border: 1px solid #eee; color: #27ae60;">Completed</td>
+                            <td style="padding: 12px; border: 1px solid #eee; font-weight: bold;">95/100</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; border: 1px solid #eee;">Quiz 2</td>
+                            <td style="padding: 12px; border: 1px solid #eee; color: #e67e22;">Pending</td>
+                            <td style="padding: 12px; border: 1px solid #eee;">-</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+</div>
+
+<script>
+    // CLOCK LOGIC
+    function updateClock() {
+        const now = new Date();
+        const dateEl = document.getElementById("date");
+        const timeEl = document.getElementById("time");
+        if(dateEl) dateEl.textContent = now.toDateString();
+        if(timeEl) timeEl.textContent = now.toLocaleTimeString();
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // TAB LOGIC
+    function openTab(evt, tabId) {
+        const tabContents = document.getElementsByClassName("tab-content");
+        for (let i = 0; i < tabContents.length; i++) {
+            tabContents[i].classList.remove("active");
+        }
+
+        const tabBtns = document.getElementsByClassName("tab-btn");
+        for (let i = 0; i < tabBtns.length; i++) {
+            tabBtns[i].classList.remove("active");
+        }
+
+        document.getElementById(tabId).classList.add("active");
+        evt.currentTarget.classList.add("active");
+        
+        if(tabId === 'class-tab') {
+            refreshHeights();
+        }
+    }
+
+    // COLLAPSE LOGIC
+    const state = {};
+
+    function toggleSection(wrapperId, btnId = null, arrowId = null, collapseAll = false) {
+        const sections = collapseAll ? ['gen-wrapper', 'week1-wrapper'] : [wrapperId];
+
+        sections.forEach(id => {
+            const wrapper = document.getElementById(id);
+            const arrow = document.getElementById(id.replace('-wrapper', '-arrow'));
+            
+            const isExpanded = state[id] === undefined ? true : state[id];
+
+            if (isExpanded) {
+                wrapper.style.maxHeight = "0px";
+                if(id === 'gen-wrapper' && btnId) document.getElementById(btnId).textContent = "Expand";
+                if(arrow) arrow.style.transform = "rotate(-90deg)";
+            } else {
+                wrapper.style.maxHeight = wrapper.scrollHeight + "px";
+                if(id === 'gen-wrapper' && btnId) document.getElementById(btnId).textContent = "Collapse";
+                if(arrow) arrow.style.transform = "rotate(0deg)";
+            }
+            state[id] = !isExpanded;
+        });
+    }
+
+    function refreshHeights() {
+        const sections = ['gen-wrapper', 'week1-wrapper'];
+        sections.forEach(id => {
+            const el = document.getElementById(id);
+            if (state[id] === false || state[id] === undefined) {
+                el.style.maxHeight = el.scrollHeight + "px";
+            }
+        });
+    }
+
+    window.onload = () => {
+        refreshHeights();
+        state['gen-wrapper'] = false;
+        state['week1-wrapper'] = false;
+    };
+
+    // ===== PARTICIPANTS LOGIC =====
+    const participantsData = [
+        { id: 1, name: "Joe Doe", avatar: "https://randomuser.me/api/portraits/men/1.jpg", role: "Student", group: "IT1A", status: "online" },
+        { id: 2, name: "Jhon Els", avatar: "https://randomuser.me/api/portraits/men/2.jpg", role: "Student", group: "IT1B", status: "recent" },
+        { id: 3, name: "Darell Mason", avatar: "https://randomuser.me/api/portraits/men/3.jpg", role: "Teacher", group: "", status: "online" },
+        { id: 4, name: "Alex Dolla", avatar: "https://randomuser.me/api/portraits/women/4.jpg", role: "Student", group: "IT1C", status: "online" },
+        { id: 5, name: "Maria Lee", avatar: "https://randomuser.me/api/portraits/women/5.jpg", role: "Student", group: "IT1A", status: "recent" },
+        { id: 6, name: "Kevin Smith", avatar: "https://randomuser.me/api/portraits/men/6.jpg", role: "Student", group: "IT1B", status: "never" }
+    ];
+
+    const listEl = document.getElementById('participantsList');
+    const quickSearchInput = document.getElementById('participantsSearch');
+    const filterPanel = document.getElementById('filterPanel');
+    const toggleFilterBtn = document.getElementById('toggleFilterBtn');
+    const filterInput = document.getElementById('filter-input');
+
+    toggleFilterBtn.addEventListener('click', () => {
+        filterPanel.classList.toggle('show');
+        toggleFilterBtn.classList.toggle('active');
+    });
+
+    function getStatusLabel(status) {
+        const dots = { online: 'status-online', recent: 'status-recent', never: 'status-never' };
+        const labels = { online: 'Online', recent: 'Recently', never: 'Never' };
+        return `${labels[status]} <span class="status-dot ${dots[status]}"></span>`;
+    }
+
+    function renderParticipants(data) {
+        document.getElementById('results-count').textContent = `${data.length} participants found`;
+        
+        if (data.length === 0) {
+            listEl.innerHTML = `<div style="padding:40px; text-align:center; color:#888;">No results found</div>`;
+            return;
+        }
+
+        listEl.innerHTML = data.map(item => `
+            <div class="participants-item">
+                <div class="name-col">
+                    <div class="avatar"><img src="${item.avatar}"></div>
+                    ${item.name}
+                </div>
+                <div>${item.role}</div>
+                <div>${item.group || "No Group"}</div>
+                <div>${getStatusLabel(item.status)}</div>
+            </div>
+        `).join('');
+    }
+
+    function setupAlphabet(containerId) {
+        const container = document.getElementById(containerId);
+        'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(letter => {
+            const btn = document.createElement('button');
+            btn.textContent = letter;
+            btn.setAttribute('data-letter', letter);
+            btn.onclick = () => {
+                container.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            };
+            container.appendChild(btn);
+        });
+
+        const allBtn = container.querySelector('button[data-letter="all"]');
+        allBtn.onclick = () => {
+            container.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+            allBtn.classList.add('active');
+        };
+    }
+
+    function applyFilters() {
+        const matchType = document.getElementById('matchType').value;
+        const searchField = document.getElementById('searchField').value;
+        const keyword = filterInput.value.toLowerCase();
+        
+        const firstLetterActive = document.querySelector('#first-name-letters .active').getAttribute('data-letter');
+        const lastLetterActive = document.querySelector('#last-name-letters .active').getAttribute('data-letter');
+
+        const filtered = participantsData.filter(p => {
+            const nameParts = p.name.split(' ');
+            const firstName = nameParts[0] || "";
+            const lastName = nameParts[1] || "";
+
+            const matchesKeyword = keyword === "" || String(p[searchField] || "").toLowerCase().includes(keyword);
+            const matchesFirst = firstLetterActive === 'all' || firstName.toUpperCase().startsWith(firstLetterActive);
+            const matchesLast = lastLetterActive === 'all' || lastName.toUpperCase().startsWith(lastLetterActive);
+
+            if (matchType === "all") {
+                return matchesKeyword && matchesFirst && matchesLast;
+            } else {
+                const hasActiveFirstFilter = firstLetterActive !== 'all';
+                const hasActiveLastFilter = lastLetterActive !== 'all';
+                const hasKeywordFilter = keyword !== "";
+
+                if (!hasActiveFirstFilter && !hasActiveLastFilter && !hasKeywordFilter) return true;
+
+                return (hasKeywordFilter && matchesKeyword) || 
+                       (hasActiveFirstFilter && matchesFirst) || 
+                       (hasActiveLastFilter && matchesLast);
+            }
+        });
+
+        renderParticipants(filtered);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        setupAlphabet('first-name-letters');
+        setupAlphabet('last-name-letters');
+        renderParticipants(participantsData);
+
+        quickSearchInput.addEventListener('input', (e) => {
+            const val = e.target.value.toLowerCase();
+            const filtered = participantsData.filter(p => p.name.toLowerCase().includes(val));
+            renderParticipants(filtered);
+        });
+
+        document.getElementById('apply-filters-btn').onclick = applyFilters;
+
+        document.getElementById('reset-filters-btn').onclick = () => {
+            filterInput.value = '';
+            document.querySelectorAll('.letters button').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.letters button[data-letter="all"]').forEach(b => b.classList.add('active'));
+            document.getElementById('matchType').value = 'all';
+            document.getElementById('searchField').value = 'name';
+            renderParticipants(participantsData);
+        };
+
+        document.getElementById('clear-input-btn').onclick = () => {
+            filterInput.value = '';
+        };
+    });
+</script>
+
+</body>
+</html>
