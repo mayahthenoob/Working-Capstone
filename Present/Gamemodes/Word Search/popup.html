@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    body {
+        background: linear-gradient(135deg, #0d0d0d, #1a1a1a);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+
+    .modal {
+        width: 450px;
+        background: linear-gradient(145deg, #0b1120, #1c2541);
+        border: 3px solid #0055ff;
+        border-radius: 16px;
+        color: #ffffff;
+        padding: 30px;
+        position: relative;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0, 85, 255, 0.5);
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .modal:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0, 85, 255, 0.6);
+    }
+
+    .content p {
+        font-size: 18px;
+        font-weight: 600;
+        line-height: 1.5;
+        margin-bottom: 30px;
+    }
+
+    .input-section {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+    }
+
+    .btn {
+        background: linear-gradient(145deg, #76ff03, #32cd32);
+        color: #ffffff;
+        border: none;
+        padding: 12px 50px;
+        font-size: 18px;
+        font-weight: bold;
+        border-radius: 12px;
+        cursor: pointer;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        box-shadow: 0 5px 0 #4a9e02;
+        transition: all 0.2s;
+    }
+
+    .btn:hover {
+        background: linear-gradient(145deg, #32cd32, #76ff03);
+        transform: translateY(-2px);
+        box-shadow: 0 7px 0 #4a9e02;
+    }
+
+    .btn:active {
+        transform: translateY(2px);
+        box-shadow: 0 2px 0 #4a9e02;
+    }
+</style>
+</head>
+<body>
+
+    <div class="modal">
+        <div class="content">
+            <p>Press <strong>Submit</strong> to submit the quiz or <strong>Continue</strong> to keep interacting.</p>
+
+            <div class="input-section">
+                <button class="btn">Continue</button>
+                <button class="btn">Submit</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
