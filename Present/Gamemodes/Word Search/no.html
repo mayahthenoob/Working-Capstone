@@ -75,12 +75,11 @@
     </div>
 
     <script>
-        // Set your target date here (YYYY-MM-DD HH:MM:SS)
-        const countdownDate = new Date().getTime() 
-            + (6 * 24 * 60 * 60 * 1000)  // 6 days
-            + (10 * 60 * 60 * 1000)      // 10 hours
-            + (57 * 60 * 1000)           // 57 minutes
-            + (32 * 1000);               // 32 seconds
+        const countdownDate = new Date().getTime()
+            + (6 * 24 * 60 * 60 * 1000)  
+            + (10 * 60 * 60 * 1000)      
+            + (57 * 60 * 1000)           
+            + (32 * 1000);               
 
         function updateCountdown() {
             const now = new Date().getTime();
@@ -92,7 +91,8 @@
                 return;
             }
 
-            const h = Math.floor(timeLeft / (1000 * 60 * 60));
+            // Hours reset every 24 hours (0-23)
+            const h = Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
             const m = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
             const s = Math.floor((timeLeft % (1000 * 60)) / 1000);
 

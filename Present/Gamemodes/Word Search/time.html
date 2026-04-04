@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Countdown Timer</title>
     <style>
-        /* CSS Styles */
         body {
             background-color: #0f0f0f;
             display: flex;
@@ -51,7 +50,7 @@
         .separator {
             color: #333;
             font-size: 2rem;
-            padding-bottom: 25px; /* Aligns dots with the center of the numbers */
+            padding-bottom: 25px;
             font-weight: bold;
         }
     </style>
@@ -60,60 +59,47 @@
 
     <div class="timer-container">
         <div class="time-box">
-            <span id="days" class="number">0</span>
-            <span class="label">days</span>
-        </div>
-        <div class="separator">:</div>
-        <div class="time-box">
-            <span id="hours" class="number">0</span>
+            <span id="hours" class="number">00</span>
             <span class="label">hours</span>
         </div>
         <div class="separator">:</div>
         <div class="time-box">
-            <span id="minutes" class="number">0</span>
+            <span id="minutes" class="number">00</span>
             <span class="label">minutes</span>
         </div>
         <div class="separator">:</div>
         <div class="time-box">
-            <span id="seconds" class="number">0</span>
+            <span id="seconds" class="number">00</span>
             <span class="label">seconds</span>
         </div>
     </div>
 
     <script>
-        // JavaScript Logic
-        
-        // Set your target date here (YYYY-MM-DD HH:MM:SS)
-        // For demonstration, this sets it to 6 days, 10 hours, 57 mins from now
-        const countdownDate = new Date().getTime() + (6 * 24 * 60 * 60 * 1000) + (10 * 60 * 60 * 1000) + (57 * 60 * 1000) + (32 * 1000);
+        // Countdown starts from 1 hour and 30 minutes
+        const countdownDate = new Date().getTime()
+            + (1 * 60 * 60 * 1000)  // 1 hour
+            + (30 * 60 * 1000);     // 30 minutes
 
         function updateCountdown() {
             const now = new Date().getTime();
-            const timeLeft = countdownDate - now;
+            let timeLeft = countdownDate - now;
 
-            // Time calculations
-            const d = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-            const h = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const m = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-            const s = Math.floor((timeLeft % (1000 * 60)) / 1000);
-
-            // Display results
-            document.getElementById("days").innerText = d;
-            document.getElementById("hours").innerText = h;
-            document.getElementById("minutes").innerText = m;
-            document.getElementById("seconds").innerText = s;
-
-            // If countdown is finished
             if (timeLeft < 0) {
                 clearInterval(interval);
                 document.querySelector(".timer-container").innerHTML = "<h1 style='color:white'>Expired</h1>";
+                return;
             }
+
+            const h = Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
+            const m = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+            document.getElementById("hours").innerText = h.toString().padStart(2, '0');
+            document.getElementById("minutes").innerText = m.toString().padStart(2, '0');
+            document.getElementById("seconds").innerText = s.toString().padStart(2, '0');
         }
 
-        // Update every 1 second
         const interval = setInterval(updateCountdown, 1000);
-        
-        // Run immediately on load
         updateCountdown();
     </script>
 
