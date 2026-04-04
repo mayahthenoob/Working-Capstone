@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown Timer</title>
+    <style>
+        body {
+            background-color: #0f0f0f;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        .timer-container {
+            background-color: #161616;
+            padding: 30px 40px;
+            border-radius: 24px;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid #222;
+        }
+
+        .time-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 80px;
+        }
+
+        .number {
+            color: #ffffff;
+            font-size: 3.5rem;
+            font-weight: 500;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .label {
+            color: #666;
+            font-size: 0.9rem;
+            font-weight: 400;
+        }
+
+        .separator {
+            color: #333;
+            font-size: 2rem;
+            padding-bottom: 25px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="timer-container">
+        <div class="time-box">
+            <span id="hours" class="number">00</span>
+            <span class="label">hours</span>
+        </div>
+        <div class="separator">:</div>
+        <div class="time-box">
+            <span id="minutes" class="number">00</span>
+            <span class="label">minutes</span>
+        </div>
+        <div class="separator">:</div>
+        <div class="time-box">
+            <span id="seconds" class="number">00</span>
+            <span class="label">seconds</span>
+        </div>
+    </div>
+
+    <script>
+        // Set your target date here (YYYY-MM-DD HH:MM:SS)
+        const countdownDate = new Date().getTime() 
+            + (6 * 24 * 60 * 60 * 1000)  // 6 days
+            + (10 * 60 * 60 * 1000)      // 10 hours
+            + (57 * 60 * 1000)           // 57 minutes
+            + (32 * 1000);               // 32 seconds
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            let timeLeft = countdownDate - now;
+
+            if (timeLeft < 0) {
+                clearInterval(interval);
+                document.querySelector(".timer-container").innerHTML = "<h1 style='color:white'>Expired</h1>";
+                return;
+            }
+
+            const h = Math.floor(timeLeft / (1000 * 60 * 60));
+            const m = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+            document.getElementById("hours").innerText = h.toString().padStart(2, '0');
+            document.getElementById("minutes").innerText = m.toString().padStart(2, '0');
+            document.getElementById("seconds").innerText = s.toString().padStart(2, '0');
+        }
+
+        const interval = setInterval(updateCountdown, 1000);
+        updateCountdown();
+    </script>
+
+</body>
+</html>
