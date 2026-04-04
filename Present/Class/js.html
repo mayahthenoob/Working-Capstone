@@ -33,44 +33,6 @@
             overflow: hidden;
         }
 
-        /* Profile Header Section */
-        .profile-summary {
-            display: flex;
-            align-items: center;
-            padding: 30px;
-            background: #fff;
-            border-bottom: 1px solid var(--border-light);
-            gap: 20px;
-        }
-
-        .profile-avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: var(--bg-gray);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 3px solid var(--primary-blue);
-        }
-
-        .profile-avatar i {
-            font-size: 40px;
-            color: var(--primary-blue);
-        }
-
-        .profile-info h1 {
-            margin: 0;
-            font-size: 1.5rem;
-        }
-
-        .profile-info p {
-            margin: 5px 0 0;
-            color: var(--text-muted);
-            font-size: 0.95rem;
-        }
-
-        /* Table Styling */
         .table-container {
             padding: 20px 30px 40px;
         }
@@ -84,7 +46,6 @@
 
         .grade-table th {
             text-align: left;
-            background: #f8f9fa;
             color: var(--text-muted);
             font-weight: 600;
             font-size: 0.85rem;
@@ -127,7 +88,6 @@
             font-size: 0.85rem;
         }
 
-        /* Summary Row */
         .summary-row {
             background: #fdfdfd;
         }
@@ -140,29 +100,19 @@
         }
 
         .total-label {
-            text-align: right;
-            padding-right: 30px;
+            text-align: left;  
+            padding-left: 30px;  
         }
     </style>
 </head>
 <body>
 
 <div class="report-card">
-    <div class="profile-summary">
-        <div class="profile-avatar">
-            <i class='bx bx-user'></i>
-        </div>
-        <div class="profile-info">
-            <h1>User Grade Report</h1>
-            <p>Course: Mathematics | ID: 11042026</p>
-        </div>
-    </div>
-
     <div class="table-container">
         <table class="grade-table">
             <thead>
                 <tr>
-                    <th>Grade Item</th>
+                    <th>Quiz Name</th> 
                     <th>Calculated Weight</th>
                     <th>Grade</th>
                     <th>Percentage</th>
@@ -187,10 +137,22 @@
                     <td class="grade-value">20.00 / 20.00</td>
                     <td><span class="percentage-badge">100.00%</span></td>
                 </tr>
+                <tr>
+                    <td><a href="#" class="item-name"><i class='bx bx-file'></i> Quiz 4</a></td>
+                    <td>20%</td>
+                    <td class="grade-value">18.00 / 20.00</td>
+                    <td><span class="percentage-badge">90.00%</span></td>
+                </tr>
+                <tr>
+                    <td><a href="#" class="item-name"><i class='bx bx-file'></i> Quiz 5</a></td>
+                    <td>20%</td>
+                    <td class="grade-value">19.50 / 20.00</td>
+                    <td><span class="percentage-badge">97.50%</span></td>
+                </tr>
                 <tr class="summary-row">
-                    <td colspan="2" class="total-label">Course Total</td>
-                    <td class="grade-value">56.60 / 60.00</td>
-                    <td><span class="percentage-badge" style="background: #27ae60; color: white;">94.33%</span></td>
+                    <td colspan="2" class="total-label">Class Total</td> 
+                    <td class="grade-value">94.60 / 100.00</td> 
+                    <td><span class="percentage-badge" style="background: #27ae60; color: white;">94.60%</span></td> 
                 </tr>
             </tbody>
         </table>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grade Report | Networking Style</title>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --border-color: #e9ecef;
+            --text-main: #212529;
+            --text-blue: #0056b3;
+            --bg-hover: #f8f9fa;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            background-color: #f0f2f5;
+            padding: 20px;
+            color: var(--text-main);
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+
+        /* Accordion Headers */
+        .accordion-header {
+            padding: 12px 20px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            background-color: #fff;
+        }
+
+        .header-main { font-size: 1.1rem; }
+        .header-sub { 
+            padding-left: 40px; 
+            font-size: 1rem;
+            background-color: #fff;
+        }
+
+        .bx-chevron-down, .bx-chevron-right {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        /* Grade Rows */
+        .grade-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            padding: 15px 20px 15px 60px;
+            border-bottom: 1px solid var(--border-color);
+            align-items: center;
+            font-size: 0.95rem;
+        }
+
+        .grade-row:hover {
+            background-color: var(--bg-hover);
+        }
+
+        .assignment-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .label-type {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: #6c757d;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .assignment-name {
+            color: var(--text-blue);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .assignment-name:hover {
+            text-decoration: underline;
+        }
+
+        .assignment-name i {
+            margin-right: 8px;
+            color: #adb5bd;
+        }
+
+        .col-grade, .col-range, .col-percent {
+            text-align: left;
+        }
+
+        .col-percent {
+            font-weight: 500;
+        }
+
+        /* Utility */
+        .hidden { display: none; }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="accordion-header header-main" onclick="toggle('coursework-section')">
+        <i class='bx bx-chevron-down'></i> Networking 2 - 2026
+    </div>
+
+    <div id="coursework-section">
+        <div class="accordion-header header-sub" onclick="toggle('assignments-list')">
+            <i class='bx bx-chevron-down'></i> Course Work
+        </div>
+
+        <div id="assignments-list">
+            <div class="accordion-header" style="padding-left: 60px; background: #fafafa;">
+                <i class='bx bx-chevron-down'></i> Assignments
+            </div>
+
+            <div class="grade-row">
+                <div class="assignment-info">
+                    <span class="label-type">Assignment</span>
+                    <a href="#" class="assignment-name"><i class='bx bx-file-blank'></i> Quiz 1</a>
+                </div>
+                <div class="col-grade">19.00 / 20.00 (A)</div>
+                <div class="col-range">0–20</div>
+                <div class="col-percent">95.00 %</div>
+            </div>
+
+            <div class="grade-row">
+                <div class="assignment-info">
+                    <span class="label-type">Assignment</span>
+                    <a href="#" class="assignment-name"><i class='bx bx-file-blank'></i> Quiz 2</a>
+                </div>
+                <div class="col-grade">17.60 / 20.00 (B)</div>
+                <div class="col-range">0–20</div>
+                <div class="col-percent">88.00 %</div>
+            </div>
+
+            <div class="grade-row">
+                <div class="assignment-info">
+                    <span class="label-type">Assignment</span>
+                    <a href="#" class="assignment-name"><i class='bx bx-file-blank'></i> Quiz 3</a>
+                </div>
+                <div class="col-grade">20.00 / 20.00 (A)</div>
+                <div class="col-range">0–20</div>
+                <div class="col-percent">100.00 %</div>
+            </div>
+            
+            <div class="grade-row">
+                <div class="assignment-info">
+                    <span class="label-type">Assignment</span>
+                    <a href="#" class="assignment-name"><i class='bx bx-file-blank'></i> PacketTracer Lab (Take home)</a>
+                </div>
+                <div class="col-grade">100.00 % (A)</div>
+                <div class="col-range">0–100</div>
+                <div class="col-percent">100.00 %</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggle(id) {
+        const element = document.getElementById(id);
+        const header = event.currentTarget;
+        const icon = header.querySelector('i');
+        
+        element.classList.toggle('hidden');
+        
+        if (element.classList.contains('hidden')) {
+            icon.classList.replace('bx-chevron-down', 'bx-chevron-right');
+        } else {
+            icon.classList.replace('bx-chevron-right', 'bx-chevron-down');
+        }
+    }
+</script>
+
+</body>
+</html>
