@@ -28,7 +28,6 @@
             font-family: 'Orbitron', sans-serif;
         }
 
-        /* Scaled up from 420px to 600px */
         .game-card {
             width: 600px;
             background: linear-gradient(180deg, #0d2a5a 0%, #051025 100%);
@@ -39,7 +38,6 @@
             border-radius: 8px;
         }
 
-        /* Scaled up Header */
         .header-tab {
             position: absolute;
             top: -22px;
@@ -80,7 +78,6 @@
             position: relative;
         }
 
-        /* Scaled up from 90px to 130px */
         .circle {
             position: relative;
             height: 130px;
@@ -103,14 +100,14 @@
         }
 
         .circle .box span {
-            font-size: 24px; /* Bigger text */
+            font-size: 24px; 
             font-weight: 900;
             color: var(--neon-cyan);
         }
 
         .circle-label {
             margin-top: 18px;
-            font-size: 14px; /* Bigger label */
+            font-size: 14px; 
             color: white;
             text-transform: uppercase;
             letter-spacing: 2px;
@@ -139,7 +136,7 @@
             text-transform: uppercase;
             font-size: 14px;
             white-space: nowrap;
-            text-decoration: none; /* for <a> links */
+            text-decoration: none; 
             display: flex;
             align-items: center;
             justify-content: center;
@@ -151,7 +148,6 @@
             box-shadow: 0 0 20px var(--neon-cyan);
         }
 
-        /* Hexagon shape remains responsive to the med class */
         .hex { clip-path: polygon(12% 0%, 88% 0%, 100% 50%, 88% 100%, 12% 100%, 0% 50%); }
         .med { width: 200px; height: 70px; }
     </style>
@@ -159,7 +155,7 @@
 <body>
 
     <div class="game-card">
-        <div class="header-tab">1ST</div>
+        <div class="header-tab">Results</div>
         
         <div class="inner-frame">
             <div class="circles-container">
@@ -194,7 +190,6 @@
     </div>
 
     <script>
-        // Updated size to 130 and thickness to 10
         let baseOptions = {
             startAngle: -1.55,
             size: 130,
@@ -202,7 +197,6 @@
             fill: {gradient: ['#00d2ff', '#3081d0']} 
         }
 
-        // Correct %
         $(".correct .bar").circleProgress({
             ...baseOptions,
             value: 0.92,
