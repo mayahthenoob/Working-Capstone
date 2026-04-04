@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mathematics | Grade Report</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        :root {
+            --primary-blue: #3498db;
+            --bg-gray: #f4f7f6;
+            --border-light: #e0e4e8;
+            --text-dark: #2c3e50;
+            --text-muted: #7f8c8d;
+            --success-green: #27ae60;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-gray);
+            margin: 0;
+            padding: 40px 20px;
+            color: var(--text-dark);
+        }
+
+        .report-card {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #ccc;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+
+        /* Profile Header Section */
+        .profile-summary {
+            display: flex;
+            align-items: center;
+            padding: 30px;
+            background: #fff;
+            border-bottom: 1px solid var(--border-light);
+            gap: 20px;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--bg-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid var(--primary-blue);
+        }
+
+        .profile-avatar i {
+            font-size: 40px;
+            color: var(--primary-blue);
+        }
+
+        .profile-info h1 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .profile-info p {
+            margin: 5px 0 0;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* Table Styling */
+        .table-container {
+            padding: 20px 30px 40px;
+        }
+
+        .grade-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 10px;
+        }
+
+        .grade-table th {
+            text-align: left;
+            background: #f8f9fa;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            padding: 15px;
+            border-bottom: 2px solid var(--border-light);
+        }
+
+        .grade-table td {
+            padding: 15px;
+            border-bottom: 1px solid var(--border-light);
+            font-size: 0.95rem;
+        }
+
+        .grade-table tr:hover {
+            background-color: #fcfdfe;
+        }
+
+        .item-name {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+            color: var(--primary-blue);
+            text-decoration: none;
+        }
+
+        .grade-value {
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+        }
+
+        .percentage-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: #ebf5fb;
+            color: var(--primary-blue);
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        /* Summary Row */
+        .summary-row {
+            background: #fdfdfd;
+        }
+
+        .summary-row td {
+            font-weight: bold;
+            border-bottom: none;
+            color: var(--text-dark);
+            font-size: 1.05rem;
+        }
+
+        .total-label {
+            text-align: right;
+            padding-right: 30px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="report-card">
+    <div class="profile-summary">
+        <div class="profile-avatar">
+            <i class='bx bx-user'></i>
+        </div>
+        <div class="profile-info">
+            <h1>User Grade Report</h1>
+            <p>Course: Mathematics | ID: 11042026</p>
+        </div>
+    </div>
+
+    <div class="table-container">
+        <table class="grade-table">
+            <thead>
+                <tr>
+                    <th>Grade Item</th>
+                    <th>Calculated Weight</th>
+                    <th>Grade</th>
+                    <th>Percentage</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><a href="#" class="item-name"><i class='bx bx-file'></i> Quiz 1</a></td>
+                    <td>20%</td>
+                    <td class="grade-value">19.00 / 20.00</td>
+                    <td><span class="percentage-badge">95.00%</span></td>
+                </tr>
+                <tr>
+                    <td><a href="#" class="item-name"><i class='bx bx-file'></i> Quiz 2</a></td>
+                    <td>20%</td>
+                    <td class="grade-value">17.60 / 20.00</td>
+                    <td><span class="percentage-badge">88.00%</span></td>
+                </tr>
+                <tr>
+                    <td><a href="#" class="item-name"><i class='bx bx-file'></i> Quiz 3</a></td>
+                    <td>20%</td>
+                    <td class="grade-value">20.00 / 20.00</td>
+                    <td><span class="percentage-badge">100.00%</span></td>
+                </tr>
+                <tr class="summary-row">
+                    <td colspan="2" class="total-label">Course Total</td>
+                    <td class="grade-value">56.60 / 60.00</td>
+                    <td><span class="percentage-badge" style="background: #27ae60; color: white;">94.33%</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

@@ -2,3 +2,11 @@
 <i class='bx bx-male'></i> replace the third quiz icon with this
 <i class='bx bx-color-fill'></i> replace the forth quiz icon with this
 <i class='bx bx-detail'></i> replace the fifth quiz icon with this
+
+
+
+<i class='bx bx-search-alt-2' ></i>
+<i class='bx bxs-invader'></i> 
+<i class='bx bx-male'></i> 
+<i class='bx bx-color-fill'></i>
+<i class='bx bx-detail'></i> 
