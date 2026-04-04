@@ -106,7 +106,6 @@ input:focus, textarea:focus {
     margin-top: 6px;
 }
 
-/* NEW BUTTON STYLES */
 .button-row {
     display: flex;
     justify-content: space-between;
@@ -197,7 +196,7 @@ input:focus, textarea:focus {
 
 <div class="form-group">
 <label>Amount</label>
-<input type="number" id="amount" min="1" max="32" required>
+<input type="number" id="amount" min="1" max="30" required>
 </div>
 
 <div class="form-group full-width">
@@ -234,7 +233,6 @@ input:focus, textarea:focus {
 
 </div>
 
-<!-- NEW BUTTONS -->
 <div class="button-row">
     <button type="button" class="action-btn preview-btn">Preview</button>
     <button type="submit" class="action-btn publish-btn">Publish</button>
@@ -251,7 +249,7 @@ const wordsContainer = document.getElementById("wordsContainer");
 amountInput.addEventListener("input", function () {
     let amount = parseInt(this.value);
 
-    if (amount > 32) { amount = 32; this.value = 32; }
+    if (amount > 30) { amount = 30; this.value = 30; }
     if (amount < 1 || isNaN(amount)) { wordsContainer.innerHTML = ""; return; }
 
     wordsContainer.innerHTML = "";
@@ -274,13 +272,17 @@ amountInput.addEventListener("input", function () {
             this.setSelectionRange(this.value.length, this.value.length);
         });
 
+        // ✅ UPDATED INPUT LOGIC (cursor moves after blank)
         textarea.addEventListener("input", function () {
             const cursorPos = this.selectionStart;
-            const newValue = this.value.replace(/\(_\)/g, "____ ");
+            const before = this.value.substring(0, cursorPos);
+            const after = this.value.substring(cursorPos);
 
-            if (this.value !== newValue) {
-                this.value = newValue;
-                this.setSelectionRange(cursorPos, cursorPos);
+            if (before.includes("(_)")) {
+                const newBefore = before.replace(/\(_\)/g, "____ ");
+                this.value = newBefore + after;
+
+                this.setSelectionRange(newBefore.length, newBefore.length);
             }
         });
 
@@ -370,7 +372,7 @@ Time Limit: ${document.getElementById("timeLimit").value} minutes`
     );
 });
 
-// SUBMIT (PUBLISH)
+// SUBMIT
 document.querySelector("form").addEventListener("submit", function(e){
     e.preventDefault();
 
