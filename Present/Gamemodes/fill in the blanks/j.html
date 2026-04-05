@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fill In the Blanks</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            background-color: #f0f2f5; 
+            padding: 20px; 
+        }
+        .container { 
+            background: white; 
+            padding: 30px; 
+            border-radius: 12px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
+            width: 700px;
+            min-height: 550px;
+            box-sizing: border-box;
+            position: relative;
+        }
+        h1 { text-align: center; color: #333; margin-top: 0; }
+
+        /* Sentences and Blanks */
+        .sentence-page { display: none; }
+        .sentence-page.active { display: block; }
+        
+        .sentence { 
+            margin-bottom: 18px; 
+            font-size: 1.1rem; 
+            line-height: 1.6;
+            color: #444;
+        }
+        .drop-zone {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            min-width: 100px;
+            height: 30px;
+            border-bottom: 2px solid #999;
+            vertical-align: bottom;
+            margin: 0 5px;
+            transition: all 0.3s;
+        }
+        .drop-zone.hovered { background-color: #e3f2fd; border-bottom-color: #2196f3; }
+        
+        .word-bank {
+            margin-top: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px dashed #ccc;
+            min-height: 100px;
+        }
+        .word {
+            background: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: grab;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border: 1px solid #ddd;
+            user-select: none;
+            font-size: 0.95rem;
+        }
+        .word:active { cursor: grabbing; }
+        .word.in-zone { box-shadow: none; border: none; background: transparent; color: #2196f3; font-weight: bold; }
+
+        .nav-controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        button {
+            padding: 10px 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            background-color: #2196f3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: background 0.2s;
+        }
+        button:disabled { background-color: #ccc; cursor: not-allowed; }
+        button:hover:not(:disabled) { background-color: #1976d2; }
+        #page-info { font-weight: bold; color: #666; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Fill In Blanks</h1>
+    <div id="game-content">
+        </div>
+    
+    <div class="word-bank" id="word-bank"></div>
+</div>
+
+<div class="nav-controls">
+    <button id="prevBtn" onclick="changePage(-1)" disabled>Previous</button>
+    <span id="page-info">Page 1 of 3</span>
+    <button id="nextBtn" onclick="changePage(1)">Next</button>
+</div>
+
+<script>
+    const allSentences = [
+        { s: "Frank decided to", a: "draw", e: "a picture." },
+        { s: "Kelley refused to", a: "eat", e: "a cookie." },
+        { s: "George could not get to", a: "sleep", e: "last night." },
+        { s: "Jim asked Helen to", a: "write", e: "him a letter." },
+        { s: "The teacher asked me to", a: "raise", e: "my hand." },
+        { s: "My mother asked me to", a: "run", e: "to the store." },
+        { s: "We could not get the kids to", a: "sit", e: "still." },
+        { s: "John said he wanted to", a: "speak", e: "to me." },
+        { s: "It is time for us to", a: "leave", e: "the party." },
+        { s: "The cat likes to", a: "climb", e: "the tall tree." },
+        { s: "Please help me", a: "carry", e: "these heavy boxes." },
+        { s: "I forgot to", a: "lock", e: "the front door." },
+        { s: "Can you help me", a: "find", e: "my lost keys?" },
+        { s: "The chef needs to", a: "chop", e: "the onions." },
+        { s: "He wanted to", a: "learn", e: "how to play guitar." },
+        { s: "She tried to", a: "catch", e: "the falling ball." },
+        { s: "They like to", a: "watch", e: "movies on Friday." },
+        { s: "Don't forget to", a: "wash", e: "your dirty hands." },
+        { s: "We need to", a: "buy", e: "some fresh milk." },
+        { s: "The bird began to", a: "sing", e: "at sunrise." },
+        { s: "I want to", a: "paint", e: " my room blue." },
+        { s: "Did you", a: "finish", e: "your homework yet?" },
+        { s: "Wait for me to", a: "tie", e: "my shoelaces." },
+        { s: "The baby started to", a: "smile", e: "at her dad." },
+        { s: "You should", a: "drink", e: "more water today." },
+        { s: "I like to", a: "read", e: "books before bed." },
+        { s: "The sun began to", a: "shine", e: "through clouds." },
+        { s: "He needs to", a: "fix", e: "his broken bike." },
+        { s: "Please", a: "open", e: "the window for air." },
+        { s: "We love to", a: "dance", e: "to loud music." }
+    ];
+
+    let currentPage = 0;
+    const itemsPerPage = 10;
+    const wordBank = document.getElementById('word-bank');
+    const content = document.getElementById('game-content');
+
+    // Initialize Game
+    function init() {
+        renderSentences();
+        renderWordBank();
+        updatePage();
+    }
+
+    function renderSentences() {
+        content.innerHTML = '';
+        for (let i = 0; i < allSentences.length; i += itemsPerPage) {
+            const pageDiv = document.createElement('div');
+            pageDiv.className = `sentence-page page-${i / itemsPerPage}`;
+            
+            const chunk = allSentences.slice(i, i + itemsPerPage);
+            chunk.forEach((item, index) => {
+                const globalIndex = i + index + 1;
+                const sDiv = document.createElement('div');
+                sDiv.className = 'sentence';
+                sDiv.innerHTML = `${globalIndex}. ${item.s} <div class="drop-zone" data-id="${globalIndex-1}"></div> ${item.e}`;
+                pageDiv.appendChild(sDiv);
+            });
+            content.appendChild(pageDiv);
+        }
+
+        document.querySelectorAll('.drop-zone').forEach(zone => {
+            zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('hovered'); });
+            zone.addEventListener('dragleave', () => zone.classList.remove('hovered'));
+            zone.addEventListener('drop', handleDrop);
+        });
+    }
+
+    function renderWordBank() {
+        const words = allSentences.map(x => x.a).sort(() => Math.random() - 0.5);
+        wordBank.innerHTML = '';
+        words.forEach(wordText => {
+            const el = document.createElement('div');
+            el.className = 'word';
+            el.draggable = true;
+            el.textContent = wordText;
+            el.id = 'word-' + Math.random().toString(36).substr(2, 9);
+            el.addEventListener('dragstart', e => e.dataTransfer.setData('text', e.target.id));
+            wordBank.appendChild(el);
+        });
+        
+        wordBank.addEventListener('dragover', e => e.preventDefault());
+        wordBank.addEventListener('drop', e => {
+            e.preventDefault();
+            const id = e.dataTransfer.getData('text');
+            const el = document.getElementById(id);
+            if (el) {
+                el.classList.remove('in-zone');
+                wordBank.appendChild(el);
+            }
+        });
+    }
+
+    function handleDrop(e) {
+        e.preventDefault();
+        this.classList.remove('hovered');
+        const id = e.dataTransfer.getData('text');
+        const el = document.getElementById(id);
+        
+        if (this.children.length > 0) {
+            const existing = this.children[0];
+            existing.classList.remove('in-zone');
+            wordBank.appendChild(existing);
+        }
+        
+        el.classList.add('in-zone');
+        this.appendChild(el);
+    }
+
+    function updatePage() {
+        document.querySelectorAll('.sentence-page').forEach((p, i) => {
+            p.classList.toggle('active', i === currentPage);
+        });
+        document.getElementById('prevBtn').disabled = currentPage === 0;
+        document.getElementById('nextBtn').disabled = currentPage === 2;
+        document.getElementById('page-info').textContent = `Page ${currentPage + 1} of 3`;
+    }
+
+    function changePage(step) {
+        currentPage += step;
+        updatePage();
+    }
+
+    init();
+</script>
+
+</body>
+</html>

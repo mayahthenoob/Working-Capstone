@@ -80,18 +80,21 @@ input:focus, textarea:focus {
     border-color: #4a90e2;
 }
 
+/* RADIO & CHECKBOX STYLING */
 .radio-group {
     display: flex;
+    flex-wrap: wrap;   /* allows items to stay in one row and wrap on smaller screens */
     align-items: center;
-    gap: 30px;
+    gap: 20px;
     margin-top: 12px;
 }
 
 .radio-option {
     display: flex;
-    align-items: center;
+    align-items: center; /* vertical center */
     gap: 8px;
     font-size: 14px;
+    white-space: nowrap; /* keep checkbox text on same line */
 }
 
 #wordsContainer {
@@ -106,7 +109,6 @@ input:focus, textarea:focus {
     margin-top: 6px;
 }
 
-/* NEW BUTTON STYLES */
 .button-row {
     display: flex;
     justify-content: space-between;
@@ -197,7 +199,7 @@ input:focus, textarea:focus {
 
 <div class="form-group">
 <label>Amount</label>
-<input type="number" id="amount" min="1" max="32" required>
+<input type="number" id="amount" min="1" max="30" required>
 </div>
 
 <div class="form-group full-width">
@@ -205,12 +207,29 @@ input:focus, textarea:focus {
 <div id="wordsContainer"></div>
 </div>
 
+<!-- Attempts Allowed -->
 <div class="form-group full-width">
-<label>Re-attempt</label>
+<label>Attempts Allowed</label>
 <div class="radio-group">
-<div class="radio-option"><input type="radio" name="reattempt" value="none"> None</div>
-<div class="radio-option"><input type="radio" name="reattempt" value="two"> Two</div>
-<div class="radio-option"><input type="radio" name="reattempt" value="three"> Three</div>
+<div class="radio-option"><input type="radio" name="attempts" value="1"> 1</div>
+<div class="radio-option"><input type="radio" name="attempts" value="2"> 2</div>
+<div class="radio-option"><input type="radio" name="attempts" value="3"> 3</div>
+</div>
+</div>
+
+<!-- Grading Criteria -->
+<div class="form-group full-width">
+<label>Grading Criteria</label>
+<div class="radio-group">
+<div class="radio-option">
+<input type="checkbox" name="grading" value="highest_score"> Highest Score
+</div>
+<div class="radio-option">
+<input type="checkbox" name="grading" value="fastest_time"> Fastest Time
+</div>
+<div class="radio-option">
+<input type="checkbox" name="grading" value="highest_streak"> Highest Streak
+</div>
 </div>
 </div>
 
@@ -234,7 +253,6 @@ input:focus, textarea:focus {
 
 </div>
 
-<!-- NEW BUTTONS -->
 <div class="button-row">
     <button type="button" class="action-btn preview-btn">Preview</button>
     <button type="submit" class="action-btn publish-btn">Publish</button>
@@ -251,7 +269,7 @@ const wordsContainer = document.getElementById("wordsContainer");
 amountInput.addEventListener("input", function () {
     let amount = parseInt(this.value);
 
-    if (amount > 32) { amount = 32; this.value = 32; }
+    if (amount > 30) { amount = 30; this.value = 30; }
     if (amount < 1 || isNaN(amount)) { wordsContainer.innerHTML = ""; return; }
 
     wordsContainer.innerHTML = "";
@@ -276,11 +294,13 @@ amountInput.addEventListener("input", function () {
 
         textarea.addEventListener("input", function () {
             const cursorPos = this.selectionStart;
-            const newValue = this.value.replace(/\(_\)/g, "____ ");
+            const before = this.value.substring(0, cursorPos);
+            const after = this.value.substring(cursorPos);
 
-            if (this.value !== newValue) {
-                this.value = newValue;
-                this.setSelectionRange(cursorPos, cursorPos);
+            if (before.includes("(_)")) {
+                const newBefore = before.replace(/\(_\)/g, "____ ");
+                this.value = newBefore + after;
+                this.setSelectionRange(newBefore.length, newBefore.length);
             }
         });
 
@@ -359,6 +379,13 @@ document.querySelector(".preview-btn").addEventListener("click", () => {
         sentences.push(t.value);
     });
 
+    const attemptsSelected = document.querySelector("input[name='attempts']:checked");
+
+    const gradingSelected = [];
+    document.querySelectorAll("input[name='grading']:checked").forEach(cb => {
+        gradingSelected.push(cb.value);
+    });
+
     alert(
 `PREVIEW
 
@@ -366,13 +393,22 @@ Title: ${document.getElementById("title").value}
 Description: ${document.getElementById("description").value}
 Sentences:
 ${sentences.join("\n")}
+Attempts Allowed: ${attemptsSelected ? attemptsSelected.value : 'Not set'}
+Grading Criteria: ${gradingSelected.length ? gradingSelected.join(", ") : 'Not set'}
 Time Limit: ${document.getElementById("timeLimit").value} minutes`
     );
 });
 
-// SUBMIT (PUBLISH)
+// SUBMIT
 document.querySelector("form").addEventListener("submit", function(e){
     e.preventDefault();
+
+    const attemptsSelected = document.querySelector("input[name='attempts']:checked");
+
+    const gradingSelected = [];
+    document.querySelectorAll("input[name='grading']:checked").forEach(cb => {
+        gradingSelected.push(cb.value);
+    });
 
     const data = {
         title: document.getElementById("title").value,
@@ -382,7 +418,8 @@ document.querySelector("form").addEventListener("submit", function(e){
         timeLimit: document.getElementById("timeLimit").value,
         opens: document.getElementById("opens").value,
         closes: document.getElementById("closes").value,
-        reattempt: document.querySelector("input[name='reattempt']:checked").value,
+        attempts: attemptsSelected ? attemptsSelected.value : null,
+        grading: gradingSelected,
         sentences: []
     };
 
