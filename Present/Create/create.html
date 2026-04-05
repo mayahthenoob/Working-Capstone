@@ -19,10 +19,6 @@
     --bg-overlay: rgba(0,0,0,0.6);
 }
 
-/* ========================= */
-/* GLOBAL / GRID / CREATE CARD */
-/* ========================= */
-
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: var(--bg-color);
@@ -81,10 +77,6 @@ h2 { color: var(--text-dark); margin-bottom: 5px; font-size: 22px; }
     transform: scale(1.1);
 }
 
-/* ========================= */
-/* OTHER CARDS */
-/* ========================= */
-
 .card-container {
     height: 200px;
     border-radius: 20px;
@@ -119,30 +111,6 @@ h2 { color: var(--text-dark); margin-bottom: 5px; font-size: 22px; }
 .content h3 { font-size: 18px; margin: 0 0 4px 0; font-weight: 700; }
 .content p { font-size: 13px; margin-bottom: 15px; opacity: 0.85; }
 .btn-primary { display: inline-block; border: 2px solid white; padding: 6px 14px; border-radius: 8px; font-weight: 600; font-size: 12px; transition: 0.3s; }
-
-/* ========================= */
-/* TEMPLATE SECTION */
-/* ========================= */
-
-.template-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 25px; }
-
-.template-card {
-    background: white;
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-    transition: transform 0.3s ease;
-}
-
-.template-card:hover { transform: translateY(-5px); }
-
-.img-placeholder { height: 150px; background-size: cover; background-position: center; position: relative; }
-.badge { position: absolute; bottom: 10px; right: 10px; background: rgba(0,0,0,0.75); color: white; font-size: 0.75rem; padding: 4px 8px; border-radius: 6px; }
-.template-info { padding: 15px; font-size: 0.95rem; font-weight: 600; color: var(--text-dark); }
-
-/* ========================= */
-/* POPUP STYLES */
-/* ========================= */
 
 .popup-overlay {
     position: fixed;
@@ -186,9 +154,21 @@ h2 { color: var(--text-dark); margin-bottom: 5px; font-size: 22px; }
 .card-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 16px; }
 .card { border: 2px solid var(--border-color); border-radius: 12px; padding: 24px 15px; cursor: pointer; transition: all 0.2s ease; display: flex; flex-direction: column; align-items: center; text-decoration: none; }
 .card:hover { border-color: var(--primary-purple); transform: translateY(-3px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-.icon-box { width: 50px; height: 50px; background: var(--primary-purple); border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 15px; color: white; }
-.icon-box.outline { background: transparent; border: 2px dashed #ccc; color: #ccc; }
+
+.icon-box {
+    width: 50px;
+    height: 50px;
+    background: var(--primary-purple);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+    color: white;
+}
+
 .icon-box i { font-size: 26px; }
+
 .card h3 { font-family: 'Montserrat', sans-serif; margin: 10px 0; font-size: 16px; color: var(--text-main); }
 .card p { font-size: 13px; color: var(--text-muted); line-height: 1.4; margin: 0; }
 
@@ -212,69 +192,41 @@ h2 { color: var(--text-dark); margin-bottom: 5px; font-size: 22px; }
 
 <div class="quick-tools-grid">
 
-    <!-- CREATE CARD triggers popup -->
-    <div class="create-card" onclick="openPopup()">
-        <div class="plus-circle">
-            <i class='bx bx-plus'></i>
-        </div>
-    </div>
-
-    <!-- CARD 1 -->
-    <a href="#" class="card-container" 
-       style="background-image: url('https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=800&q=60');">
-        <div class="content">
-            <h3>Create kahoots with AI</h3>
-            <p>Generate interactive quizzes instantly</p>
-            <span class="btn-primary">Start creating</span>
-        </div>
-    </a>
-
-    <!-- CARD 2 -->
-    <a href="#" class="card-container" 
-       style="background-image: url('https://images.unsplash.com/photo-1581090700227-1e8e6d5f6c9b?auto=format&fit=crop&w=800&q=60');">
-        <div class="content">
-            <h3>Generate from PDF</h3>
-            <p>Upload and auto-create kahoot</p>
-            <span class="btn-primary">Upload PDF</span>
-        </div>
-    </a>
-
-    <!-- CARD 3 -->
-    <a href="#" class="card-container" 
-       style="background-image: url('https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=800&q=60');">
-        <div class="content">
-            <h3>Import presentation</h3>
-            <p>Turn slides into experiences</p>
-            <span class="btn-primary">Import</span>
-        </div>
-    </a>
-
-</div>
-</section>
-
-<section>
-<h2>Timeline</h2>
-<p class="subtitle">Grab a template and go! Pick a kahoot that fits your needs.</p>
-
-<div class="template-grid">
-    <div class="template-card">
-        <div class="img-placeholder" 
-             style="background-image: url('https://via.placeholder.com/400x200');">
-            <span class="badge">10 Questions</span>
-        </div>
-        <div class="template-info">
-            Icebreaker quiz
-        </div>
+<div class="create-card" onclick="openPopup()">
+    <div class="plus-circle">
+        <i class='bx bx-plus'></i>
     </div>
 </div>
 
+<a href="#" class="card-container" style="background-image: url('https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=800&q=60');">
+    <div class="content">
+        <h3>Create kahoots with AI</h3>
+        <p>Generate interactive quizzes instantly</p>
+        <span class="btn-primary">Start creating</span>
+    </div>
+</a>
+
+<a href="#" class="card-container" style="background-image: url('https://images.unsplash.com/photo-1581090700227-1e8e6d5f6c9b?auto=format&fit=crop&w=800&q=60');">
+    <div class="content">
+        <h3>Generate from PDF</h3>
+        <p>Upload and auto-create kahoot</p>
+        <span class="btn-primary">Upload PDF</span>
+    </div>
+</a>
+
+<a href="#" class="card-container" style="background-image: url('https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=800&q=60');">
+    <div class="content">
+        <h3>Import presentation</h3>
+        <p>Turn slides into experiences</p>
+        <span class="btn-primary">Import</span>
+    </div>
+</a>
+
+</div>
 </section>
 
 </main>
 
-<!-- ========================= -->
-<!-- POPUP MODAL -->
-<!-- ========================= -->
 <div class="popup-overlay" id="createPopup">
     <div class="popup-box">
         <button class="close-btn" onclick="closePopup()">&times;</button>
@@ -286,8 +238,8 @@ h2 { color: var(--text-dark); margin-bottom: 5px; font-size: 22px; }
                 <div class="icon-box">
                     <i class='bx bxs-file-plus'></i>
                 </div>
-                <h3>Upload From File</h3>
-                <p>Use quiz that was exported to start new Quiz</p>
+                <h3>Create Class</h3>
+                <p>Create class to give students quizzes</p>
             </div>
 
             <div class="card">
@@ -295,15 +247,15 @@ h2 { color: var(--text-dark); margin-bottom: 5px; font-size: 22px; }
                     <i class='bx bx-archive'></i>
                 </div>
                 <h3>Use From Library</h3>
-                <p>Use already made quizzes from the website's library</p>
+                <p>Use already made classes from the website's library</p>
             </div>
 
             <div class="card">
-                <div class="icon-box outline">
-                    <i class='bx bx-file-blank'></i>
+                <div class="icon-box">
+                    <i class='bx bx-file'></i>
                 </div>
-                <h3>Blank canvas</h3>
-                <p>Create from scratch</p>
+                <h3>Auto Fill</h3>
+                <p>Auto filled general section of class </p>
             </div>
         </div>
 
@@ -311,16 +263,16 @@ h2 { color: var(--text-dark); margin-bottom: 5px; font-size: 22px; }
             <div class="mini-card">
                 <div class="mini-icon"><i class='bx bx-slideshow'></i></div>
                 <div>
-                    <h4>Reuse Quiz</h4>
-                    <p>Use old quiz to start new</p>
+                    <h4>Reuse Class</h4>
+                    <p>Use old created class to start new</p>
                 </div>
             </div>
 
             <div class="mini-card">
                 <div class="mini-icon"><i class='bx bx-layout'></i></div>
                 <div>
-                    <h4>Teachers Quizzes</h4>
-                    <p>Pre-made quizzes from other teachers</p>
+                    <h4>Teachers Classes</h4>
+                    <p>Pre-made classes from other teachers</p>
                 </div>
             </div>
         </div>
@@ -338,7 +290,6 @@ function closePopup() {
     document.body.classList.remove('popup-open');
 }
 
-// Close popup when clicking outside the box
 window.onclick = function(e) {
     const popup = document.getElementById('createPopup');
     if (e.target === popup) { closePopup(); }
