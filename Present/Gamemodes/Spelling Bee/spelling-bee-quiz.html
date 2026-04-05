@@ -1,194 +1,163 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quiz Carnival - Spelling Bee</title>
-<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Carnival - Spelling Bee</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
-<style>
-:root {
-    --bg-color: #ffffff;
-    --text-main: #333333;
-    --text-light: #888888;
-    --border-color: #ccc;
-    --current-color: #ffd166;
-}
+    <style>
+        :root {
+            --bg-color: #f0f2f5;
+            --text-main: #333333;
+            --text-light: #888888;
+            --border-color: #ccc;
+        }
 
-/* BODY */
-body {
-    margin: 0;
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    background-color: var(--bg-color);
-    color: var(--text-main);
-}
+        /* BODY */
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-bottom: 40px;
+        }
 
-/* NAVBAR */
-.navbar {
-    background-color: #111827;
-    height: 60px;
-    display: flex;
-    align-items: center;
-    padding: 0 20px;
-}
+        /* NAVBAR */
+        .navbar {
+            background-color: #111827;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            width: 100%;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
 
-.logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 1.2rem;
-    color: white;
-}
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+            color: white;
+        }
 
-.logo img {
-    height: 35px;
-}
+        .logo img { height: 35px; }
 
-/* TIMER WRAPPER */
-.timer-wrapper {
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 20px;
-}
+        /* TIMER STYLES */
+        .timer-wrapper {
+            width: 100%;
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+            padding-right: 20px;
+            box-sizing: border-box;
+        }
 
-/* TIMER STYLES */
-.timer-container {
-    background-color: #ffffff;
-    padding: 10px 15px;
-    border-radius: 10px;
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-    border: 1px solid #ddd;
-}
+        .timer-container {
+            background-color: #ffffff;
+            padding: 10px 15px;
+            border-radius: 10px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            border: 1px solid #ddd;
+        }
 
-.time-box {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-width: 50px;
-}
+        .time-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 50px;
+        }
 
-.number {
-    color: #222;
-    font-size: 1.5rem;
-    font-weight: 600;
-    line-height: 1;
-    margin-bottom: 3px;
-}
+        .number { color: #222; font-size: 1.5rem; font-weight: 600; line-height: 1; margin-bottom: 3px; }
+        .label { color: #555; font-size: 0.7rem; font-weight: 400; }
+        .separator { color: #ccc; font-size: 1rem; padding-bottom: 12px; font-weight: bold; }
 
-.label {
-    color: #555;
-    font-size: 0.7rem;
-    font-weight: 400;
-}
+        /* QUIZ CARD */
+        .test-box {
+            padding: 30px;
+            width: 700px;
+            min-height: 550px;
+            margin: 10px auto;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            background-color: white;
+            box-sizing: border-box;
+        }
 
-.separator {
-    color: #ccc;
-    font-size: 1rem;
-    padding-bottom: 12px;
-    font-weight: bold;
-}
+        .box-header {
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
 
-/* QUIZ CARD */
-.test-box {
-    padding: 30px;
-    max-width: 500px;
-    margin: 10px auto 30px auto;
-    border: 2px solid var(--border-color);
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    background-color: #fdfdfd;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
+        /* ITEM ROW */
+        .row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
 
-/* HEADER INSIDE QUIZ BOX */
-.test-box .box-header {
-    text-align: center;
-    font-size: 1.8rem;
-    font-weight: bold;
-    color: #111827;
-    margin-bottom: 15px;
-}
+        .item-number { font-weight: bold; width: 30px; color: #666; }
 
-/* CONTAINER FOR ALL NUMBERED ITEMS */
-.items-container {
-    padding: 20px;
-}
+        .input-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
 
-/* EACH ITEM ROW */
-.row {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 8px;
-}
+        .input-container input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 16px;
+            outline: none;
+        }
 
-/* ITEM NUMBER */
-.item-number {
-    font-weight: bold;
-    width: 25px;
-    text-align: right;
-}
+        .input-container i {
+            position: absolute;
+            right: 10px;
+            cursor: pointer;
+            color: #2196f3;
+            font-size: 20px;
+        }
 
-/* INPUT CONTAINER */
-.input-container {
-    position: relative;
-    display: flex;
-    align-items: center;
-    flex: 1;
-}
+        /* NAVIGATION CONTROLS */
+        .nav-controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
 
-.input-container input {
-    flex: 1;
-    padding: 8px 10px;
-    padding-right: 30px;
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-    font-size: 16px;
-    outline: none;
-}
+        button {
+            padding: 10px 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            background-color: #2196f3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: background 0.2s;
+        }
 
-.input-container i {
-    position: absolute;
-    right: 8px;
-    cursor: pointer;
-    color: var(--text-light);
-    font-size: 18px;
-}
-
-/* NAVIGATION BUTTONS */
-.nav-buttons {
-    margin: 10px auto 30px auto;
-    display: flex;
-    justify-content: space-between;
-    max-width: 500px;
-}
-
-button {
-    padding: 10px 18px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: background 0.2s;
-}
-
-.btn-primary { background-color: #007bff; color: white; }
-.btn-primary:hover { background-color: #0056b3; }
-.btn-secondary { background-color: #adb5bd; color: #333; }
-.btn-secondary:hover { background-color: #8e9499; }
-
-button:disabled {
-    background: #999;
-    cursor: not-allowed;
-    color: #eee;
-}
-</style>
+        button:disabled { background-color: #ccc; cursor: not-allowed; }
+        button:hover:not(:disabled) { background-color: #1976d2; }
+        #page-info { font-weight: bold; color: #666; }
+    </style>
 </head>
 
 <body>
@@ -200,7 +169,6 @@ button:disabled {
     </div>
 </header>
 
-<!-- TIMER -->
 <div class="timer-wrapper">
   <div class="timer-container">
     <div class="time-box">
@@ -225,14 +193,15 @@ button:disabled {
     <div class="items-container" id="itemsContainer"></div>
 </div>
 
-<div class="nav-buttons">
-    <button onclick="prevPage()" id="prevBtn" class="btn btn-secondary">Previous</button>
-    <button onclick="nextPage()" id="nextBtn" class="btn btn-primary">Next</button>
+<div class="nav-controls">
+    <button id="prevBtn" onclick="prevPage()" disabled>Previous</button>
+    <span id="page-info">Page 1 of 3</span>
+    <button id="nextBtn" onclick="nextPage()">Next</button>
 </div>
 
 <script>
 // TIMER SCRIPT
-const countdownDate = new Date().getTime() + (20 * 60 * 1000); // 20 minutes
+const countdownDate = new Date().getTime() + (20 * 60 * 1000); 
 
 function updateCountdown() {
     const now = new Date().getTime();
@@ -240,7 +209,6 @@ function updateCountdown() {
 
     if (timeLeft < 0) {
         clearInterval(interval);
-        // Timer stops silently at 0
         document.getElementById("hours").innerText = "00";
         document.getElementById("minutes").innerText = "00";
         document.getElementById("seconds").innerText = "00";
@@ -283,17 +251,14 @@ function renderPage() {
         `;
     }
 
-    const prevBtn = document.getElementById("prevBtn");
-    prevBtn.style.display = currentPage === 1 ? "none" : "inline-block";
-
+    document.getElementById("page-info").textContent = `Page ${currentPage} of ${totalPages}`;
+    document.getElementById("prevBtn").disabled = (currentPage === 1);
+    
     const nextBtn = document.getElementById("nextBtn");
     if (currentPage === totalPages) {
         nextBtn.textContent = "Finish";
-        // Do nothing on last page
-        nextBtn.onclick = () => {};
     } else {
         nextBtn.textContent = "Next";
-        nextBtn.onclick = nextPage;
     }
 }
 
@@ -301,6 +266,8 @@ function nextPage() {
     if (currentPage < totalPages) {
         currentPage++;
         renderPage();
+    } else {
+        alert("Quiz Finished!");
     }
 }
 
@@ -311,7 +278,6 @@ function prevPage() {
     }
 }
 
-// Initialize
 renderPage();
 </script>
 

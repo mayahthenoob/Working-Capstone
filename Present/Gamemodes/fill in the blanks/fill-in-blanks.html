@@ -3,16 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fill In the Blanks</title>
+    <title>Quiz Carnival - Fill In the Blanks</title>
     <style>
+        /* General Styles */
         body { 
+            margin: 0; 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             display: flex; 
             flex-direction: column; 
             align-items: center; 
             background-color: #f0f2f5; 
-            padding: 20px; 
+            padding-bottom: 40px; 
         }
+
+        /* --- Header Styles --- */
+        .navbar {
+            background-color: #111827;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            width: 100%; 
+            box-sizing: border-box;
+            margin-bottom: 10px; /* Reduced to make room for timer */
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        .logo img {
+            height: 35px;
+        }
+
+        /* --- TIMER STYLES (Added from Website 1) --- */
+        .timer-wrapper {
+            width: 100%;
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+            padding-right: 20px;
+            box-sizing: border-box;
+        }
+
+        .timer-container {
+            background-color: #ffffff;
+            padding: 10px 15px;
+            border-radius: 10px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            border: 1px solid #ddd;
+        }
+
+        .time-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 50px;
+        }
+
+        .number {
+            color: #222;
+            font-size: 1.5rem;
+            font-weight: 600;
+            line-height: 1;
+            margin-bottom: 3px;
+        }
+
+        .label {
+            color: #555;
+            font-size: 0.7rem;
+            font-weight: 400;
+        }
+
+        .separator {
+            color: #ccc;
+            font-size: 1rem;
+            padding-bottom: 12px;
+            font-weight: bold;
+        }
+
+        /* --- Game Styles --- */
         .container { 
             background: white; 
             padding: 30px; 
@@ -95,147 +172,200 @@
 </head>
 <body>
 
-<div class="container">
-    <h1>Fill In The Blanks</h1>
-    <div id="game-content">
+    <header class="navbar">
+        <div class="logo">
+            <img src="logo.png" alt="Quiz Carnival Logo"> 
+            <span>Quiz Carnival</span>
         </div>
-    
-    <div class="word-bank" id="word-bank"></div>
-</div>
+    </header>
 
-<div class="nav-controls">
-    <button id="prevBtn" onclick="changePage(-1)" disabled>Previous</button>
-    <span id="page-info">Page 1 of 3</span>
-    <button id="nextBtn" onclick="changePage(1)">Next</button>
-</div>
+    <div class="timer-wrapper">
+        <div class="timer-container">
+          <div class="time-box">
+            <span id="hours" class="number">00</span>
+            <span class="label">hours</span>
+          </div>
+          <div class="separator">:</div>
+          <div class="time-box">
+            <span id="minutes" class="number">00</span>
+            <span class="label">minutes</span>
+          </div>
+          <div class="separator">:</div>
+          <div class="time-box">
+            <span id="seconds" class="number">00</span>
+            <span class="label">seconds</span>
+          </div>
+        </div>
+      </div>
 
-<script>
-    const allSentences = [
-        { s: "Frank decided to", a: "draw", e: "a picture." },
-        { s: "Kelley refused to", a: "eat", e: "a cookie." },
-        { s: "George could not get to", a: "sleep", e: "last night." },
-        { s: "Jim asked Helen to", a: "write", e: "him a letter." },
-        { s: "The teacher asked me to", a: "raise", e: "my hand." },
-        { s: "My mother asked me to", a: "run", e: "to the store." },
-        { s: "We could not get the kids to", a: "sit", e: "still." },
-        { s: "John said he wanted to", a: "speak", e: "to me." },
-        { s: "It is time for us to", a: "leave", e: "the party." },
-        { s: "The cat likes to", a: "climb", e: "the tall tree." },
-        { s: "Please help me", a: "carry", e: "these heavy boxes." },
-        { s: "I forgot to", a: "lock", e: "the front door." },
-        { s: "Can you help me", a: "find", e: "my lost keys?" },
-        { s: "The chef needs to", a: "chop", e: "the onions." },
-        { s: "He wanted to", a: "learn", e: "how to play guitar." },
-        { s: "She tried to", a: "catch", e: "the falling ball." },
-        { s: "They like to", a: "watch", e: "movies on Friday." },
-        { s: "Don't forget to", a: "wash", e: "your dirty hands." },
-        { s: "We need to", a: "buy", e: "some fresh milk." },
-        { s: "The bird began to", a: "sing", e: "at sunrise." },
-        { s: "I want to", a: "paint", e: " my room blue." },
-        { s: "Did you", a: "finish", e: "your homework yet?" },
-        { s: "Wait for me to", a: "tie", e: "my shoelaces." },
-        { s: "The baby started to", a: "smile", e: "at her dad." },
-        { s: "You should", a: "drink", e: "more water today." },
-        { s: "I like to", a: "read", e: "books before bed." },
-        { s: "The sun began to", a: "shine", e: "through clouds." },
-        { s: "He needs to", a: "fix", e: "his broken bike." },
-        { s: "Please", a: "open", e: "the window for air." },
-        { s: "We love to", a: "dance", e: "to loud music." }
-    ];
+    <div class="container">
+        <h1>Fill In The Blanks</h1>
+        <div id="game-content"></div>
+        
+        <div class="word-bank" id="word-bank"></div>
+    </div>
 
-    let currentPage = 0;
-    const itemsPerPage = 10;
-    const wordBank = document.getElementById('word-bank');
-    const content = document.getElementById('game-content');
+    <div class="nav-controls">
+        <button id="prevBtn" onclick="changePage(-1)" disabled>Previous</button>
+        <span id="page-info">Page 1 of 3</span>
+        <button id="nextBtn" onclick="changePage(1)">Next</button>
+    </div>
 
-    // Initialize Game
-    function init() {
-        renderSentences();
-        renderWordBank();
-        updatePage();
-    }
+    <script>
+        // --- TIMER SCRIPT (Added from Website 1) ---
+        const countdownDate = new Date().getTime() + (20 * 60 * 1000); // 20 minutes
 
-    function renderSentences() {
-        content.innerHTML = '';
-        for (let i = 0; i < allSentences.length; i += itemsPerPage) {
-            const pageDiv = document.createElement('div');
-            pageDiv.className = `sentence-page page-${i / itemsPerPage}`;
-            
-            const chunk = allSentences.slice(i, i + itemsPerPage);
-            chunk.forEach((item, index) => {
-                const globalIndex = i + index + 1;
-                const sDiv = document.createElement('div');
-                sDiv.className = 'sentence';
-                sDiv.innerHTML = `${globalIndex}. ${item.s} <div class="drop-zone" data-id="${globalIndex-1}"></div> ${item.e}`;
-                pageDiv.appendChild(sDiv);
-            });
-            content.appendChild(pageDiv);
+        function updateCountdown() {
+            const now = new Date().getTime();
+            let timeLeft = countdownDate - now;
+
+            if (timeLeft < 0) {
+                clearInterval(timerInterval);
+                document.getElementById("hours").innerText = "00";
+                document.getElementById("minutes").innerText = "00";
+                document.getElementById("seconds").innerText = "00";
+                return;
+            }
+
+            const h = Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
+            const m = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+            document.getElementById("hours").innerText = h.toString().padStart(2,'0');
+            document.getElementById("minutes").innerText = m.toString().padStart(2,'0');
+            document.getElementById("seconds").innerText = s.toString().padStart(2,'0');
         }
 
-        document.querySelectorAll('.drop-zone').forEach(zone => {
-            zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('hovered'); });
-            zone.addEventListener('dragleave', () => zone.classList.remove('hovered'));
-            zone.addEventListener('drop', handleDrop);
-        });
-    }
+        const timerInterval = setInterval(updateCountdown, 1000);
+        updateCountdown();
 
-    function renderWordBank() {
-        const words = allSentences.map(x => x.a).sort(() => Math.random() - 0.5);
-        wordBank.innerHTML = '';
-        words.forEach(wordText => {
-            const el = document.createElement('div');
-            el.className = 'word';
-            el.draggable = true;
-            el.textContent = wordText;
-            el.id = 'word-' + Math.random().toString(36).substr(2, 9);
-            el.addEventListener('dragstart', e => e.dataTransfer.setData('text', e.target.id));
-            wordBank.appendChild(el);
-        });
-        
-        wordBank.addEventListener('dragover', e => e.preventDefault());
-        wordBank.addEventListener('drop', e => {
+
+        // --- GAME SCRIPT ---
+        const allSentences = [
+            { s: "Frank decided to", a: "draw", e: "a picture." },
+            { s: "Kelley refused to", a: "eat", e: "a cookie." },
+            { s: "George could not get to", a: "sleep", e: "last night." },
+            { s: "Jim asked Helen to", a: "write", e: "him a letter." },
+            { s: "The teacher asked me to", a: "raise", e: "my hand." },
+            { s: "My mother asked me to", a: "run", e: "to the store." },
+            { s: "We could not get the kids to", a: "sit", e: "still." },
+            { s: "John said he wanted to", a: "speak", e: "to me." },
+            { s: "It is time for us to", a: "leave", e: "the party." },
+            { s: "The cat likes to", a: "climb", e: "the tall tree." },
+            { s: "Please help me", a: "carry", e: "these heavy boxes." },
+            { s: "I forgot to", a: "lock", e: "the front door." },
+            { s: "Can you help me", a: "find", e: "my lost keys?" },
+            { s: "The chef needs to", a: "chop", e: "the onions." },
+            { s: "He wanted to", a: "learn", e: "how to play guitar." },
+            { s: "She tried to", a: "catch", e: "the falling ball." },
+            { s: "They like to", a: "watch", e: "movies on Friday." },
+            { s: "Don't forget to", a: "wash", e: "your dirty hands." },
+            { s: "We need to", a: "buy", e: "some fresh milk." },
+            { s: "The bird began to", a: "sing", e: "at sunrise." },
+            { s: "I want to", a: "paint", e: " my room blue." },
+            { s: "Did you", a: "finish", e: "your homework yet?" },
+            { s: "Wait for me to", a: "tie", e: "my shoelaces." },
+            { s: "The baby started to", a: "smile", e: "at her dad." },
+            { s: "You should", a: "drink", e: "more water today." },
+            { s: "I like to", a: "read", e: "books before bed." },
+            { s: "The sun began to", a: "shine", e: "through clouds." },
+            { s: "He needs to", a: "fix", e: "his broken bike." },
+            { s: "Please", a: "open", e: "the window for air." },
+            { s: "We love to", a: "dance", e: "to loud music." }
+        ];
+
+        let currentPage = 0;
+        const itemsPerPage = 10;
+        const wordBank = document.getElementById('word-bank');
+        const content = document.getElementById('game-content');
+
+        function init() {
+            renderSentences();
+            renderWordBank();
+            updatePage();
+        }
+
+        function renderSentences() {
+            content.innerHTML = '';
+            for (let i = 0; i < allSentences.length; i += itemsPerPage) {
+                const pageDiv = document.createElement('div');
+                pageDiv.className = `sentence-page page-${i / itemsPerPage}`;
+                
+                const chunk = allSentences.slice(i, i + itemsPerPage);
+                chunk.forEach((item, index) => {
+                    const globalIndex = i + index + 1;
+                    const sDiv = document.createElement('div');
+                    sDiv.className = 'sentence';
+                    sDiv.innerHTML = `${globalIndex}. ${item.s} <div class="drop-zone" data-id="${globalIndex-1}"></div> ${item.e}`;
+                    pageDiv.appendChild(sDiv);
+                });
+                content.appendChild(pageDiv);
+            }
+
+            document.querySelectorAll('.drop-zone').forEach(zone => {
+                zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('hovered'); });
+                zone.addEventListener('dragleave', () => zone.classList.remove('hovered'));
+                zone.addEventListener('drop', handleDrop);
+            });
+        }
+
+        function renderWordBank() {
+            const words = allSentences.map(x => x.a).sort(() => Math.random() - 0.5);
+            wordBank.innerHTML = '';
+            words.forEach(wordText => {
+                const el = document.createElement('div');
+                el.className = 'word';
+                el.draggable = true;
+                el.textContent = wordText;
+                el.id = 'word-' + Math.random().toString(36).substr(2, 9);
+                el.addEventListener('dragstart', e => e.dataTransfer.setData('text', e.target.id));
+                wordBank.appendChild(el);
+            });
+            
+            wordBank.addEventListener('dragover', e => e.preventDefault());
+            wordBank.addEventListener('drop', e => {
+                e.preventDefault();
+                const id = e.dataTransfer.getData('text');
+                const el = document.getElementById(id);
+                if (el) {
+                    el.classList.remove('in-zone');
+                    wordBank.appendChild(el);
+                }
+            });
+        }
+
+        function handleDrop(e) {
             e.preventDefault();
+            this.classList.remove('hovered');
             const id = e.dataTransfer.getData('text');
             const el = document.getElementById(id);
-            if (el) {
-                el.classList.remove('in-zone');
-                wordBank.appendChild(el);
+            
+            if (this.children.length > 0) {
+                const existing = this.children[0];
+                existing.classList.remove('in-zone');
+                wordBank.appendChild(existing);
             }
-        });
-    }
-
-    function handleDrop(e) {
-        e.preventDefault();
-        this.classList.remove('hovered');
-        const id = e.dataTransfer.getData('text');
-        const el = document.getElementById(id);
-        
-        if (this.children.length > 0) {
-            const existing = this.children[0];
-            existing.classList.remove('in-zone');
-            wordBank.appendChild(existing);
+            
+            el.classList.add('in-zone');
+            this.appendChild(el);
         }
-        
-        el.classList.add('in-zone');
-        this.appendChild(el);
-    }
 
-    function updatePage() {
-        document.querySelectorAll('.sentence-page').forEach((p, i) => {
-            p.classList.toggle('active', i === currentPage);
-        });
-        document.getElementById('prevBtn').disabled = currentPage === 0;
-        document.getElementById('nextBtn').disabled = currentPage === 2;
-        document.getElementById('page-info').textContent = `Page ${currentPage + 1} of 3`;
-    }
+        function updatePage() {
+            document.querySelectorAll('.sentence-page').forEach((p, i) => {
+                p.classList.toggle('active', i === currentPage);
+            });
+            document.getElementById('prevBtn').disabled = currentPage === 0;
+            document.getElementById('nextBtn').disabled = currentPage === 2;
+            document.getElementById('page-info').textContent = `Page ${currentPage + 1} of 3`;
+        }
 
-    function changePage(step) {
-        currentPage += step;
-        updatePage();
-    }
+        function changePage(step) {
+            currentPage += step;
+            updatePage();
+        }
 
-    init();
-</script>
+        init();
+    </script>
 
 </body>
 </html>

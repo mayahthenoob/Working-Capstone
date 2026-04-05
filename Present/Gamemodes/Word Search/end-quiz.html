@@ -43,13 +43,11 @@
             padding: 0 20px;
         }
 
-        /* Updated h1 styling to match the first page */
         h1 { 
-            font-size: 2rem;  /* matches first page */
-            margin-bottom: 40px; /* matches first page spacing */
+            font-size: 2rem;
+            margin-bottom: 40px;
         }
 
-        /* Quiz Info Sections */
         .quiz-dates, .quiz-details {
             font-size: 0.95rem;
         }
@@ -103,7 +101,6 @@
             background-color: #8e9499; 
         }
 
-        /* Quiz Results Styling */
         .final-grade {
             margin-top: 30px;
             font-size: 1.2rem;
@@ -175,9 +172,8 @@
     <main class="container">
         <h1>Quiz 1</h1>
 
-        <!-- Section 1: Open/Close Dates -->
         <section class="quiz-dates">
-            <p><strong>Opened:</strong> Monday, 30 March 2026, 11:06 AM</p>
+            <p><strong>Opens:</strong> Monday, 30 March 2026, 11:06 AM</p>
             <p><strong>Closes:</strong> Monday, 6 April 2026, 11:06 AM</p>
         </section>
 
@@ -186,7 +182,10 @@
             <p>Time limit: 20 mins</p>
             <p>Grading method: Highest grade</p>
 
-            <!-- Quiz Results Section -->
+            <div style="margin-top: 15px;">
+                <button class="btn btn-primary" onclick="reattemptQuiz()">Re-attempt Quiz</button>
+            </div>
+
             <div class="final-grade">
                 Your final grade for this quiz is 12.00/15.00.
             </div>
@@ -225,7 +224,6 @@
                     Reviews are not permitted
                 </div>
             </div>
-            <!-- End Quiz Results Section -->
 
         </section>
 
@@ -239,6 +237,11 @@
         function goBack() {
             alert("Redirecting to the course main page...");
             // window.location.href = 'course_home.html';
+        }
+
+        function reattemptQuiz() {
+            alert("Starting a new attempt...");
+            // window.location.href = 'quiz_page.html';
         }
 
         window.onload = () => {
