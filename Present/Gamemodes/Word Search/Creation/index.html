@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Create Word Puzzle Form</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { margin: 0; padding: 0; min-height: 100vh; display: flex; justify-content: center; align-items: center; background: linear-gradient(135deg, #f04e84 0%, #7c3a91 100%); padding: 20px; }
+    .form-container { background-color: white; padding: 40px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); width: 100%; max-width: 900px; }
+    h2 { margin-top: 0; color: #666; font-weight: 500; margin-bottom: 30px; text-align: center; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .form-group { display: flex; flex-direction: column; }
+    .form-group.full-width { grid-column: span 2; }
+    label { font-size: 14px; color: #777; margin-bottom: 8px; }
+    input, textarea { padding: 12px; border: 1px solid #f2f2f2; background-color: #f9f9f9; border-radius: 4px; font-size: 14px; color: #333; outline: none; width: 100%; }
+    textarea { resize: vertical; min-height: 100px; }
+    input:focus, textarea:focus { border-color: #4a90e2; }
+    .radio-group { display: flex; align-items: center; gap: 30px; margin-top: 12px; }
+    .radio-option { display: flex; align-items: center; gap: 8px; font-size: 14px; color: #333; }
+    .radio-option label { margin: 0; cursor: pointer; }
+    .button-row { display: flex; justify-content: space-between; margin-top: 30px; }
+    .action-btn { border: none; padding: 12px 30px; border-radius: 4px; font-size: 15px; cursor: pointer; transition: 0.3s; }
+    .publish-btn { background-color: #28a745; color: white; }
+    #wordsContainer { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+    .grid-design { display: grid; grid-template-columns: repeat(10, 40px); grid-template-rows: repeat(10, 40px); gap: 2px; border: 1px solid #ccc; margin-top: 10px; }
+    .grid-design .cell { display: flex; align-items: center; justify-content: center; font-weight: bold; background-color: #f9f9f9; border: 1px solid #ddd; cursor: text; font-size: 18px; line-height: 1; }
+    @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } .form-group.full-width { grid-column: span 1; } #wordsContainer { grid-template-columns: 1fr; } .grid-design { grid-template-columns: repeat(10, 30px); grid-template-rows: repeat(10, 30px); } }
+</style>
+</head>
+<body>
+
+<div class="form-container">
+    <h2>Word Search Creator</h2>
+    <form id="quizForm">
+        <div class="form-grid">
+            <div class="form-group full-width">
+                <label for="title">Title</label>
+                <input type="text" id="title" name="title" required placeholder="e.g., Animal Kingdom">
+            </div>
+            <div class="form-group full-width">
+                <label for="description">Description</label>
+                <textarea id="description" name="description"></textarea>
+                <div class="radio-group">
+                    <div class="radio-option"><input type="radio" id="default" name="mode" value="default"><label for="default">Default Text</label></div>
+                    <div class="radio-option"><input type="radio" id="custom" name="mode" value="custom" checked><label for="custom">Custom</label></div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="category">Category</label>
+                <input type="text" id="category" name="category" placeholder="e.g., Vocabulary">
+            </div>
+            <div class="form-group">
+                <label for="amount">Number of Words</label>
+                <input type="number" id="amount" name="amount" min="1" max="12" required>
+            </div>
+            <div class="form-group full-width">
+                <label>Words to Find (Auto-Uppercase)</label>
+                <div id="wordsContainer"></div>
+            </div>
+            <div class="form-group full-width">
+                <label>Design Grid (10x10)</label>
+                <div class="radio-group">
+                    <div class="radio-option"><input type="radio" id="modeCustom" name="designMode" value="custom" checked><label for="modeCustom">Manual Entry</label></div>
+                    <div class="radio-option"><input type="radio" id="modeDefault" name="designMode" value="default"><label for="modeDefault">Auto-fill Random</label></div>
+                </div>
+                <div id="designGrid" class="grid-design"></div>
+            </div>
+            <div class="form-group">
+                <label for="timeLimit">Time Limit (Minutes)</label>
+                <input type="number" id="timeLimit" min="1" value="20">
+            </div>
+            <div class="form-group">
+                <label>Attempts</label>
+                <select id="attempts" style="padding:12px; background:#f9f9f9; border:1px solid #f2f2f2;">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="Unlimited">Unlimited</option>
+                </select>
+            </div>
+        </div>
+        <div class="button-row">
+            <button type="button" class="action-btn publish-btn" id="publishBtn">Publish Quiz</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    const amountInput = document.getElementById("amount");
+    const wordsContainer = document.getElementById("wordsContainer");
+    const designGrid = document.getElementById("designGrid");
+    const gridSize = 10;
+
+    // Word inputs generation
+    amountInput.addEventListener("input", function () {
+        let amount = parseInt(this.value);
+        if (amount > 12) amount = 12;
+        wordsContainer.innerHTML = "";
+        for (let i = 1; i <= amount; i++) {
+            const input = document.createElement("input");
+            input.type = "text";
+            input.placeholder = "Word " + i;
+            input.className = "word-input";
+            input.addEventListener("input", () => input.value = input.value.toUpperCase().replace(/[^A-Z]/g, ''));
+            wordsContainer.appendChild(input);
+        }
+    });
+
+    // Grid generation
+    for (let r = 0; r < gridSize; r++) {
+        for (let c = 0; c < gridSize; c++) {
+            const cell = document.createElement("div");
+            cell.className = "cell";
+            cell.dataset.row = r;
+            cell.dataset.col = c;
+            cell.contentEditable = true;
+            cell.addEventListener("input", (e) => {
+                cell.textContent = cell.textContent.toUpperCase().replace(/[^A-Z]/g, '').charAt(0);
+                if (cell.textContent && cell.nextSibling) cell.nextSibling.focus();
+            });
+            designGrid.appendChild(cell);
+        }
+    }
+
+    // Auto-fill Logic
+    document.getElementById("modeDefault").addEventListener("change", () => {
+        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        document.querySelectorAll(".cell").forEach(cell => {
+            if (!cell.textContent.trim()) cell.textContent = letters.charAt(Math.floor(Math.random() * letters.length));
+        });
+    });
+
+    // Publish Logic
+    document.getElementById("publishBtn").addEventListener("click", () => {
+        const gridRows = [];
+        for (let r = 0; r < gridSize; r++) {
+            let row = "";
+            for (let c = 0; c < gridSize; c++) {
+                const cell = designGrid.querySelector(`.cell[data-row='${r}'][data-col='${c}']`);
+                row += (cell.textContent.trim() || "X");
+            }
+            gridRows.push(row);
+        }
+
+        const words = Array.from(document.querySelectorAll(".word-input")).map(i => i.value).filter(v => v);
+        
+        const data = {
+            title: document.getElementById("title").value || "Word Search",
+            desc: document.getElementById("description").value || "Find all the hidden words.",
+            cat: document.getElementById("category").value || "General",
+            limit: document.getElementById("timeLimit").value || "20",
+            attempts: document.getElementById("attempts").value,
+            words: words.join(","),
+            grid: gridRows.join(",")
+        };
+
+        window.location.href = "landing.html?" + new URLSearchParams(data).toString();
+    });
+</script>
+</body>
+</html>
