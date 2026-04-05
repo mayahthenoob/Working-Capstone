@@ -436,6 +436,74 @@
         #participants-tab .card.connected-card {
             padding: 20px;
         }
+
+        /* ===== GRADES TAB STYLES ===== */
+        #grades-tab {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #f8f9fa;
+            padding-bottom: 15px;
+        }
+
+        .report-header h1 { margin: 0; color: #212529; font-size: 1.5rem; }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-val { display: block; font-size: 1.25rem; font-weight: 700; color: #3498db; }
+        .stat-label { font-size: 0.75rem; color: #7f8c8d; text-transform: uppercase; }
+
+        .grade-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .grade-table th {
+            text-align: left;
+            padding: 12px;
+            background: #f8f9fa;
+            color: #4b5563;
+            font-size: 0.85rem;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .grade-table td {
+            padding: 15px 12px;
+            border-bottom: 1px solid #e9ecef;
+            font-size: 0.9rem;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-done { background: #dcfce7; color: #166534; }
+        .status-wait { background: #fef9c3; color: #854d0e; }
+
+        .grade-pill {
+            font-weight: 700;
+            color: #212529;
+        }
     </style>
 </head>
 <body>
@@ -618,17 +686,78 @@
     </div>
 
     <div id="grades-tab" class="tab-content">
-        <section class="card connected-card">
-            <div class="card-header">
-                <h2>Grade Overview</h2>
-            </div>
-            <div class="card-body">
-                <div style="padding: 40px; text-align: center; color: #888;">
-                    <i class='bx bx-bar-chart-alt-2' style="font-size: 3rem; display: block; margin-bottom: 10px;"></i>
-                    <p>No grade information is currently available for this course.</p>
+        <div class="card connected-card">
+            <div class="card-body" style="padding: 30px;">
+                <div class="report-header">
+                    <div>
+                        <h1>Grade Report</h1>
+                        <span style="color: #666; font-size: 0.9rem;">Mathematics | User: Alan Walker</span>
+                    </div>
+                    <div style="text-align: right;">
+                        <span class="stat-label">Calculated Grade</span>
+                        <div style="font-size: 2rem; font-weight: 800; color: #27ae60;">95%</div>
+                    </div>
                 </div>
+
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <span class="stat-val">2/5</span>
+                        <span class="stat-label">Quizzes Done</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-val">91.50</span>
+                        <span class="stat-label">Class Total</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-val">A</span>
+                        <span class="stat-label">Letter Grade</span>
+                    </div>
+                </div>
+
+                <table class="grade-table">
+                    <thead>
+                        <tr>
+                            <th>Grade Item</th>
+                            <th>Status</th>
+                            <th>Weight</th>
+                            <th>Grade</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Quiz 1:</strong> Algebra Basics</td>
+                            <td><span class="status-badge status-done">Completed</span></td>
+                            <td>20%</td>
+                            <td class="grade-pill">95 / 100</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Quiz 2:</strong> Trigonometry Intro</td>
+                            <td><span class="status-badge status-wait">Pending</span></td>
+                            <td>20%</td>
+                            <td class="grade-pill">-</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Quiz 3:</strong> Geometry Basics</td>
+                            <td><span class="status-badge status-done">Completed</span></td>
+                            <td>20%</td>
+                            <td class="grade-pill">88 / 100</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Quiz 4:</strong> Calculus Intro</td>
+                            <td><span class="status-badge status-wait">Pending</span></td>
+                            <td>20%</td>
+                            <td class="grade-pill">-</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Quiz 5:</strong> Statistics Fundamentals</td>
+                            <td><span class="status-badge status-wait">Pending</span></td>
+                            <td>20%</td>
+                            <td class="grade-pill">-</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-        </section>
+        </div>
     </div>
 
 </div>
