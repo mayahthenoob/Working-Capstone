@@ -232,11 +232,11 @@ input:focus, textarea:focus, select:focus {
 </div>
 
 <div class="form-group full-width">
-<label>Re-attempt</label>
+<label>Attempts Allowed</label>
 <div class="radio-group">
-<label class="radio-option"><input type="radio" name="reattempt" value="none"> None</label>
-<label class="radio-option"><input type="radio" name="reattempt" value="two"> Two</label>
-<label class="radio-option"><input type="radio" name="reattempt" value="three"> Three</label>
+    <label class="radio-option"><input type="radio" name="attemptsAllowed" value="1"> 1</label>
+    <label class="radio-option"><input type="radio" name="attemptsAllowed" value="2"> 2</label>
+    <label class="radio-option"><input type="radio" name="attemptsAllowed" value="3"> 3</label>
 </div>
 </div>
 
@@ -275,7 +275,7 @@ const wordsContainer = document.getElementById("wordsContainer");
 
 amountInput.addEventListener("input", function () {
     let amount = parseInt(this.value);
-    if (amount > 30) { amount = 30; this.value = 30; }  // max now 30
+    if (amount > 30) { amount = 30; this.value = 30; }  
     if (amount < 1 || isNaN(amount)) { wordsContainer.innerHTML = ""; return; }
 
     wordsContainer.innerHTML = "";
@@ -352,7 +352,6 @@ timeLimitInput.addEventListener("input", function () {
 let voices = [];
 let defaultVoice = null;
 
-// Load voices
 function populateVoices() {
     voices = speechSynthesis.getVoices();
     if (!defaultVoice && voices.length > 0) defaultVoice = voices[0];
@@ -363,13 +362,11 @@ function populateVoices() {
         .join('');
 }
 
-// Chrome voice load quirk
 if (speechSynthesis.onvoiceschanged !== undefined) {
     speechSynthesis.onvoiceschanged = populateVoices;
 }
 populateVoices();
 
-// Show/hide voice selection and highlight selected radio
 const speakerRadios = document.querySelectorAll("input[name='speakerVoice']");
 const voiceContainer = document.getElementById('voiceContainer');
 const voiceSearch = document.getElementById('voiceSearch');
@@ -388,18 +385,14 @@ function updateSelectedVoiceDisplay() {
 
 speakerRadios.forEach(radio => {
     radio.addEventListener('change', () => {
-        // Highlight active radio
         speakerRadios.forEach(r => r.parentElement.classList.remove('active'));
         if (radio.checked) radio.parentElement.classList.add('active');
 
-        // Show/hide voice container
         voiceContainer.style.display = radio.value === 'select' ? 'block' : 'none';
-
         updateSelectedVoiceDisplay();
     });
 });
 
-// Search filter for voices
 voiceSearch.addEventListener('input', function() {
     const filter = this.value.toLowerCase();
     voiceSelect.innerHTML = voices
@@ -410,10 +403,8 @@ voiceSearch.addEventListener('input', function() {
     updateSelectedVoiceDisplay();
 });
 
-// Update selected voice display when dropdown changes
 voiceSelect.addEventListener('change', updateSelectedVoiceDisplay);
 
-// Function to get selected voice
 function getSelectedVoice() {
     const mode = document.querySelector("input[name='speakerVoice']:checked").value;
     if (mode === 'default') return defaultVoice;
@@ -462,7 +453,7 @@ document.querySelector("form").addEventListener("submit", function(e){
         timeLimit: document.getElementById("timeLimit").value,
         opens: document.getElementById("opens").value,
         closes: document.getElementById("closes").value,
-        reattempt: document.querySelector("input[name='reattempt']:checked").value,
+        attemptsAllowed: parseInt(document.querySelector("input[name='attemptsAllowed']:checked").value),
         speakerVoiceMode: document.querySelector("input[name='speakerVoice']:checked").value,
         speakerVoice: getSelectedVoice() ? getSelectedVoice().name : 'Default',
         words: []

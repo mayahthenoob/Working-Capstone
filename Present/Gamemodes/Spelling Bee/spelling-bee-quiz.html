@@ -48,7 +48,7 @@ body {
 .timer-wrapper {
     width: 100%;
     display: flex;
-    justify-content: flex-end; /* Align timer to right */
+    justify-content: flex-end;
     margin-bottom: 20px;
 }
 
@@ -240,7 +240,10 @@ function updateCountdown() {
 
     if (timeLeft < 0) {
         clearInterval(interval);
-        document.querySelector(".timer-container").innerHTML = "<h1 style='color:#222'>Time's Up!</h1>";
+        // Timer stops silently at 0
+        document.getElementById("hours").innerText = "00";
+        document.getElementById("minutes").innerText = "00";
+        document.getElementById("seconds").innerText = "00";
         return;
     }
 
@@ -286,7 +289,8 @@ function renderPage() {
     const nextBtn = document.getElementById("nextBtn");
     if (currentPage === totalPages) {
         nextBtn.textContent = "Finish";
-        nextBtn.onclick = () => alert("Quiz Finished!");
+        // Do nothing on last page
+        nextBtn.onclick = () => {};
     } else {
         nextBtn.textContent = "Next";
         nextBtn.onclick = nextPage;
