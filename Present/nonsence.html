@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz Carnival – Word Search</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-circle-progress/1.2.2/circle-progress.min.js"></script>
+<style>
+:root {
+  --brand: #f04e84;
+  --brand2: #7c3a91;
+  --navy: #111827;
+  --accent: #00d2ff;
+  --win: #5effa3;
+  --gold: #f1c40f;
+  --card-bg: #0b2559;
+  --border-glow: #3081d0;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:#f8f9fa;color:#333;min-height:100vh;}
+
+/* ── NAVBAR ── */
+.navbar{background:var(--navy);height:60px;display:flex;align-items:center;padding:0 24px;position:sticky;top:0;z-index:50;}
+.navbar .logo{display:flex;align-items:center;gap:10px;font-size:1.15rem;color:white;font-weight:700;}
+.navbar .logo-icon{width:34px;height:34px;background:linear-gradient(135deg,var(--brand),var(--brand2));border-radius:8px;display:flex;align-items:center;justify-content:center;color:white;font-weight:900;font-size:1rem;}
+
+/* ── PAGES ── */
+.page{display:none;min-height:calc(100vh - 60px);}
+.page.active{display:block;}
+
+/* ========== PAGE 1 – FORM ========== */
+#page-form{background:linear-gradient(135deg,#f04e84 0%,#7c3a91 100%);padding:30px 20px;}
+.form-card{background:white;padding:40px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.2);max-width:900px;margin:0 auto;}
+.form-card h2{text-align:center;color:#666;font-weight:500;margin-bottom:28px;font-size:1.4rem;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+.form-group{display:flex;flex-direction:column;gap:6px;}
+.form-group.full{grid-column:span 2;}
+label{font-size:13px;color:#777;font-weight:500;}
+input,textarea,select{padding:11px 12px;border:1px solid #eee;background:#f9f9f9;border-radius:6px;font-size:14px;color:#333;outline:none;width:100%;font-family:inherit;}
+input:focus,textarea:focus{border-color:var(--brand);}
+textarea{resize:vertical;min-height:80px;}
+.radio-row{display:flex;gap:24px;margin-top:8px;flex-wrap:wrap;}
+.radio-opt{display:flex;align-items:center;gap:6px;font-size:14px;cursor:pointer;}
+.radio-opt input{width:auto;}
+#wordsContainer{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.formatted-date,.total-time{font-size:13px;color:#555;margin-top:4px;}
+.grid-design{display:grid;grid-template-columns:repeat(10,38px);grid-template-rows:repeat(10,38px);gap:2px;margin-top:10px;}
+.grid-design .cell{display:flex;align-items:center;justify-content:center;font-weight:700;background:#f9f9f9;border:1px solid #ddd;cursor:text;font-size:16px;outline:none;}
+.grid-design .cell:focus{border-color:var(--brand);background:#fff;}
+.btn-row{display:flex;justify-content:space-between;margin-top:28px;gap:10px;}
+.action-btn{border:none;padding:12px 28px;border-radius:6px;font-size:15px;cursor:pointer;font-family:inherit;font-weight:600;transition:.2s;}
+.preview-btn{background:#adb5bd;color:white;}
+.preview-btn:hover{background:#8e9499;}
+.publish-btn{background:#28a745;color:white;}
+.publish-btn:hover{background:#1e7e34;}
+
+/* ========== PAGE 2 – START ========== */
+#page-start{padding:30px 20px;}
+.start-container{max-width:900px;margin:0 auto;}
+#start-title{font-size:2rem;margin-bottom:32px;}
+.quiz-meta p{margin:4px 0;font-size:.95rem;}
+.quiz-meta{margin-bottom:28px;}
+.meta-details{margin-top:28px;}
+.start-actions{margin-top:36px;display:flex;gap:10px;}
+.btn{padding:10px 18px;border:none;border-radius:5px;cursor:pointer;font-size:.9rem;font-family:inherit;font-weight:600;transition:.2s;}
+.btn-primary{background:#007bff;color:white;}
+.btn-primary:hover{background:#0056b3;}
+.btn-secondary{background:#adb5bd;color:#333;}
+.btn-secondary:hover{background:#8e9499;}
+
+/* ========== PAGE 3 – QUIZ ========== */
+#page-quiz{background:#fdfdfd;display:flex;flex-direction:column;align-items:center;user-select:none;}
+.timer-wrapper{width:100%;display:flex;justify-content:flex-end;padding:14px 24px 0;}
+.timer-container{background:#fff;padding:10px 16px;border-radius:10px;display:flex;gap:10px;align-items:center;box-shadow:0 3px 10px rgba(0,0,0,.1);border:1px solid #ddd;}
+.time-box{display:flex;flex-direction:column;align-items:center;min-width:48px;}
+.t-num{color:#222;font-size:1.4rem;font-weight:700;line-height:1;margin-bottom:2px;}
+.t-lbl{color:#555;font-size:.65rem;}
+.t-sep{color:#ccc;font-size:.9rem;padding-bottom:10px;font-weight:700;}
+.quiz-card{background:white;border-radius:20px;padding:40px;box-shadow:0 10px 30px rgba(0,0,0,.08);max-width:680px;width:100%;margin:20px 0 40px;}
+.quiz-card h1{text-align:center;margin-bottom:28px;font-weight:800;letter-spacing:1px;font-size:1.6rem;}
+.game{display:flex;flex-direction:column;align-items:center;gap:36px;}
+.grid{display:grid;grid-template-columns:repeat(10,46px);grid-template-rows:repeat(10,46px);gap:0;cursor:crosshair;position:relative;}
+.cell{position:relative;width:46px;height:46px;display:flex;align-items:center;justify-content:center;font-weight:700;z-index:2;color:#333;font-size:18px;}
+.pill-highlight,#temp-pill{position:absolute;height:38px;border-radius:19px;pointer-events:none;z-index:1;transform-origin:19px center;margin-top:-19px;}
+.pill-highlight{border:2px solid var(--pill-color);background:rgba(0,0,0,.02);}
+#temp-pill{border:2px solid #ffd166;display:none;}
+.words{text-align:center;}
+.words h3{margin:0 0 14px;font-size:1.3rem;color:#666;}
+.words ul{list-style:none;padding:0;column-count:4;column-gap:40px;}
+.words li{font-weight:700;padding:4px 0;font-size:14px;color:#222;transition:all .2s;break-inside:avoid;}
+.words li.found{opacity:.3;text-decoration:line-through;}
+
+/* Modal */
+.modal{width:440px;background:linear-gradient(145deg,#0b1120,#1c2541);border:3px solid #0055ff;border-radius:16px;color:#fff;padding:30px;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;box-shadow:0 10px 30px rgba(0,85,255,.5);display:none;z-index:200;}
+.modal p{font-size:17px;font-weight:600;line-height:1.5;margin-bottom:24px;}
+.modal-btns{display:flex;justify-content:center;gap:16px;}
+.modal .gbtn{background:linear-gradient(145deg,#76ff03,#32cd32);color:#fff;border:none;padding:11px 40px;font-size:17px;font-weight:700;border-radius:12px;cursor:pointer;font-family:inherit;box-shadow:0 5px 0 #4a9e02;transition:all .2s;}
+.modal .gbtn:hover{transform:translateY(-2px);box-shadow:0 7px 0 #4a9e02;}
+.modal .gbtn:active{transform:translateY(2px);box-shadow:0 2px 0 #4a9e02;}
+
+/* ========== PAGE 4 – END ========== */
+#page-end{padding:30px 20px;}
+.end-container{max-width:900px;margin:0 auto;}
+#end-title{font-size:2rem;margin-bottom:28px;}
+.final-grade{margin-top:24px;font-size:1.15rem;font-weight:700;}
+.attempts-heading{margin-top:18px;font-size:1.05rem;font-weight:700;}
+.attempt-card{border:1px solid #e9ecef;border-radius:8px;overflow:hidden;margin-top:10px;background:#fff;max-width:600px;}
+.attempt-label{background:#f8f9fa;padding:10px 15px;font-weight:700;border-bottom:1px solid #dee2e6;}
+.results-table{width:100%;border-collapse:collapse;}
+.results-table td{padding:10px 15px;border-bottom:1px solid #dee2e6;font-size:14px;}
+.col-header{background:#f8f9fa;font-weight:700;width:160px;color:#495057;}
+.review-footer{padding:10px 15px;font-size:.9rem;color:#444;background:#f8f9fa;}
+.end-actions{margin-top:36px;display:flex;gap:10px;}
+
+/* ========== PAGE 5 – RESULTS SCREEN ========== */
+#page-results{background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:calc(100vh - 60px);}
+.game-card{width:580px;background:linear-gradient(180deg,#0d2a5a 0%,#051025 100%);border:4px solid var(--border-glow);padding:70px 30px 90px;position:relative;box-shadow:0 0 50px rgba(0,210,255,.3);border-radius:8px;font-family:'Orbitron',sans-serif;}
+.header-tab{position:absolute;top:-22px;left:50%;transform:translateX(-50%);background:linear-gradient(180deg,#2ecc71,#1e8449);color:white;padding:10px 70px;font-weight:900;font-size:2rem;letter-spacing:4px;border:3px solid var(--win);clip-path:polygon(10% 0%,90% 0%,100% 100%,0% 100%);white-space:nowrap;text-shadow:0 0 10px rgba(255,255,255,.5);}
+.inner-frame{border:1px solid rgba(48,129,208,.4);padding:40px 20px;display:flex;flex-direction:column;align-items:center;border-radius:4px;}
+.circles-container{display:flex;justify-content:space-around;width:100%;gap:20px;}
+.circle-item{display:flex;flex-direction:column;align-items:center;}
+.circle{position:relative;height:130px;width:130px;}
+.circle .box{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);height:80%;width:80%;background:#020202;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid rgba(48,129,208,.3);}
+.circle .box span{font-size:22px;font-weight:900;color:var(--accent);}
+.circle-label{margin-top:16px;font-size:13px;color:white;text-transform:uppercase;letter-spacing:2px;font-weight:700;}
+.nav-buttons{position:absolute;bottom:-35px;left:0;width:100%;display:flex;justify-content:center;gap:24px;}
+.nbtn{background:var(--border-glow);color:white;border:2px solid var(--accent);font-family:'Orbitron',sans-serif;font-weight:900;cursor:pointer;transition:.2s;padding:0 22px;text-transform:uppercase;font-size:13px;white-space:nowrap;display:flex;align-items:center;justify-content:center;clip-path:polygon(12% 0%,88% 0%,100% 50%,88% 100%,12% 100%,0% 50%);width:190px;height:64px;}
+.nbtn:hover{filter:brightness(1.2);transform:scale(1.06);box-shadow:0 0 18px var(--accent);}
+
+@media(max-width:680px){
+  #wordsContainer{grid-template-columns:repeat(2,1fr);}
+  .form-grid{grid-template-columns:1fr;}
+  .form-group.full{grid-column:span 1;}
+  .grid{grid-template-columns:repeat(10,32px);grid-template-rows:repeat(10,32px);}
+  .cell{width:32px;height:32px;font-size:13px;}
+  .pill-highlight,#temp-pill{height:28px;border-radius:14px;transform-origin:14px center;margin-top:-14px;}
+  .words ul{column-count:2;}
+  .game-card{width:95vw;padding:60px 12px 80px;}
+  .circles-container{gap:8px;}
+  .circle{height:100px;width:100px;}
+  .grid-design{grid-template-columns:repeat(10,28px);grid-template-rows:repeat(10,28px);}
+  .grid-design .cell{font-size:12px;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<header class="navbar">
+  <div class="logo">
+    <div class="logo-icon">QC</div>
+    <span>Quiz Carnival</span>
+  </div>
+</header>
+
+<!-- ======= PAGE 1: FORM ======= -->
+<div id="page-form" class="page active">
+<div id="page-form-inner" style="padding:30px 20px;">
+<div class="form-card">
+  <h2>Word Search Form</h2>
+  <div class="form-grid">
+
+    <div class="form-group full">
+      <label>Title</label>
+      <input type="text" id="f-title" placeholder="e.g. Quiz 1" required>
+    </div>
+
+    <div class="form-group full">
+      <label>Description</label>
+      <textarea id="f-desc"></textarea>
+      <div class="radio-row">
+        <label class="radio-opt"><input type="radio" name="descMode" value="default" id="rdDefault"> Default</label>
+        <label class="radio-opt"><input type="radio" name="descMode" value="custom" id="rdCustom"> Custom</label>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Category</label>
+      <input type="text" id="f-category" placeholder="e.g. Animals">
+    </div>
+
+    <div class="form-group">
+      <label>Amount of Words (1–12)</label>
+      <input type="number" id="f-amount" min="1" max="12">
+    </div>
+
+    <div class="form-group full">
+      <label>Words to Find</label>
+      <div id="wordsContainer"></div>
+    </div>
+
+    <div class="form-group full">
+      <label>Word Search Design Mode</label>
+      <div class="radio-row">
+        <label class="radio-opt"><input type="radio" name="designMode" value="custom" id="modeCustom"> Custom</label>
+        <label class="radio-opt"><input type="radio" name="designMode" value="default" id="modeDefault"> Default (auto-fill)</label>
+      </div>
+      <div id="designGrid" class="grid-design"></div>
+    </div>
+
+    <div class="form-group full">
+      <label>Attempts Allowed</label>
+      <div class="radio-row">
+        <label class="radio-opt"><input type="radio" name="reattempt" value="1"> 1</label>
+        <label class="radio-opt"><input type="radio" name="reattempt" value="2"> 2</label>
+        <label class="radio-opt"><input type="radio" name="reattempt" value="3"> 3</label>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Opens</label>
+      <input type="datetime-local" id="f-opens">
+      <div id="opensFormatted" class="formatted-date"></div>
+    </div>
+
+    <div class="form-group">
+      <label>Closes</label>
+      <input type="datetime-local" id="f-closes">
+      <div id="closesFormatted" class="formatted-date"></div>
+    </div>
+
+    <div class="form-group full">
+      <label>Time Limit (Minutes)</label>
+      <input type="number" id="f-timeLimit" min="0" placeholder="Enter minutes">
+      <div id="totalTime" class="total-time"></div>
+    </div>
+
+  </div>
+  <div class="btn-row">
+    <button class="action-btn preview-btn" onclick="previewQuiz()">Preview</button>
+    <button class="action-btn publish-btn" onclick="publishQuiz()">Publish</button>
+  </div>
+</div>
+</div>
+</div>
+
+<!-- ======= PAGE 2: START ======= -->
+<div id="page-start" class="page">
+  <div class="start-container">
+    <h1 id="start-title">Quiz</h1>
+    <section class="quiz-meta" id="start-dates"></section>
+    <section class="quiz-meta meta-details" id="start-details"></section>
+    <footer class="start-actions">
+      <button class="btn btn-secondary" onclick="goTo('page-form')">Back to the course</button>
+      <button class="btn btn-primary" onclick="beginQuiz()">Start Quiz</button>
+    </footer>
+  </div>
+</div>
+
+<!-- ======= PAGE 3: QUIZ ======= -->
+<div id="page-quiz" class="page">
+  <div class="timer-wrapper">
+    <div class="timer-container">
+      <div class="time-box"><span id="q-hours" class="t-num">00</span><span class="t-lbl">hours</span></div>
+      <span class="t-sep">:</span>
+      <div class="time-box"><span id="q-minutes" class="t-num">00</span><span class="t-lbl">minutes</span></div>
+      <span class="t-sep">:</span>
+      <div class="time-box"><span id="q-seconds" class="t-num">00</span><span class="t-lbl">seconds</span></div>
+    </div>
+  </div>
+  <div class="quiz-card">
+    <h1>WORD SEARCH</h1>
+    <div class="game">
+      <div class="grid" id="q-grid"><div id="temp-pill"></div></div>
+      <div class="words">
+        <h3>WORDS TO FIND</h3>
+        <ul id="q-wordList"></ul>
+      </div>
+    </div>
+  </div>
+  <div id="finishModal" class="modal">
+    <p>You've found all the words! Press <strong>Submit</strong> to submit or <strong>Continue</strong> to keep playing.</p>
+    <div class="modal-btns">
+      <button class="gbtn" onclick="closeModal()">Continue</button>
+      <button class="gbtn" onclick="submitQuiz()">Submit</button>
+    </div>
+  </div>
+</div>
+
+<!-- ======= PAGE 4: END ======= -->
+<div id="page-end" class="page">
+  <div class="end-container">
+    <h1 id="end-title">Quiz</h1>
+    <section class="quiz-meta" id="end-dates"></section>
+    <section class="quiz-meta meta-details" id="end-details"></section>
+    <footer class="end-actions">
+      <button class="btn btn-secondary" onclick="goTo('page-form')">Back to the course</button>
+      <button class="btn btn-primary" onclick="showResults()">View Results</button>
+    </footer>
+  </div>
+</div>
+
+<!-- ======= PAGE 5: RESULTS ======= -->
+<div id="page-results" class="page">
+  <div class="game-card">
+    <div class="header-tab">Results</div>
+    <div class="inner-frame">
+      <div class="circles-container">
+        <div class="circle-item">
+          <div class="circle correct"><div class="bar"></div><div class="box"><span>0%</span></div></div>
+          <div class="circle-label">Correct</div>
+        </div>
+        <div class="circle-item">
+          <div class="circle speed"><div class="bar"></div><div class="box"><span>0%</span></div></div>
+          <div class="circle-label">Speed</div>
+        </div>
+        <div class="circle-item">
+          <div class="circle streak"><div class="bar"></div><div class="box"><span>0%</span></div></div>
+          <div class="circle-label">Streak</div>
+        </div>
+      </div>
+    </div>
+    <div class="nav-buttons">
+      <button class="nbtn" onclick="goTo('page-end')">Back to Quiz</button>
+      <button class="nbtn" onclick="goTo('page-form')">Dashboard</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── APP STATE ───
+const state = {
+  title:'Quiz 1', description:'', category:'', attemptsAllowed:2, opens:'', closes:'',
+  timeLimitMinutes:20, words:[], gridData:[], attemptsUsed:0,
+  quizStartTime:null, quizEndTime:null, wordsFound:0
+};
+
+// ─── NAVIGATION ───
+function goTo(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+// ─── FORMAT DATE ───
+function formatDT(val){
+  if(!val)return'';
+  return new Date(val).toLocaleString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric',hour:'numeric',minute:'2-digit',hour12:true});
+}
+function formatMinutes(m){
+  if(!m||m<1)return'';
+  if(m<60)return`${m} Minute${m!==1?'s':''}`;
+  const h=Math.floor(m/60),rm=m%60;
+  return rm===0?`${h} Hour${h!==1?'s':''}`:`${h} Hour${h!==1?'s':''} : ${rm} Minute${rm!==1?'s':''}`;
+}
+
+// ─── PAGE 1 FORM LOGIC ───
+document.getElementById('rdDefault').addEventListener('change',function(){
+  if(this.checked){document.getElementById('f-desc').value='This is a word search puzzle that should be completed in the allotted time';document.getElementById('f-desc').readOnly=true;}
+});
+document.getElementById('rdCustom').addEventListener('change',function(){
+  if(this.checked){document.getElementById('f-desc').value='';document.getElementById('f-desc').readOnly=false;}
+});
+
+document.getElementById('f-opens').addEventListener('change',function(){
+  document.getElementById('opensFormatted').textContent=formatDT(this.value);
+});
+document.getElementById('f-closes').addEventListener('change',function(){
+  document.getElementById('closesFormatted').textContent=formatDT(this.value);
+});
+document.getElementById('f-timeLimit').addEventListener('input',function(){
+  document.getElementById('totalTime').textContent=formatMinutes(parseInt(this.value));
+});
+
+const amountInput=document.getElementById('f-amount');
+const wordsContainer=document.getElementById('wordsContainer');
+amountInput.addEventListener('input',function(){
+  let n=parseInt(this.value);
+  if(n>12){n=12;this.value=12;}
+  if(!n||n<1){wordsContainer.innerHTML='';return;}
+  wordsContainer.innerHTML='';
+  for(let i=1;i<=n;i++){
+    const inp=document.createElement('input');
+    inp.type='text';inp.placeholder='Word '+i;inp.required=true;
+    inp.addEventListener('input',()=>{inp.value=inp.value.toUpperCase().replace(/[^A-Z]/g,'');});
+    wordsContainer.appendChild(inp);
+  }
+});
+
+// Design grid
+const dGrid=document.getElementById('designGrid');
+const GSIZE=10;
+function focusCell(r,c){const t=dGrid.querySelector(`.cell[data-row='${r}'][data-col='${c}']`);if(t){t.focus();const rng=document.createRange();const sel=window.getSelection();rng.selectNodeContents(t);rng.collapse(false);sel.removeAllRanges();sel.addRange(rng);}}
+for(let r=0;r<GSIZE;r++){for(let c=0;c<GSIZE;c++){
+  const cell=document.createElement('div');
+  cell.className='cell';cell.dataset.row=r;cell.dataset.col=c;cell.contentEditable=true;cell.style.textAlign='center';
+  cell.addEventListener('input',()=>{let ch=cell.textContent.toUpperCase().replace(/[^A-Z]/g,'');ch=ch.charAt(0)||'';cell.textContent=ch;const rng=document.createRange();const sel=window.getSelection();rng.selectNodeContents(cell);rng.collapse(false);sel.removeAllRanges();sel.addRange(rng);if(ch.length>0){if(c<GSIZE-1)focusCell(r,c+1);else if(r<GSIZE-1)focusCell(r+1,0);}});
+  cell.addEventListener('keydown',(e)=>{
+    switch(e.key){
+      case'ArrowUp':e.preventDefault();focusCell(Math.max(0,r-1),c);break;
+      case'ArrowDown':e.preventDefault();focusCell(Math.min(GSIZE-1,r+1),c);break;
+      case'ArrowLeft':e.preventDefault();focusCell(r,Math.max(0,c-1));break;
+      case'ArrowRight':e.preventDefault();focusCell(r,Math.min(GSIZE-1,c+1));break;
+      case'Backspace':if(cell.textContent.length>0){cell.textContent='';}else{e.preventDefault();let pr=r,pc=c-1;if(pc<0){if(r>0){pr=r-1;pc=GSIZE-1;}else return;}const prev=dGrid.querySelector(`.cell[data-row='${pr}'][data-col='${pc}']`);if(prev){prev.textContent='';focusCell(pr,pc);}}break;
+      default:if(e.key.length===1&&!e.key.match(/[a-zA-Z]/))e.preventDefault();
+    }
+  });
+  cell.addEventListener('paste',(e)=>{e.preventDefault();let pt=(e.clipboardData||window.clipboardData).getData('text').toUpperCase().replace(/[^A-Z]/g,'');let cr=r,cc=c;for(const ch of pt){const t=dGrid.querySelector(`.cell[data-row='${cr}'][data-col='${cc}']`);if(!t)break;t.textContent=ch;if(cc<GSIZE-1)cc++;else if(cr<GSIZE-1){cc=0;cr++;}else break;}focusCell(cr,cc);});
+  dGrid.appendChild(cell);
+}}
+
+document.getElementById('modeDefault').addEventListener('change',()=>{
+  const letters='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  dGrid.querySelectorAll('.cell').forEach(c=>{if(!c.textContent.trim())c.textContent=letters[Math.floor(Math.random()*26)];});
+});
+
+// Collect grid
+function collectGrid(){
+  const g=[];
+  for(let r=0;r<GSIZE;r++){const row=[];for(let c=0;c<GSIZE;c++)row.push(dGrid.querySelector(`.cell[data-row='${r}'][data-col='${c}']`).textContent||'');g.push(row);}
+  return g;
+}
+
+function previewQuiz(){populateStartPage();goTo('page-start');}
+function publishQuiz(){populateStartPage();goTo('page-start');}
+
+function populateStartPage(){
+  state.title=document.getElementById('f-title').value||'Quiz';
+  state.description=document.getElementById('f-desc').value;
+  state.category=document.getElementById('f-category').value;
+  state.attemptsAllowed=parseInt(document.querySelector('input[name="reattempt"]:checked')?.value)||1;
+  state.opens=document.getElementById('f-opens').value;
+  state.closes=document.getElementById('f-closes').value;
+  state.timeLimitMinutes=parseInt(document.getElementById('f-timeLimit').value)||20;
+  state.words=Array.from(wordsContainer.querySelectorAll('input')).map(i=>i.value.trim().toUpperCase()).filter(Boolean);
+  state.gridData=collectGrid();
+  state.attemptsUsed=0;
+
+  document.getElementById('start-title').textContent=state.title;
+  document.getElementById('start-dates').innerHTML=
+    `<p>Opens: ${state.opens?formatDT(state.opens):'Not set'}</p>
+     <p>Closes: ${state.closes?formatDT(state.closes):'Not set'}</p>`;
+  document.getElementById('start-details').innerHTML=
+    `<p>Attempts allowed: ${state.attemptsAllowed}</p>
+     <p>${state.description||'No description.'}</p>
+     ${state.category?`<p>Category: ${state.category}</p>`:''}
+     <p>Time limit: ${formatMinutes(state.timeLimitMinutes)||state.timeLimitMinutes+' mins'}</p>
+     <p>Grading method: Highest grade</p>`;
+}
+
+// ─── PAGE 3 QUIZ LOGIC ───
+let timerInterval=null;
+const COLORS=[
+  '#2092e9','#cf7486','#35556e','#06382f','#74070e',
+  '#614d70','#6c7d36','#ffa858','#3a4b41','#abd1c6','#FF6B6B'
+];
+let colorIdx=0,isSelecting=false,startCell=null,currentSel={cells:[],angle:0,width:0,left:0,top:0},wordColors={},cellsArray=[];
+const tempPill=document.getElementById('temp-pill');
+
+function beginQuiz(){
+  state.attemptsUsed++;
+  state.quizStartTime=new Date();
+  colorIdx=0;wordColors={};cellsArray=[];isSelecting=false;startCell=null;
+
+  // Build grid
+  const qGrid=document.getElementById('q-grid');
+  // Remove all children except temp-pill
+  Array.from(qGrid.children).forEach(ch=>{if(ch.id!=='temp-pill')ch.remove();});
+  const cellSize=window.innerWidth<=680?32:46;
+
+  state.gridData.forEach((row,r)=>{
+    row.forEach((letter,c)=>{
+      const cell=document.createElement('div');
+      cell.className='cell';cell.textContent=letter||'·';
+      cell.dataset.row=r;cell.dataset.col=c;
+      cell.addEventListener('mousedown',(e)=>{e.preventDefault();handleStart(cell);});
+      cell.addEventListener('mouseenter',()=>handleDrag(cell));
+      cell.addEventListener('touchstart',(e)=>{e.preventDefault();handleStart(cell);},{passive:false});
+      cell.addEventListener('touchmove',(e)=>{e.preventDefault();const t=e.touches[0];const el=document.elementFromPoint(t.clientX,t.clientY);if(el&&el.classList.contains('cell'))handleDrag(el);},{passive:false});
+      qGrid.appendChild(cell);
+      cellsArray.push(cell);
+    });
+  });
+
+  // Update grid CSS for correct cell size
+  qGrid.style.gridTemplateColumns=`repeat(10,${cellSize}px)`;
+  qGrid.style.gridTemplateRows=`repeat(10,${cellSize}px)`;
+
+  // Build word list
+  const wl=document.getElementById('q-wordList');
+  wl.innerHTML='';
+  state.words.forEach(w=>{
+    const li=document.createElement('li');li.textContent=w;li.id='word-'+w;wl.appendChild(li);
+  });
+
+  // Start timer
+  clearInterval(timerInterval);
+  const end=Date.now()+(state.timeLimitMinutes*60*1000);
+  function tick(){
+    const left=end-Date.now();
+    if(left<=0){clearInterval(timerInterval);document.querySelector('.timer-container').innerHTML="<strong style='color:#222;font-size:1.1rem'>Time's Up!</strong>";autoSubmit();return;}
+    const h=Math.floor(left/3600000),m=Math.floor((left%3600000)/60000),s=Math.floor((left%60000)/1000);
+    document.getElementById('q-hours').textContent=String(h).padStart(2,'0');
+    document.getElementById('q-minutes').textContent=String(m).padStart(2,'0');
+    document.getElementById('q-seconds').textContent=String(s).padStart(2,'0');
+  }
+  timerInterval=setInterval(tick,1000);tick();
+  document.getElementById('finishModal').style.display='none';
+  goTo('page-quiz');
+}
+
+document.addEventListener('mouseup',()=>{if(!isSelecting)return;isSelecting=false;checkSel();tempPill.style.display='none';});
+document.addEventListener('touchend',()=>{if(!isSelecting)return;isSelecting=false;checkSel();tempPill.style.display='none';});
+
+function handleStart(cell){isSelecting=true;startCell=cell;document.documentElement.style.setProperty('--current-color','#ffd166');tempPill.style.display='block';updateSel(cell);}
+function handleDrag(cell){if(!isSelecting)return;updateSel(cell);}
+
+function updateSel(endCell){
+  if(!startCell)return;
+  const r1=parseInt(startCell.dataset.row),c1=parseInt(startCell.dataset.col);
+  const r2=parseInt(endCell.dataset.row),c2=parseInt(endCell.dataset.col);
+  const dr=r2-r1,dc=c2-c1,absDr=Math.abs(dr),absDc=Math.abs(dc);
+  if(!(dr===0||dc===0||absDr===absDc))return;
+  const cellSize=window.innerWidth<=680?32:46;
+  const steps=Math.max(absDr,absDc);
+  const dist=Math.sqrt(dr*dr+dc*dc)*cellSize;
+  const pillW=dist+cellSize*0.8;
+  const ang=Math.atan2(dr,dc)*(180/Math.PI);
+  const sx=c1*cellSize+(cellSize/2),sy=r1*cellSize+(cellSize/2);
+  const ph=cellSize*0.82;
+  tempPill.style.height=ph+'px';tempPill.style.borderRadius=(ph/2)+'px';tempPill.style.transformOrigin=(ph/2)+'px center';tempPill.style.marginTop=(-ph/2)+'px';
+  tempPill.style.width=pillW+'px';tempPill.style.left=(sx-ph/2)+'px';tempPill.style.top=sy+'px';tempPill.style.transform=`rotate(${ang}deg)`;
+  currentSel.width=pillW;currentSel.angle=ang;currentSel.left=tempPill.style.left;currentSel.top=tempPill.style.top;currentSel.ph=ph;currentSel.cells=[];
+  const rStep=dr===0?0:dr/absDr,cStep=dc===0?0:dc/absDc;
+  for(let i=0;i<=steps;i++){const r=r1+i*rStep,c=c1+i*cStep;if(cellsArray[r*10+c])currentSel.cells.push(cellsArray[r*10+c]);}
+}
+
+function checkSel(){
+  if(!currentSel.cells.length)return;
+  const word=currentSel.cells.map(c=>c.textContent).join('');
+  const rev=word.split('').reverse().join('');
+  const match=state.words.find(w=>(w===word||w===rev)&&!wordColors[w]);
+  if(match){
+    const color=COLORS[colorIdx%COLORS.length];
+    wordColors[match]=color;
+    const pill=document.createElement('div');
+    pill.className='pill-highlight';
+    pill.style.setProperty('--pill-color',color);
+    const ph=currentSel.ph||38;
+    pill.style.height=ph+'px';pill.style.borderRadius=(ph/2)+'px';pill.style.transformOrigin=(ph/2)+'px center';pill.style.marginTop=(-ph/2)+'px';
+    pill.style.width=currentSel.width+'px';pill.style.left=currentSel.left;pill.style.top=currentSel.top;pill.style.transform=`rotate(${currentSel.angle}deg)`;
+    document.getElementById('q-grid').appendChild(pill);
+    const li=document.getElementById('word-'+match);
+    if(li){li.classList.add('found');li.style.color=color;}
+    colorIdx++;state.wordsFound++;
+    if(state.words.every(w=>wordColors[w]))document.getElementById('finishModal').style.display='block';
+  }
+}
+
+function closeModal(){document.getElementById('finishModal').style.display='none';}
+function autoSubmit(){submitQuiz();}
+function submitQuiz(){
+  clearInterval(timerInterval);
+  state.quizEndTime=new Date();
+  document.getElementById('finishModal').style.display='none';
+  populateEndPage();
+  goTo('page-end');
+}
+
+// ─── PAGE 4 END ───
+function populateEndPage(){
+  document.getElementById('end-title').textContent=state.title;
+  document.getElementById('end-dates').innerHTML=
+    `<p><strong>Opens:</strong> ${state.opens?formatDT(state.opens):'Not set'}</p>
+     <p><strong>Closes:</strong> ${state.closes?formatDT(state.closes):'Not set'}</p>`;
+
+  const dur=state.quizStartTime&&state.quizEndTime?Math.round((state.quizEndTime-state.quizStartTime)/1000):0;
+  const durStr=dur>0?`${Math.floor(dur/60)} mins ${dur%60} secs`:'—';
+  const grade=Math.round((state.wordsFound/Math.max(state.words.length,1))*100);
+  const scoreStr=`${state.wordsFound}.00 out of ${state.words.length}.00`;
+  const canReattempt=state.attemptsUsed<state.attemptsAllowed;
+
+  document.getElementById('end-details').innerHTML=`
+    <p>Attempts allowed: ${state.attemptsAllowed}</p>
+    <p>Time limit: ${formatMinutes(state.timeLimitMinutes)}</p>
+    <p>Grading method: Highest grade</p>
+    ${canReattempt?`<div style="margin-top:14px"><button class="btn btn-primary" onclick="reAttempt()">Re-attempt Quiz</button></div>`:''}
+    <div class="final-grade">Your final grade for this quiz is ${scoreStr}.</div>
+    <div class="attempts-heading">Your attempts</div>
+    <div class="attempt-card">
+      <div class="attempt-label">Attempt ${state.attemptsUsed}</div>
+      <table class="results-table">
+        <tr><td class="col-header">Status</td><td>Finished</td></tr>
+        <tr><td class="col-header">Started</td><td>${state.quizStartTime?state.quizStartTime.toLocaleString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric',hour:'numeric',minute:'2-digit',hour12:true}):'—'}</td></tr>
+        <tr><td class="col-header">Completed</td><td>${state.quizEndTime?state.quizEndTime.toLocaleString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric',hour:'numeric',minute:'2-digit',hour12:true}):'—'}</td></tr>
+        <tr><td class="col-header">Duration</td><td>${durStr}</td></tr>
+        <tr><td class="col-header">Grade</td><td>${scoreStr} <strong>(${grade}%)</strong></td></tr>
+      </table>
+      <div class="review-footer">Reviews are not permitted</div>
+    </div>`;
+}
+
+function reAttempt(){
+  state.wordsFound=0;
+  beginQuiz();
+}
+
+// ─── PAGE 5 RESULTS ───
+function showResults(){
+  const grade=Math.round((state.wordsFound/Math.max(state.words.length,1))*100)/100;
+  const dur=state.quizStartTime&&state.quizEndTime?(state.quizEndTime-state.quizStartTime)/1000:0;
+  const maxTime=state.timeLimitMinutes*60;
+  const speedRatio=Math.max(0,Math.min(1,(maxTime-dur)/maxTime));
+  const streakRatio=state.words.length>0?state.wordsFound/state.words.length:0;
+
+  goTo('page-results');
+
+  // Re-init circles each time
+  $('.correct .bar').circleProgress({
+    startAngle:-1.55,size:130,thickness:10,
+    value:grade,
+    fill:{gradient:['#5effa3','#2ecc71']}
+  }).on('circle-animation-progress',function(e,p,v){$(this).parent().find('span').text(Math.round(v*100)+'%');});
+
+  $('.speed .bar').circleProgress({
+    startAngle:-1.55,size:130,thickness:10,
+    value:speedRatio,
+    fill:{gradient:['#00d2ff','#3081d0']}
+  }).on('circle-animation-progress',function(e,p,v){$(this).parent().find('span').text(Math.round(v*100)+'%');});
+
+  $('.streak .bar').circleProgress({
+    startAngle:-1.55,size:130,thickness:10,
+    value:streakRatio,
+    fill:{gradient:['#f1c40f','#e67e22']}
+  }).on('circle-animation-progress',function(e,p,v){$(this).parent().find('span').text(Math.round(v*100)+'%');});
+}
+</script>
+</body>
+</html>
