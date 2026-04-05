@@ -83,7 +83,7 @@ input:focus, textarea:focus {
 /* RADIO & CHECKBOX STYLING */
 .radio-group {
     display: flex;
-    flex-wrap: wrap;   /* allows items to stay in one row and wrap on smaller screens */
+    flex-wrap: wrap;
     align-items: center;
     gap: 20px;
     margin-top: 12px;
@@ -91,10 +91,10 @@ input:focus, textarea:focus {
 
 .radio-option {
     display: flex;
-    align-items: center; /* vertical center */
+    align-items: center;
     gap: 8px;
     font-size: 14px;
-    white-space: nowrap; /* keep checkbox text on same line */
+    white-space: nowrap;
 }
 
 #wordsContainer {
@@ -262,7 +262,7 @@ input:focus, textarea:focus {
 </div>
 
 <script>
-// SENTENCE GENERATOR
+// SENTENCE + ANSWER GENERATOR
 const amountInput = document.getElementById("amount");
 const wordsContainer = document.getElementById("wordsContainer");
 
@@ -275,9 +275,15 @@ amountInput.addEventListener("input", function () {
     wordsContainer.innerHTML = "";
 
     for (let i = 1; i <= amount; i++) {
+        // Container for sentence + answer
+        const sentenceDiv = document.createElement("div");
+        sentenceDiv.style.display = "flex";
+        sentenceDiv.style.flexDirection = "column";
+        sentenceDiv.style.gap = "6px";
+
+        // Sentence textarea
         const textarea = document.createElement("textarea");
         textarea.required = true;
-
         const prefix = i + ". ";
         textarea.value = prefix;
 
@@ -304,7 +310,15 @@ amountInput.addEventListener("input", function () {
             }
         });
 
-        wordsContainer.appendChild(textarea);
+        // Answer input
+        const answerInput = document.createElement("input");
+        answerInput.type = "text";
+        answerInput.placeholder = "Correct answer";
+        answerInput.required = true;
+
+        sentenceDiv.appendChild(textarea);
+        sentenceDiv.appendChild(answerInput);
+        wordsContainer.appendChild(sentenceDiv);
     }
 });
 
@@ -375,8 +389,10 @@ timeLimitInput.addEventListener("input", function () {
 // PREVIEW
 document.querySelector(".preview-btn").addEventListener("click", () => {
     const sentences = [];
-    document.querySelectorAll("#wordsContainer textarea").forEach(t => {
-        sentences.push(t.value);
+    document.querySelectorAll("#wordsContainer > div").forEach(div => {
+        const sentence = div.querySelector("textarea").value;
+        const answer = div.querySelector("input").value;
+        sentences.push(`${sentence} | Answer: ${answer}`);
     });
 
     const attemptsSelected = document.querySelector("input[name='attempts']:checked");
@@ -423,8 +439,10 @@ document.querySelector("form").addEventListener("submit", function(e){
         sentences: []
     };
 
-    document.querySelectorAll("#wordsContainer textarea").forEach(t => {
-        data.sentences.push(t.value);
+    document.querySelectorAll("#wordsContainer > div").forEach(div => {
+        const sentence = div.querySelector("textarea").value;
+        const answer = div.querySelector("input").value;
+        data.sentences.push({ sentence, answer });
     });
 
     console.log("SUBMITTED DATA:", data);
