@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wordle</title>
+  
+  <!-- Boxicons CSS -->
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+  <style>
+    :root {
+      --color-black: #121213;
+      --color-white: #fff;
+      --color-green: #538d4e;
+      --color-yellow: #B59F3B;
+      --color-gray-dark: #3A3A3C;
+      --color-gray-light: #818384;
+    }
+
+    html { box-sizing: border-box; }
+    *, *:before, *:after { box-sizing: inherit; }
+
+    body {
+      background: var(--color-white);
+      color: var(--color-black);
+      font-family: 'Clear Sans', 'Helvetica Neue', Arial, sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Centered Box */
+    .container {
+      background: #f2f2f2;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    header { border-bottom: none; text-align: center; }
+
+    h1 { margin: 0; padding: 0; font-size: 2rem; }
+
+    main { display: flex; flex-direction: column; align-items: center; }
+
+    .toaster {
+      position: absolute;
+      top: 10%;
+      left: 50%;
+      transform: translate(-50%, 0);
+      pointer-events: none;
+      width: fit-content;
+    }
+
+    .toaster ul {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .toast {
+      background: var(--color-white);
+      border-radius: 4px;
+      color: var(--color-black);
+      padding: 1rem;
+      font-weight: bold;
+      text-align: center;
+      opacity: 1;
+      transition: opacity 300ms cubic-bezier(0.645, 0.045, 0.355, 1);
+    }
+
+    .fade { opacity: 0; }
+
+    #board, #keyboard {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      text-transform: uppercase;
+    }
+
+    #board ul,
+    #keyboard ul {
+      display: flex;
+      list-style: none;
+      gap: 6px;
+      padding: 0;
+      margin: 0;
+    }
+
+    [data-status],
+    [data-key] {
+      border: 2px solid var(--color-gray-dark);
+      font-weight: 700;
+      font-size: 2rem;
+      line-height: 2rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 4rem;
+      width: 4rem;
+      user-select: none;
+    }
+
+    #keyboard { gap: 8px; padding-bottom: 10px; }
+    #keyboard ul { justify-content: center; }
+
+    [data-key] {
+      background: var(--color-gray-light);
+      border: none;
+      border-radius: 4px;
+      font-size: 1rem;
+      height: 3.8rem;
+      width: 2.8rem;
+      cursor: pointer;
+      transition: all .3s ease-in-out;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    [data-key='Enter'] { width: 6rem; }
+
+    /* Backspace key using Boxicons */
+    [data-key='Backspace'] {
+      width: 4rem;
+      font-size: 1.5rem;
+    }
+
+    [data-status='filled']      { border: 1px solid var(--color-gray-light); }
+    [data-status='valid']       { background: var(--color-green); color: #fff; }
+    [data-status='invalid']     { background: var(--color-yellow); color: #fff; }
+    [data-status='none']        { background: var(--color-gray-dark); }
+
+    [data-animation='pop']      { animation: PopIn 100ms; }
+
+    @keyframes PopIn {
+      from { transform: scale(0.8); opacity: 0; }
+      40% { transform: scale(1.1); opacity: 1; }
+    }
+
+    [data-animation='flip']     { animation: Flip .50s ease-in; }
+
+    @keyframes Flip {
+      from { transform: rotateX(0); }
+      50% { transform: rotateX(-90deg); }
+      to { transform: rotateX(0); }
+    }
+
+    [data-animation='invalid']  { animation: Shake 600ms; }
+
+    @keyframes Shake {
+      10%, 90% { transform: translateX(-1px); }
+      20%, 80% { transform: translateX(2px); }
+      30%, 50%, 70% { transform: translateX(-4px); }
+      40%, 60% { transform: translateX(4px); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Wordle</h1>
+    </header>
+    <main>
+      <section id="board"></section>
+    </main>
+    <footer>
+      <section id="keyboard"></section>
+    </footer>
+  </div>
+
+  <div class="toaster">
+    <ul></ul>
+  </div>
+
+  <script>
+    'use strict';
+
+    const BACKSPACE_KEY = 'Backspace';
+    const ENTER_KEY = 'Enter';
+
+    const WORD_LIST = [
+      'HELLO','PASTA','PANIC','SKILL','ARROW','BIRDS',
+      'FRUIT','PIZZA','SHAKE','THOSE','SUPER','SHARE',
+      'LOVES','WATER','VALUE','VALID','SWEET','START',
+      'SPACE','SLEEP','MAGIC','LEARN','LIGHT','LOGIC',
+      'HAPPY','HUMAN','GRAND','FOCUS','ENJOY','DREAM',
+      'CLEAN','CLEAR','WORDS'
+    ];
+
+    const WORD_OF_THE_DAY = WORD_LIST[getRandomIndex(WORD_LIST.length)];
+    const MAX_NUMBER_OF_ATTEMPTS = 6;
+    const history = [];
+    let currentWord = '';
+    let gameOver = false;
+
+    const init = () => {
+      const KEYBOARD_KEYS = ['QWERTYUIOP','ASDFGHJKL','ZXCVBNM'];
+      const gameBoard = document.querySelector('#board');
+      const keyboard = document.querySelector('#keyboard');
+
+      generateBoard(gameBoard);
+      generateBoard(keyboard, 3, 10, KEYBOARD_KEYS, true);
+
+      document.addEventListener('keydown', e => onKeyDown(e.key));
+      gameBoard.addEventListener('animationend', e => e.target.setAttribute('data-animation', 'idle'));
+      keyboard.addEventListener('click', onKeyboardButtonClick);
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          resetGame();
+          showMessage('Board cleared! 🎯');
+        }
+      });
+    };
+
+    const showMessage = (message) => {
+      const toast = document.createElement('li');
+      toast.textContent = message;
+      toast.className = 'toast';
+      document.querySelector('.toaster ul').prepend(toast);
+      setTimeout(() => toast.classList.add('fade'), 1000);
+      toast.addEventListener('transitionend', e => e.target.remove());
+    };
+
+    const checkGuess = (guess, word) => {
+      const guessLetters = guess.split('');
+      const wordLetters = word.split('');
+      const currentRow = document.querySelector(`#board ul[data-row='${history.length}']`);
+      [...currentRow.children].forEach((cell, i) => {
+        cell.setAttribute('data-status','none');
+        cell.setAttribute('data-animation','flip');
+        cell.style.animationDelay = `${i*300}ms`;
+      });
+
+      const letterCount = {};
+      wordLetters.forEach(l => letterCount[l] = (letterCount[l] || 0) + 1);
+
+      // Green
+      guessLetters.forEach((letter,i) => {
+        if (letter === wordLetters[i]) {
+          currentRow.children[i].setAttribute('data-status','valid');
+          document.querySelector(`[data-key='${letter}']`)?.setAttribute('data-status','valid');
+          letterCount[letter]--;
+          guessLetters[i] = null;
+        }
+      });
+
+      // Yellow / Gray
+      guessLetters.forEach((letter,i)=>{
+        if(!letter) return;
+        const cell = currentRow.children[i];
+        const key = document.querySelector(`[data-key='${letter}']`);
+        if(letterCount[letter]>0){
+          cell.setAttribute('data-status','invalid');
+          if(key?.getAttribute('data-status')!=='valid') key.setAttribute('data-status','invalid');
+          letterCount[letter]--;
+        } else {
+          cell.setAttribute('data-status','none');
+          if(key && !key.getAttribute('data-status')) key.setAttribute('data-status','none');
+        }
+      });
+
+      history.push(guess);
+      currentWord = '';
+
+      if(guess===word){ showMessage('🎉 Genius!'); gameOver=true; return; }
+      if(history.length===MAX_NUMBER_OF_ATTEMPTS){ showMessage(`The word was ${word}`); gameOver=true; }
+    };
+
+    const onKeyboardButtonClick = (e) => {
+      if(gameOver) return;
+      if(e.target.nodeName==='LI') onKeyDown(e.target.getAttribute('data-key'));
+    };
+
+    const onKeyDown = (key) => {
+      if(gameOver) return;
+      const currentRow = document.querySelector(`#board ul[data-row='${history.length}']`);
+      if(!currentRow) return;
+
+      if(key===BACKSPACE_KEY){
+        const cells = Array.from(currentRow.children);
+        const lastFilled = [...cells].reverse().find(c=>c.getAttribute('data-status')==='filled');
+        if(!lastFilled) return;
+        lastFilled.textContent='';
+        lastFilled.setAttribute('data-status','empty');
+        currentWord=currentWord.slice(0,-1);
+        return;
+      }
+
+      if(key===ENTER_KEY){
+        if(currentWord.length!==5){ showMessage('Not enough letters'); return; }
+        checkGuess(currentWord, WORD_OF_THE_DAY);
+        return;
+      }
+
+      if(currentWord.length>=5) return;
+
+      const letter=key.toUpperCase();
+      if(/^[A-Z]$/.test(letter)){
+        const emptyCell = Array.from(currentRow.children).find(c=>c.getAttribute('data-status')==='empty');
+        if(!emptyCell) return;
+        emptyCell.textContent=letter;
+        emptyCell.setAttribute('data-status','filled');
+        emptyCell.setAttribute('data-animation','pop');
+        currentWord+=letter;
+      }
+    };
+
+    const generateBoard = (board, rows=6, cols=5, keys=[], keyboard=false) => {
+      for(let r=0;r<rows;r++){
+        const row=document.createElement('ul');
+        row.setAttribute('data-row',r);
+        for(let c=0;c<cols;c++){
+          const cell=document.createElement('li');
+          cell.setAttribute('data-status','empty');
+          cell.setAttribute('data-animation','idle');
+          if(keyboard && keys[r]?.[c]){ 
+            cell.textContent=keys[r][c]; 
+            cell.setAttribute('data-key',keys[r][c]); 
+          }
+          if(!(keyboard && cell.textContent==='')) row.appendChild(cell);
+        }
+        board.appendChild(row);
+      }
+      if(keyboard){
+        const enter=document.createElement('li');
+        enter.textContent=ENTER_KEY;
+        enter.setAttribute('data-key',ENTER_KEY);
+        board.lastChild.prepend(enter);
+
+        const back = document.createElement('li');
+        back.setAttribute('data-key', BACKSPACE_KEY);
+        back.innerHTML = "<i class='bx bx-redo'></i>";
+        board.lastChild.append(back);
+      }
+    };
+
+    document.addEventListener('DOMContentLoaded', init);
+
+    function getRandomIndex(max){ return Math.floor(Math.random()*max); }
+
+    function resetGame(){
+      document.querySelectorAll('#board li').forEach(cell=>{
+        cell.textContent=''; 
+        cell.setAttribute('data-status','empty'); 
+        cell.setAttribute('data-animation','idle');
+      });
+      document.querySelectorAll('#keyboard li[data-key]').forEach(key=>key.setAttribute('data-status',''));
+      history.length=0;
+      currentWord='';
+      gameOver=false;
+    }
+  </script>
+</body>
+</html>
