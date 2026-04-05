@@ -15,26 +15,10 @@
             color: #333;
         }
 
-        /* NAVBAR */
-        .main-nav {
-            background: #fff;
-            border-bottom: 1px solid #d1d5db;
-            padding: 12px 40px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        nav a {
-            text-decoration: none;
-            color: #4b5563;
-            margin-right: 15px;
-        }
-
         /* CONTAINER */
         .container {
             max-width: 1000px;
-            margin: 40px auto;
+            margin: 60px auto; 
             padding: 0 20px;
         }
 
@@ -456,14 +440,6 @@
 </head>
 <body>
 
-<header class="main-nav">
-    <nav>
-        <a href="#">Home</a>
-        <a href="#">Dashboard</a>
-        <a href="#">Courses</a>
-    </nav>
-</header>
-
 <div class="container">
     <h1>Mathematics</h1>
 
@@ -570,7 +546,6 @@
         </section>
     </div>
 
-    <!-- PARTICIPANTS TAB - replaced with second page content -->
     <div id="participants-tab" class="tab-content">
         <div class="card connected-card">
             <div class="app-container">
@@ -648,27 +623,10 @@
                 <h2>Grade Overview</h2>
             </div>
             <div class="card-body">
-                <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
-                    <thead>
-                        <tr style="text-align: left; background: #f8f9fa;">
-                            <th style="padding: 12px; border: 1px solid #eee;">Quiz Item</th>
-                            <th style="padding: 12px; border: 1px solid #eee;">Status</th>
-                            <th style="padding: 12px; border: 1px solid #eee;">Grade</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td style="padding: 12px; border: 1px solid #eee;">Quiz 1</td>
-                            <td style="padding: 12px; border: 1px solid #eee; color: #27ae60;">Completed</td>
-                            <td style="padding: 12px; border: 1px solid #eee; font-weight: bold;">95/100</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 12px; border: 1px solid #eee;">Quiz 2</td>
-                            <td style="padding: 12px; border: 1px solid #eee; color: #e67e22;">Pending</td>
-                            <td style="padding: 12px; border: 1px solid #eee;">-</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div style="padding: 40px; text-align: center; color: #888;">
+                    <i class='bx bx-bar-chart-alt-2' style="font-size: 3rem; display: block; margin-bottom: 10px;"></i>
+                    <p>No grade information is currently available for this course.</p>
+                </div>
             </div>
         </section>
     </div>
