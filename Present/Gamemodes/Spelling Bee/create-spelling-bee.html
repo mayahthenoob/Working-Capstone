@@ -240,6 +240,16 @@ input:focus, textarea:focus, select:focus {
 </div>
 </div>
 
+<!-- GRADING CRITERIA -->
+<div class="form-group full-width">
+<label>Grading Criteria</label>
+<div class="radio-group">
+    <label class="radio-option"><input type="checkbox" name="gradingCriteria" value="highestScore"> Highest Score</label>
+    <label class="radio-option"><input type="checkbox" name="gradingCriteria" value="fastestTime"> Fastest Time</label>
+    <label class="radio-option"><input type="checkbox" name="gradingCriteria" value="highestStreak"> Highest Streak</label>
+</div>
+</div>
+
 <div class="form-group">
 <label>Opens</label>
 <input type="datetime-local" id="opens">
@@ -456,10 +466,12 @@ document.querySelector("form").addEventListener("submit", function(e){
         attemptsAllowed: parseInt(document.querySelector("input[name='attemptsAllowed']:checked").value),
         speakerVoiceMode: document.querySelector("input[name='speakerVoice']:checked").value,
         speakerVoice: getSelectedVoice() ? getSelectedVoice().name : 'Default',
-        words: []
+        words: [],
+        gradingCriteria: []
     };
 
     document.querySelectorAll("#wordsContainer input").forEach(i => data.words.push(i.value));
+    document.querySelectorAll("input[name='gradingCriteria']:checked").forEach(cb => data.gradingCriteria.push(cb.value));
 
     console.log("SUBMITTED DATA:", data);
     alert("Form submitted! Check console.");

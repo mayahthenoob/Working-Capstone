@@ -80,7 +80,6 @@
             border-color: #4a90e2;
         }
 
-        /* SHARED SELECTION STYLES */
         .selection-group {
             display: flex;
             flex-wrap: wrap;
@@ -104,7 +103,6 @@
             cursor: pointer;
         }
 
-        /* BUTTON STYLES */
         .button-row {
             display: flex;
             justify-content: space-between;
@@ -222,17 +220,18 @@
                 <div id="wordsContainer"></div>
             </div>
 
+            <!-- UPDATED ATTEMPTS SECTION -->
             <div class="form-group full-width">
-                <label>Re-attempt</label>
+                <label>Attempts Allowed</label>
                 <div class="selection-group">
                     <label class="selection-option">
-                        <input type="radio" name="reattempt" value="none"> None
+                        <input type="radio" name="reattempt" value="1"> 1
                     </label>
                     <label class="selection-option">
-                        <input type="radio" name="reattempt" value="two"> Two
+                        <input type="radio" name="reattempt" value="2"> 2
                     </label>
                     <label class="selection-option">
-                        <input type="radio" name="reattempt" value="three"> Three
+                        <input type="radio" name="reattempt" value="3"> 3
                     </label>
                 </div>
             </div>
@@ -271,6 +270,24 @@
                 <label for="timeLimit">Time Limit (Minutes)</label>
                 <input type="number" id="timeLimit" min="0">
                 <div id="totalTime" class="total-time"></div>
+            </div>
+
+            <!-- NEW GUESSES SECTION -->
+            <div class="form-group full-width">
+                <label>Guesses</label>
+                <div class="selection-group">
+                    <label class="selection-option">
+                        <input type="radio" name="guessesMode" value="perWord">
+                        Per Word
+                    </label>
+                    <label class="selection-option">
+                        <input type="radio" name="guessesMode" value="entireQuiz">
+                        Entire Quiz
+                    </label>
+                </div>
+                <div id="guessesInputContainer" style="margin-top:10px; display:none;">
+                    <input type="number" id="guessesInput" min="1" placeholder="Enter number of guesses">
+                </div>
             </div>
 
         </div>
@@ -362,6 +379,21 @@
         }
     });
 
+    // GUESSES SECTION
+    const guessesRadios = document.querySelectorAll("input[name='guessesMode']");
+    const guessesInputContainer = document.getElementById("guessesInputContainer");
+    const guessesInput = document.getElementById("guessesInput");
+
+    guessesRadios.forEach(radio => {
+        radio.addEventListener("change", function () {
+            guessesInputContainer.style.display = "block";
+            guessesInput.placeholder = 
+                this.value === "perWord" 
+                ? "Enter guesses per word" 
+                : "Enter guesses for entire quiz";
+        });
+    });
+
     // PREVIEW
     document.querySelector(".preview-btn").addEventListener("click", () => {
         const words = [];
@@ -370,6 +402,11 @@
         const criteria = [];
         document.querySelectorAll("input[name='criteria']:checked").forEach(c => criteria.push(c.parentNode.textContent.trim()));
 
+        const guessesMode = document.querySelector("input[name='guessesMode']:checked")?.value || '';
+        const guessesNumber = guessesInput.value || '';
+
+        const attemptsAllowed = document.querySelector("input[name='reattempt']:checked")?.value || "Not selected";
+
         alert(
 `PREVIEW
 
@@ -377,7 +414,9 @@ Title: ${document.getElementById("title").value}
 Description: ${document.getElementById("description").value}
 Words: ${words.join(", ") || "None entered"}
 Grading: ${criteria.join(", ") || "None selected"}
-Time Limit: ${document.getElementById("timeLimit").value || 0} minutes`
+Time Limit: ${document.getElementById("timeLimit").value || 0} minutes
+Attempts Allowed: ${attemptsAllowed}
+Guesses: ${guessesMode ? guessesMode + " (" + guessesNumber + ")" : "Not set"}`
         );
     });
 
@@ -385,7 +424,6 @@ Time Limit: ${document.getElementById("timeLimit").value || 0} minutes`
     document.getElementById("hangmanForm").addEventListener("submit", function(e){
         e.preventDefault();
 
-        // Capture checked criteria
         const selectedCriteria = [];
         document.querySelectorAll("input[name='criteria']:checked").forEach(cb => {
             selectedCriteria.push(cb.value);
@@ -399,9 +437,11 @@ Time Limit: ${document.getElementById("timeLimit").value || 0} minutes`
             timeLimit: document.getElementById("timeLimit").value,
             opens: document.getElementById("opens").value,
             closes: document.getElementById("closes").value,
-            reattempt: document.querySelector("input[name='reattempt']:checked")?.value || 'none',
+            reattempt: document.querySelector("input[name='reattempt']:checked")?.value || '1',
             gradingCriteria: selectedCriteria,
-            words: []
+            words: [],
+            guessesMode: document.querySelector("input[name='guessesMode']:checked")?.value || '',
+            guessesNumber: guessesInput.value || ''
         };
 
         document.querySelectorAll("#wordsContainer input").forEach(i => data.words.push(i.value));
