@@ -1,0 +1,1726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Create Word Puzzle Form</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+* {
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #f04e84 0%, #7c3a91 100%);
+    padding: 20px;
+}
+
+.form-container {
+    background-color: white;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    width: 100%;
+    max-width: 900px;
+}
+
+h2 {
+    margin-top: 0;
+    color: #666;
+    font-weight: 500;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group.full-width {
+    grid-column: span 2;
+}
+
+label {
+    font-size: 14px;
+    color: #777;
+    margin-bottom: 8px;
+}
+
+input, textarea {
+    padding: 12px;
+    border: 1px solid #f2f2f2;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #333;
+    outline: none;
+    width: 100%;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+input:focus, textarea:focus {
+    border-color: #4a90e2;
+}
+
+.radio-group {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    margin-top: 12px;
+}
+
+.reattempt-group .radio-group {
+    margin-top: 4px;
+}
+
+.radio-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #333;
+}
+
+.radio-option label {
+    margin: 0;
+    cursor: pointer;
+}
+
+.radio-option input[type="radio"] {
+    margin: 0;
+    transform: translateY(1px);
+    cursor: pointer;
+    width: auto;
+}
+
+.button-row {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+.action-btn {
+    border: none;
+    padding: 12px 30px;
+    border-radius: 4px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.preview-btn {
+    background-color: #999;
+    color: white;
+}
+
+.preview-btn:hover {
+    background-color: #777;
+}
+
+.publish-btn {
+    background-color: #28a745;
+    color: white;
+}
+
+.publish-btn:hover {
+    background-color: #1e7e34;
+}
+
+#wordsContainer {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.formatted-date, .total-time {
+    font-size: 14px;
+    color: #555;
+    margin-top: 6px;
+}
+
+.grid-design {
+    display: grid;
+    grid-template-columns: repeat(10, 40px);
+    grid-template-rows: repeat(10, 40px);
+    gap: 2px;
+    border: 1px solid #ccc;
+    margin-top: 10px;
+    justify-content: center;
+}
+
+.grid-design .cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    cursor: text;
+    user-select: text;
+    font-size: 18px;
+    overflow: hidden;
+    line-height: 1;
+    outline: none;
+}
+
+.grid-design .cell:focus {
+    border-color: #4a90e2;
+    background-color: #fff;
+}
+
+@media (max-width: 900px) {
+    #wordsContainer {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+    .form-group.full-width {
+        grid-column: span 1;
+    }
+    .form-container {
+        padding: 20px;
+    }
+
+    #wordsContainer {
+        grid-template-columns: 1fr;
+    }
+
+    .button-row {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .grid-design {
+        grid-template-columns: repeat(10, 30px);
+        grid-template-rows: repeat(10, 30px);
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="form-container">
+<h2>Word Search Form</h2>
+
+<form>
+<div class="form-grid">
+
+<div class="form-group full-width">
+<label for="title">Title</label>
+<input type="text" id="title" name="title" required>
+</div>
+
+<div class="form-group full-width">
+<label for="description">Description</label>
+<textarea id="description" name="description"></textarea>
+
+<div class="radio-group">
+<div class="radio-option">
+<input type="radio" id="default" name="mode" value="default">
+<label for="default">Default</label>
+</div>
+<div class="radio-option">
+<input type="radio" id="custom" name="mode" value="custom">
+<label for="custom">Custom</label>
+</div>
+</div>
+</div>
+
+<div class="form-group">
+<label for="category">Category</label>
+<input type="text" id="category" name="category">
+</div>
+
+<div class="form-group">
+<label for="amount">Amount</label>
+<input type="number" id="amount" name="amount" min="1" max="12" required>
+</div>
+
+<div class="form-group full-width">
+<label>Words to Find</label>
+<div id="wordsContainer"></div>
+</div>
+
+<div class="form-group full-width">
+<label>Word Search Design Mode</label>
+<div class="radio-group">
+    <div class="radio-option">
+        <input type="radio" id="modeCustom" name="designMode" value="custom">
+        <label for="modeCustom">Custom</label>
+    </div>
+    <div class="radio-option">
+        <input type="radio" id="modeDefault" name="designMode" value="default">
+        <label for="modeDefault">Default (auto-fill)</label>
+    </div>
+</div>
+<div id="designGrid" class="grid-design"></div>
+</div>
+
+<!-- ✅ UPDATED SECTION -->
+<div class="form-group full-width reattempt-group">
+<label>Attempts Allowed</label>
+<div class="radio-group">
+  <div class="radio-option">
+    <input type="radio" name="reattempt" value="1">
+    <label>1</label>
+  </div>
+  <div class="radio-option">
+    <input type="radio" name="reattempt" value="2">
+    <label>2</label>
+  </div>
+  <div class="radio-option">
+    <input type="radio" name="reattempt" value="3">
+    <label>3</label>
+  </div>
+</div>
+</div>
+
+<div class="form-group">
+<label for="opens">Opens</label>
+<input type="datetime-local" id="opens" name="opens">
+<div id="opensFormatted" class="formatted-date"></div>
+</div>
+
+<div class="form-group">
+<label for="closes">Closes</label>
+<input type="datetime-local" id="closes" name="closes">
+<div id="closesFormatted" class="formatted-date"></div>
+</div>
+
+<div class="form-group full-width">
+<label for="timeLimit">Time Limit (Minutes)</label>
+<input type="number" id="timeLimit" min="0" placeholder="Enter minutes">
+<div id="totalTime" class="total-time"></div>
+</div>
+
+</div>
+
+<div class="button-row">
+<button type="button" class="action-btn preview-btn">Preview</button>
+<button type="button" class="action-btn publish-btn">Publish</button>
+</div>
+
+</form>
+</div>
+
+<script>
+// ------------------------
+// Words to Find Uppercase
+// ------------------------
+const amountInput = document.getElementById("amount");
+const wordsContainer = document.getElementById("wordsContainer");
+
+amountInput.addEventListener("input", function () {
+    let amount = parseInt(this.value);
+    if (amount > 12) { amount = 12; this.value = 12; }
+    if (amount < 1 || isNaN(amount)) { wordsContainer.innerHTML = ""; return; }
+
+    wordsContainer.innerHTML = "";
+    for (let i = 1; i <= amount; i++) {
+        const input = document.createElement("input");
+        input.type = "text";
+        input.placeholder = "Word " + i;
+        input.required = true;
+
+        input.addEventListener("input", () => {
+            input.value = input.value.toUpperCase().replace(/[^A-Z]/g, '');
+        });
+
+        wordsContainer.appendChild(input);
+    }
+});
+
+// ------------------------
+// Description default/custom
+// ------------------------
+const defaultRadio = document.getElementById("default");
+const customRadio = document.getElementById("custom");
+const descriptionField = document.getElementById("description");
+
+defaultRadio.addEventListener("change", function () {
+    if (this.checked) {
+        descriptionField.value = "This is a word search puzzle that should be completed in the allotted time";
+        descriptionField.readOnly = true;
+    }
+});
+customRadio.addEventListener("change", function () {
+    if (this.checked) {
+        descriptionField.value = "";
+        descriptionField.readOnly = false;
+    }
+});
+
+// ------------------------
+// Format Opens/Closes
+// ------------------------
+function formatDateTime(value) {
+    if (!value) return "";
+    const date = new Date(value);
+    return date.toLocaleString('en-GB', {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+    });
+}
+
+const opensInput = document.getElementById("opens");
+const closesInput = document.getElementById("closes");
+
+opensInput.addEventListener("change", function () {
+    document.getElementById("opensFormatted").textContent = formatDateTime(this.value);
+});
+
+closesInput.addEventListener("change", function () {
+    document.getElementById("closesFormatted").textContent = formatDateTime(this.value);
+});
+
+// ------------------------
+// Time Limit display
+// ------------------------
+const timeLimitInput = document.getElementById("timeLimit");
+const totalTimeDisplay = document.getElementById("totalTime");
+
+timeLimitInput.addEventListener("input", function () {
+    const minutes = parseInt(this.value);
+    if (isNaN(minutes) || minutes < 0) { totalTimeDisplay.textContent = ""; return; }
+
+    if (minutes < 60) {
+        totalTimeDisplay.textContent = `${minutes} Minute${minutes !== 1 ? 's' : ''}`;
+    } else {
+        const hours = Math.floor(minutes / 60);
+        const remainingMinutes = minutes % 60;
+        if (remainingMinutes === 0) {
+            totalTimeDisplay.textContent = `${hours} Hour${hours !== 1 ? 's' : ''}`;
+        } else {
+            totalTimeDisplay.textContent =
+                `${hours} Hour${hours !== 1 ? 's' : ''} : ${remainingMinutes} Minute${remainingMinutes !== 1 ? 's' : ''}`;
+        }
+    }
+});
+
+// ------------------------
+// Word Search Design Grid
+// ------------------------
+const designGrid = document.getElementById("designGrid");
+const gridSize = 10;
+let designMode = "custom";
+
+// Helper: get target cell
+function focusCell(r, c) {
+    const target = designGrid.querySelector(`.cell[data-row='${r}'][data-col='${c}']`);
+    if (target) {
+        target.focus();
+        // Place cursor at the end
+        const range = document.createRange();
+        const sel = window.getSelection();
+        range.selectNodeContents(target);
+        range.collapse(false);
+        sel.removeAllRanges();
+        sel.addRange(range);
+    }
+}
+
+// Create grid
+for (let r = 0; r < gridSize; r++) {
+    for (let c = 0; c < gridSize; c++) {
+        const cell = document.createElement("div");
+        cell.className = "cell";
+        cell.dataset.row = r;
+        cell.dataset.col = c;
+        cell.contentEditable = true;
+        cell.style.textAlign = "center";
+
+        // Input handler: auto-uppercase and advance
+        cell.addEventListener("input", (e) => {
+            let char = cell.textContent.toUpperCase().replace(/[^A-Z]/g, '');
+            char = char.charAt(0) || "";
+            cell.textContent = char;
+
+            // Maintain cursor position
+            const range = document.createRange();
+            const sel = window.getSelection();
+            range.selectNodeContents(cell);
+            range.collapse(false);
+            sel.removeAllRanges();
+            sel.addRange(range);
+
+            if (char.length > 0) {
+                if (c < gridSize - 1) focusCell(r, c + 1);
+                else if (r < gridSize - 1) focusCell(r + 1, 0);
+            }
+        });
+
+        // Keydown handler: Arrow Navigation & Hold-to-Delete Backspace
+        cell.addEventListener("keydown", (e) => {
+            switch (e.key) {
+                case "ArrowUp":
+                    e.preventDefault();
+                    focusCell(Math.max(0, r - 1), c);
+                    break;
+                case "ArrowDown":
+                    e.preventDefault();
+                    focusCell(Math.min(gridSize - 1, r + 1), c);
+                    break;
+                case "ArrowLeft":
+                    e.preventDefault();
+                    focusCell(r, Math.max(0, c - 1));
+                    break;
+                case "ArrowRight":
+                    e.preventDefault();
+                    focusCell(r, Math.min(gridSize - 1, c + 1));
+                    break;
+                case "Backspace":
+                    // If current cell has text, clear it
+                    if (cell.textContent.length > 0) {
+                        cell.textContent = "";
+                        // e.preventDefault() not strictly needed here as we want the backspace action
+                    } else {
+                        // If cell is already empty, move focus back and clear that cell too
+                        e.preventDefault();
+                        let prevR = r;
+                        let prevC = c - 1;
+
+                        if (prevC < 0) {
+                            if (r > 0) {
+                                prevR = r - 1;
+                                prevC = gridSize - 1;
+                            } else {
+                                return; // Top of grid
+                            }
+                        }
+
+                        const prevCell = designGrid.querySelector(`.cell[data-row='${prevR}'][data-col='${prevC}']`);
+                        if (prevCell) {
+                            prevCell.textContent = "";
+                            focusCell(prevR, prevC);
+                        }
+                    }
+                    break;
+                default:
+                    if (e.key.length === 1 && !e.key.match(/[a-zA-Z]/)) {
+                        e.preventDefault();
+                    }
+            }
+        });
+
+        // Paste support
+        cell.addEventListener("paste", (e) => {
+            e.preventDefault();
+            let pasteText = (e.clipboardData || window.clipboardData).getData('text');
+            pasteText = pasteText.toUpperCase().replace(/[^A-Z]/g, '');
+            let currR = r, currC = c;
+
+            for (let char of pasteText) {
+                const target = designGrid.querySelector(`.cell[data-row='${currR}'][data-col='${currC}']`);
+                if (!target) break;
+                target.textContent = char;
+                if (currC < gridSize - 1) currC++;
+                else if (currR < gridSize - 1) { currC = 0; currR++; }
+                else break;
+            }
+            focusCell(currR, currC);
+        });
+
+        designGrid.appendChild(cell);
+    }
+}
+
+// Mode radio buttons
+const modeCustomRadio = document.getElementById("modeCustom");
+const modeDefaultRadio = document.getElementById("modeDefault");
+
+modeDefaultRadio.addEventListener("change", () => {
+    if (modeDefaultRadio.checked) {
+        designMode = "default";
+        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        designGrid.querySelectorAll(".cell").forEach(cell => {
+            if (!cell.textContent.trim()) {
+                cell.textContent = letters.charAt(Math.floor(Math.random() * letters.length));
+            }
+        });
+    }
+});
+
+modeCustomRadio.addEventListener("change", () => { if (modeCustomRadio.checked) designMode = "custom"; });
+
+// Publish data
+document.querySelector(".publish-btn").addEventListener("click", () => {
+    const gridData = [];
+    for (let r = 0; r < gridSize; r++) {
+        const row = [];
+        for (let c = 0; c < gridSize; c++) {
+            row.push(designGrid.querySelector(`.cell[data-row='${r}'][data-col='${c}']`).textContent || "");
+        }
+        gridData.push(row);
+    }
+    console.log("Grid Data:", gridData);
+    alert("Data saved to console!");
+});
+</script>
+
+</body>
+</html>
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Start Quiz</title>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        .navbar {
+            background-color: #111827;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .navbar span {
+            color: white;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+        }
+
+        .logo img {
+            height: 35px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        h1 { 
+            font-size: 2rem; 
+            margin-bottom: 40px;
+        }
+
+        /* Quiz Info Sections */
+        .quiz-dates, .quiz-details {
+            font-size: 0.95rem;
+        }
+
+        .quiz-dates {
+            margin-bottom: 40px; /* increased to match spacing above */
+        }
+
+        .quiz-details {
+            margin-top: 40px; /* increased to match spacing above */
+        }
+
+        hr { 
+            border: 0; 
+            border-top: 1px solid #eee; 
+            margin: 20px 0; 
+        }
+
+        .actions {
+            margin-top: 40px;
+            display: flex;
+            justify-content: flex-start; /* Align buttons horizontally at start */
+            gap: 10px; /* Space between buttons */
+            align-items: center;
+        }
+
+        .btn {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+
+        .btn-primary { 
+            background-color: #007bff; 
+            color: white; 
+        }
+
+        .btn-primary:hover { 
+            background-color: #0056b3; 
+        }
+
+        .btn-secondary { 
+            background-color: #adb5bd; 
+            color: #333; 
+        }
+
+        .btn-secondary:hover { 
+            background-color: #8e9499; 
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="navbar">
+        <div class="logo">
+            <img src="logo.png" alt="Quiz Carnival Logo"> 
+            <span>Quiz Carnival</span>
+        </div>
+    </header>
+
+    <main class="container">
+        <h1>Quiz 1</h1>
+
+        <!-- Section 1: Open/Close Dates -->
+        <section class="quiz-dates">
+            <p>Opens: Monday, 30 March 2026, 11:06 AM</p>
+            <p>Closes: Monday, 6 April 2026, 11:06 AM</p>
+        </section>
+
+        <section class="quiz-details">
+            <p>Attempts allowed: 2</p>
+            <p>This is a word search puzzle that should be completed in the allotted time.</p>
+            <p>Category: Animals</p>
+            <p>Time limit: 20 mins</p>
+            <p>Grading method: Highest grade</p>
+        </section>
+
+        <footer class="actions">
+            <button class="btn btn-secondary" onclick="goBack()">Back to the course</button>
+            <button class="btn btn-primary" onclick="startQuiz()">Start Quiz</button>
+        </footer>
+    </main>
+
+    <script>
+        function goBack() {
+            alert("Redirecting to the course main page...");
+            // window.location.href = 'course_home.html';
+        }
+
+        function startQuiz() {
+            alert("Starting quiz...");
+            // window.location.href = 'quiz_page.html';
+        }
+
+        window.onload = () => {
+            console.log("Quiz status loaded.");
+        };
+    </script>
+
+</body>
+</html>
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Word Search</title>
+
+<style>
+  :root {
+    --curious-blue: #2092e9;
+    --blush: #cf7486;
+    --san-juan: #35556e;
+    --tiber: #06382f;
+    --cherry-red: #74070e;
+    --mulled-wine: #614d70;
+    --pesto: #6c7d36;
+    --sorbet-orange: #ffa858;
+    --forest-green: #3a4b41;
+    --soft-jade: #abd1c6;
+    --current-color: #ffd166;
+    --radical-red: #FF6B6B;
+  }
+
+  html, body {
+    overflow-x: hidden;
+  }
+
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #fdfdfd;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    user-select: none;
+  }
+
+  .navbar {
+    background-color: #111827;
+    height: 60px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    box-sizing: border-box;
+  }
+
+  .navbar span {
+    color: white;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.2rem;
+  }
+
+  .logo img {
+    height: 35px;
+  }
+
+  /* Timer Wrapper */
+  .timer-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end; /* Align timer to right */
+    margin-bottom: 20px;
+  }
+
+  /* Timer Styles */
+  .timer-container {
+    background-color: #ffffff;
+    padding: 10px 15px; /* smaller padding */
+    border-radius: 10px;
+    display: flex;
+    gap: 10px; /* smaller gap */
+    align-items: center;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    border: 1px solid #ddd;
+  }
+
+  .time-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 50px;
+  }
+
+  .number {
+    color: #222;
+    font-size: 1.5rem; /* smaller numbers */
+    font-weight: 600;
+    line-height: 1;
+    margin-bottom: 3px;
+  }
+
+  .label {
+    color: #555;
+    font-size: 0.7rem; /* smaller label */
+    font-weight: 400;
+  }
+
+  .separator {
+    color: #ccc;
+    font-size: 1rem; /* smaller separator */
+    padding-bottom: 12px;
+    font-weight: bold;
+  }
+
+  .container {
+    background: white;
+    border-radius: 20px;
+    padding: 60px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    max-width: 700px;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 40px;
+  }
+
+  h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    color: #222;
+  }
+
+  .game {
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+    gap: 40px; 
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(10, 50px); 
+    grid-template-rows: repeat(10, 50px);
+    gap: 0; 
+    cursor: crosshair;
+    position: relative;
+    max-width: 100%;
+  }
+
+  .cell {
+    position: relative;
+    width: 50px; 
+    height: 50px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    z-index: 2;
+    color: #333;
+    font-size: 20px; 
+  }
+
+  .pill-highlight,
+  #temp-pill {
+    position: absolute;
+    height: 40px;           
+    border-radius: 20px;
+    pointer-events: none;
+    z-index: 1;
+    transform-origin: 20px center; 
+    margin-top: -20px;      
+  }
+
+  .pill-highlight {
+    border: 2px solid var(--pill-color);
+    background: rgba(0,0,0,0.02);
+  }
+
+  #temp-pill {
+    border: 2px solid var(--current-color);
+    display: none;
+  }
+
+  .words {
+    text-align: center; 
+  }
+
+  .words h3 {
+    margin: 0 0 15px;
+    font-size: 25px;
+    color: #666;
+    letter-spacing: 0.5px;
+  }
+
+  .words ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    column-count: 4; 
+    column-gap: 50px; 
+  }
+
+  .words li {
+    font-weight: 700;
+    padding: 4px 0;
+    font-size: 15px;
+    color: #222;
+    transition: all 0.2s;
+    break-inside: avoid; 
+  }
+
+  .words li.found {
+    opacity: 0.3;
+    text-decoration: line-through;
+  }
+
+  /* Modal Styles */
+  .modal {
+    width: 450px;
+    background: linear-gradient(145deg, #0b1120, #1c2541);
+    border: 3px solid #0055ff;
+    border-radius: 16px;
+    color: #ffffff;
+    padding: 30px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 85, 255, 0.5);
+    display: none;
+    z-index: 100;
+  }
+
+  .content p {
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.5;
+    margin-bottom: 30px;
+  }
+
+  .input-section {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  .btn {
+    background: linear-gradient(145deg, #76ff03, #32cd32);
+    color: #ffffff;
+    border: none;
+    padding: 12px 50px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 12px;
+    cursor: pointer;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    box-shadow: 0 5px 0 #4a9e02;
+    transition: all 0.2s;
+  }
+
+  .btn:hover {
+    background: linear-gradient(145deg, #32cd32, #76ff03);
+    transform: translateY(-2px);
+    box-shadow: 0 7px 0 #4a9e02;
+  }
+
+  .btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 #4a9e02;
+  }
+</style>
+</head>
+<body>
+
+<header class="navbar">
+  <div class="logo">
+    <img src="logo.png" alt="Quiz Carnival Logo"> 
+    <span>Quiz Carnival</span>
+  </div>
+</header>
+
+<!-- Timer -->
+<div class="timer-wrapper">
+  <div class="timer-container">
+    <div class="time-box">
+      <span id="hours" class="number">00</span>
+      <span class="label">hours</span>
+    </div>
+    <div class="separator">:</div>
+    <div class="time-box">
+      <span id="minutes" class="number">00</span>
+      <span class="label">minutes</span>
+    </div>
+    <div class="separator">:</div>
+    <div class="time-box">
+      <span id="seconds" class="number">00</span>
+      <span class="label">seconds</span>
+    </div>
+  </div>
+</div>
+
+<!-- Word Search -->
+<div class="container">
+  <h1>WORD SEARCH</h1>
+  <div class="game">
+    <div class="grid" id="grid">
+        <div id="temp-pill"></div>
+    </div>
+    <div class="words">
+      <h3>WORDS TO FIND</h3>
+      <ul id="wordList"></ul>
+    </div>
+  </div>
+</div>
+
+<!-- Finish Modal -->
+<div id="finishModal" class="modal">
+    <div class="content">
+        <p>You've found all the words! Press <strong>Submit</strong> to submit the quiz or <strong>Continue</strong> to keep interacting.</p>
+        <div class="input-section">
+            <button id="continueBtn" class="btn">Continue</button>
+            <button id="submitBtn" class="btn">Submit</button>
+        </div>
+    </div>
+</div>
+
+<script>
+  const countdownDate = new Date().getTime() + (20 * 60 * 1000); 
+
+  function updateCountdown() {
+    const now = new Date().getTime();
+    let timeLeft = countdownDate - now;
+
+    if (timeLeft < 0) {
+      clearInterval(interval);
+      document.querySelector(".timer-container").innerHTML = "<h1 style='color:#222'>Time's Up!</h1>";
+      return;
+    }
+
+    const h = Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
+    const m = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+    const s = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+    document.getElementById("hours").innerText = h.toString().padStart(2,'0');
+    document.getElementById("minutes").innerText = m.toString().padStart(2,'0');
+    document.getElementById("seconds").innerText = s.toString().padStart(2,'0');
+  }
+
+  const interval = setInterval(updateCountdown, 1000);
+  updateCountdown();
+
+  // Word Search Game Logic
+  const gridData = [
+    "ANGRYSAVRN","XRPETKYENS","RDETICXEEU","FSVDANGERR",
+    "FMCCAUASVP","CWAACMNAOR","AWORRIEDUI","LIMEMEEOSS",
+    "MTIREDDBIE","SADHAPPYXD"
+  ];
+  const words = ["ANGRY","HAPPY","SCARED","WORRIED","SURPRISED","NERVOUS","CALM","TIRED","SAD","EXCITED","TED","DANGER"];
+  const colors = [
+    "var(--curious-blue)","var(--blush)","var(--san-juan)","var(--tiber)",
+    "var(--cherry-red)","var(--mulled-wine)","var(--pesto)","var(--sorbet-orange)",
+    "var(--forest-green)","var(--soft-jade)","var(--radical-red)"
+  ];
+
+  let colorIndex = 0, isSelecting=false, startCell=null, currentSelection={cells:[],angle:0,width:0,left:0,top:0}, wordColors={}, cellsArray=[];
+  const grid=document.getElementById("grid"), wordList=document.getElementById("wordList"), tempPill=document.getElementById("temp-pill");
+
+  function buildGrid() {
+    gridData.forEach((row,r)=>{
+      row.split("").forEach((letter,c)=>{
+        const cell=document.createElement("div");
+        cell.className="cell";
+        cell.textContent=letter;
+        cell.dataset.row=r;
+        cell.dataset.col=c;
+        cell.addEventListener("mousedown",(e)=>{e.preventDefault(); handleStart(cell);});
+        cell.addEventListener("mouseenter",()=>handleDrag(cell));
+        grid.appendChild(cell);
+        cellsArray.push(cell);
+      });
+    });
+  }
+
+  function buildWords() {
+    words.forEach(word=>{
+      const li=document.createElement("li");
+      li.textContent=word;
+      li.id=word;
+      wordList.appendChild(li);
+    });
+  }
+
+  function handleStart(cell){
+    isSelecting=true;
+    startCell=cell;
+    const color=colors[colorIndex % colors.length];
+    document.documentElement.style.setProperty("--current-color", color);
+    tempPill.style.display="block";
+    updateSelection(cell);
+  }
+
+  function handleDrag(cell){
+    if(!isSelecting) return;
+    updateSelection(cell);
+  }
+
+  document.addEventListener("mouseup",()=>{
+    if(!isSelecting) return;
+    isSelecting=false;
+    checkSelection();
+    tempPill.style.display="none";
+  });
+
+  function updateSelection(endCell){
+    const r1=parseInt(startCell.dataset.row), c1=parseInt(startCell.dataset.col);
+    const r2=parseInt(endCell.dataset.row), c2=parseInt(endCell.dataset.col);
+    const dr=r2-r1, dc=c2-c1;
+    const absDr=Math.abs(dr), absDc=Math.abs(dc);
+    if(!(dr===0||dc===0||absDr===absDc)) return;
+
+    const cellSize=50;
+    const steps=Math.max(absDr,absDc);
+    const actualDist=Math.sqrt(dr*dr+dc*dc)*cellSize;
+    const pillWidth=actualDist+40;
+    const angle=Math.atan2(dr,dc)*(180/Math.PI);
+    const startX=c1*cellSize+(cellSize/2), startY=r1*cellSize+(cellSize/2);
+
+    tempPill.style.width=`${pillWidth}px`;
+    tempPill.style.left=`${startX-20}px`;
+    tempPill.style.top=`${startY}px`;
+    tempPill.style.transform=`rotate(${angle}deg)`;
+
+    currentSelection.width=pillWidth;
+    currentSelection.angle=angle;
+    currentSelection.left=tempPill.style.left;
+    currentSelection.top=tempPill.style.top;
+    currentSelection.cells=[];
+
+    const rStep=dr===0?0:dr/absDr, cStep=dc===0?0:dc/absDc;
+    for(let i=0;i<=steps;i++){
+      const r=r1+i*rStep, c=c1+i*cStep;
+      currentSelection.cells.push(cellsArray[r*10+c]);
+    }
+  }
+
+  function checkSelection(){
+    const word=currentSelection.cells.map(c=>c.textContent).join("");
+    const reversed=word.split("").reverse().join("");
+    const match=words.find(w=>(w===word||w===reversed)&&!wordColors[w]);
+    if(match){
+      const color=colors[colorIndex % colors.length];
+      wordColors[match]=color;
+      const pill=document.createElement("div");
+      pill.className="pill-highlight";
+      pill.style.setProperty("--pill-color", color);
+      pill.style.width=`${currentSelection.width}px`;
+      pill.style.left=currentSelection.left;
+      pill.style.top=currentSelection.top;
+      pill.style.transform=`rotate(${currentSelection.angle}deg)`;
+      grid.appendChild(pill);
+
+      const li=document.getElementById(match);
+      li.classList.add("found");
+      li.style.color=color;
+      colorIndex++;
+
+      // Show modal if all words found
+      if(words.every(w => wordColors[w])) {
+        document.getElementById('finishModal').style.display='block';
+      }
+    }
+  }
+
+  // Modal buttons
+  document.getElementById('continueBtn').addEventListener('click', () => {
+      document.getElementById('finishModal').style.display = 'none';
+  });
+
+  document.getElementById('submitBtn').addEventListener('click', () => {
+      alert("Quiz submitted!"); // Replace with real submit logic
+      document.getElementById('finishModal').style.display = 'none';
+  });
+
+  buildGrid();
+  buildWords();
+</script>
+
+</body>
+</html>
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>End Quiz</title>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        .navbar {
+            background-color: #111827;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .navbar span {
+            color: white;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+        }
+
+        .logo img {
+            height: 35px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        /* Updated h1 styling to match the first page */
+        h1 { 
+            font-size: 2rem;  /* matches first page */
+            margin-bottom: 40px; /* matches first page spacing */
+        }
+
+        /* Quiz Info Sections */
+        .quiz-dates, .quiz-details {
+            font-size: 0.95rem;
+        }
+
+        .quiz-dates {
+            margin-bottom: 40px;
+        }
+
+        .quiz-details {
+            margin-top: 40px;
+        }
+
+        hr { 
+            border: 0; 
+            border-top: 1px solid #eee; 
+            margin: 20px 0; 
+        }
+
+        .actions {
+            margin-top: 40px;
+            display: flex;
+            justify-content: flex-start;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+
+        .btn-primary { 
+            background-color: #007bff; 
+            color: white; 
+        }
+
+        .btn-primary:hover { 
+            background-color: #0056b3; 
+        }
+
+        .btn-secondary { 
+            background-color: #adb5bd; 
+            color: #333; 
+        }
+
+        .btn-secondary:hover { 
+            background-color: #8e9499; 
+        }
+
+        /* Quiz Results Styling */
+        .final-grade {
+            margin-top: 30px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .attempts-heading {
+            margin-top: 20px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .attempt-card {
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            overflow: hidden;
+            margin: 5px; 
+            background-color: #fff;
+            max-width: 600px;
+        }
+
+        .attempt-label {
+            background-color: #f8f9fa;
+            padding: 10px 15px;
+            font-weight: 700;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .results-table td {
+            padding: 10px 15px;
+            border-bottom: 1px solid #dee2e6;
+            font-size: 14px;
+            text-align: left;
+        }
+
+        .col-header {
+            background-color: #f8f9fa;
+            font-weight: 700;
+            text-align: left;
+            width: 160px;
+            color: #495057;
+        }
+
+        .review-footer {
+            padding: 10px 15px;
+            font-size: 0.95rem;
+            color: #444;
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="navbar">
+        <div class="logo">
+            <img src="logo.png" alt="Quiz Carnival Logo"> 
+            <span>Quiz Carnival</span>
+        </div>
+    </header>
+
+    <main class="container">
+        <h1>Quiz 1</h1>
+
+        <!-- Section 1: Open/Close Dates -->
+        <section class="quiz-dates">
+            <p><strong>Opened:</strong> Monday, 30 March 2026, 11:06 AM</p>
+            <p><strong>Closes:</strong> Monday, 6 April 2026, 11:06 AM</p>
+        </section>
+
+        <section class="quiz-details">
+            <p>Attempts allowed: 2</p>
+            <p>Time limit: 20 mins</p>
+            <p>Grading method: Highest grade</p>
+
+            <!-- Quiz Results Section -->
+            <div class="final-grade">
+                Your final grade for this quiz is 12.00/15.00.
+            </div>
+
+            <div class="attempts-heading">
+                Your attempts
+            </div>
+
+            <div class="attempt-card">
+                <div class="attempt-label">Attempt 1</div>
+                
+                <table class="results-table">
+                    <tr>
+                        <td class="col-header">Status</td>
+                        <td>Finished</td>
+                    </tr>
+                    <tr>
+                        <td class="col-header">Started</td>
+                        <td>Monday, 16 February 2026, 10:59 AM</td>
+                    </tr>
+                    <tr>
+                        <td class="col-header">Completed</td>
+                        <td>Monday, 16 February 2026, 11:06 AM</td>
+                    </tr>
+                    <tr>
+                        <td class="col-header">Duration</td>
+                        <td>7 mins 19 secs</td>
+                    </tr>
+                    <tr>
+                        <td class="col-header">Grade</td>
+                        <td>12.00 out of 15.00 <strong>(80%)</strong></td>
+                    </tr>
+                </table>
+
+                <div class="review-footer">
+                    Reviews are not permitted
+                </div>
+            </div>
+            <!-- End Quiz Results Section -->
+
+        </section>
+
+        <footer class="actions">
+            <button class="btn btn-secondary" onclick="goBack()">Back to the course</button>
+            <button class="btn btn-primary">View Results</button>
+        </footer>
+    </main>
+
+    <script>
+        function goBack() {
+            alert("Redirecting to the course main page...");
+            // window.location.href = 'course_home.html';
+        }
+
+        window.onload = () => {
+            console.log("Quiz status loaded.");
+        };
+    </script>
+
+</body>
+</html>
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Results Screen - Large</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-circle-progress/1.2.2/circle-progress.min.js"></script>
+    
+    <style>
+        :root {
+            --bg-deep: #020202;
+            --card-blue: #0b2559;
+            --border-glow: #3081d0;
+            --neon-cyan: #00d2ff;
+            --win-green: #5effa3;
+            --gold: #f1c40f;
+        }
+
+        body {
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .game-card {
+            width: 600px;
+            background: linear-gradient(180deg, #0d2a5a 0%, #051025 100%);
+            border: 4px solid var(--border-glow);
+            padding: 70px 30px 90px;
+            position: relative;
+            box-shadow: 0 0 50px rgba(0, 210, 255, 0.3);
+            border-radius: 8px;
+        }
+
+        .header-tab {
+            position: absolute;
+            top: -22px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(180deg, #2ecc71, #1e8449);
+            color: white;
+            padding: 10px 70px;
+            font-weight: 900;
+            font-size: 2rem;
+            letter-spacing: 4px;
+            border: 3px solid var(--win-green);
+            clip-path: polygon(10% 0%, 90% 0%, 100% 100%, 0% 100%);
+            white-space: nowrap;
+            text-shadow: 0 0 10px rgba(255,255,255,0.5);
+        }
+
+        .inner-frame {
+            border: 1px solid rgba(48, 129, 208, 0.4);
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border-radius: 4px;
+        }
+
+        .circles-container {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            gap: 20px;
+        }
+
+        .circle-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .circle {
+            position: relative;
+            height: 130px;
+            width: 130px;
+        }
+
+        .circle .box {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            height: 80%;
+            width: 80%;
+            background: var(--bg-deep);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid rgba(48, 129, 208, 0.3);
+        }
+
+        .circle .box span {
+            font-size: 24px; 
+            font-weight: 900;
+            color: var(--neon-cyan);
+        }
+
+        .circle-label {
+            margin-top: 18px;
+            font-size: 14px; 
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 700;
+        }
+
+        .nav-buttons {
+            position: absolute;
+            bottom: -35px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+        }
+
+        .btn {
+            background: var(--border-glow);
+            color: white;
+            border: 2px solid var(--neon-cyan);
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            cursor: pointer;
+            transition: 0.2s;
+            padding: 0 25px;
+            text-transform: uppercase;
+            font-size: 14px;
+            white-space: nowrap;
+            text-decoration: none; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn:hover {
+            filter: brightness(1.2);
+            transform: scale(1.08);
+            box-shadow: 0 0 20px var(--neon-cyan);
+        }
+
+        .hex { clip-path: polygon(12% 0%, 88% 0%, 100% 50%, 88% 100%, 12% 100%, 0% 50%); }
+        .med { width: 200px; height: 70px; }
+    </style>
+</head>
+<body>
+
+    <div class="game-card">
+        <div class="header-tab">Results</div>
+        
+        <div class="inner-frame">
+            <div class="circles-container">
+                <div class="circle-item">
+                    <div class="circle correct">
+                        <div class="bar"></div>
+                        <div class="box"><span>0%</span></div>
+                    </div>
+                    <div class="circle-label">Correct</div>
+                </div>
+                <div class="circle-item">
+                    <div class="circle speed">
+                        <div class="bar"></div>
+                        <div class="box"><span>0%</span></div>
+                    </div>
+                    <div class="circle-label">Speed</div>
+                </div>
+                <div class="circle-item">
+                    <div class="circle streak">
+                        <div class="bar"></div>
+                        <div class="box"><span>0%</span></div>
+                    </div>
+                    <div class="circle-label">Streak</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="https://example.com/class" class="btn hex med">Back to Class</a>
+            <a href="dashboard.html" class="btn hex med">Dashboard</a>
+        </div>
+    </div>
+
+    <script>
+        let baseOptions = {
+            startAngle: -1.55,
+            size: 130,
+            thickness: 10,
+            fill: {gradient: ['#00d2ff', '#3081d0']} 
+        }
+
+        $(".correct .bar").circleProgress({
+            ...baseOptions,
+            value: 0.92,
+            fill: {gradient: ['#5effa3', '#2ecc71']}
+        }).on('circle-animation-progress', function(event, progress, stepValue) {
+            $(this).parent().find("span").text(Math.round(stepValue * 100) + "%");
+        });
+
+        // Speed %
+        $(".speed .bar").circleProgress({
+            ...baseOptions,
+            value: 0.75,
+            fill: {gradient: ['#00d2ff', '#3081d0']}
+        }).on('circle-animation-progress', function(event, progress, stepValue) {
+            $(this).parent().find("span").text(Math.round(stepValue * 100) + "%");
+        });
+
+        // Streak %
+        $(".streak .bar").circleProgress({
+            ...baseOptions,
+            value: 0.80,
+            fill: {gradient: ['#f1c40f', '#e67e22']}
+        }).on('circle-animation-progress', function(event, progress, stepValue) {
+            $(this).parent().find("span").text(Math.round(stepValue * 100) + "%");
+        });
+    </script>
+
+</body>
+</html>
+
+
+after selecting submit let the quiz go to the forth website 
+make it look the same and keep the functionality 
+just make the first website able to fill out the information for the second and forth web website
+let the third be quiz that was created
+let the last webpage be the results that shows up when you press view results
+

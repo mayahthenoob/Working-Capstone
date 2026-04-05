@@ -10,3 +10,11 @@
 <i class='bx bx-male'></i> 
 <i class='bx bx-color-fill'></i>
 <i class='bx bx-detail'></i> 
+
+
+
+make it look the same and keep the functionality 
+just make the first website able to fill out the information for the second website
+let the third be quiz that was created
+
+
