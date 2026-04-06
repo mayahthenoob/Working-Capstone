@@ -187,7 +187,8 @@
         .actions {
             margin-top: 50px;
             display: flex;
-            gap: 20px;
+            gap: 15px;
+            flex-wrap: wrap;
         }
 
         button.btn-action {
@@ -198,16 +199,24 @@
             font-weight: 700;
         }
 
-        .btn-save {
-            background: #1a1a1a;
+        .btn-edit {
+            background: #2563eb; /* Blue color */
             color: white;
             border: none;
         }
 
-        .btn-cancel {
-            background: none;
-            border: 1px solid #ddd;
-            color: #666;
+        .btn-edit:hover {
+            background: #1e40af;
+        }
+
+        .btn-dashboard {
+            background: #f3f4f6; /* Light gray */
+            color: #1a1a1a;
+            border: 1px solid #ccc;
+        }
+
+        .btn-dashboard:hover {
+            background: #e5e7eb;
         }
 
         .certificate-gallery .container {
@@ -415,6 +424,12 @@
 
                 </div>
 
+                <!-- ACTIONS - moved outside details so it's always at the bottom -->
+                <div class="actions">
+                    <button class="btn-action btn-edit">Edit Profile</button>
+                    <button class="btn-action btn-dashboard">Return to Dashboard</button>
+                </div>
+
             </div>
         </div>
     </div>
@@ -467,6 +482,15 @@
         function closeModal() {
             modal.style.display = "none";
         }
+
+        // Actions buttons functionality
+        document.querySelector('.btn-edit').onclick = () => {
+            alert("Edit Profile clicked"); // Replace with actual edit logic
+        };
+
+        document.querySelector('.btn-dashboard').onclick = () => {
+            window.location.href = "dashboard.html"; // Replace with actual dashboard URL
+        };
     </script>
 
 </body>
