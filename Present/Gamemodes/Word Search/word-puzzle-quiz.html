@@ -60,24 +60,27 @@
     height: 35px;
   }
 
-  /* Timer Wrapper */
+  /* Timer Wrapper - Updated to match second website */
   .timer-wrapper {
     width: 100%;
     display: flex;
-    justify-content: flex-end; /* Align timer to right */
+    justify-content: flex-end; 
     margin-bottom: 20px;
+    padding-right: 20px; /* Aligns with the second site's spacing */
+    box-sizing: border-box;
   }
 
-  /* Timer Styles */
+  /* Timer Container - Updated to match second website */
   .timer-container {
     background-color: #ffffff;
-    padding: 10px 15px; /* smaller padding */
+    padding: 10px 15px;
     border-radius: 10px;
     display: flex;
-    gap: 10px; /* smaller gap */
+    gap: 10px;
     align-items: center;
     box-shadow: 0 3px 10px rgba(0,0,0,0.1);
     border: 1px solid #ddd;
+    margin-top: 10px;
   }
 
   .time-box {
@@ -89,7 +92,7 @@
 
   .number {
     color: #222;
-    font-size: 1.5rem; /* smaller numbers */
+    font-size: 1.5rem;
     font-weight: 600;
     line-height: 1;
     margin-bottom: 3px;
@@ -97,13 +100,13 @@
 
   .label {
     color: #555;
-    font-size: 0.7rem; /* smaller label */
+    font-size: 0.7rem;
     font-weight: 400;
   }
 
   .separator {
     color: #ccc;
-    font-size: 1rem; /* smaller separator */
+    font-size: 1rem;
     padding-bottom: 12px;
     font-weight: bold;
   }
@@ -277,7 +280,6 @@
   </div>
 </header>
 
-<!-- Timer -->
 <div class="timer-wrapper">
   <div class="timer-container">
     <div class="time-box">
@@ -297,7 +299,6 @@
   </div>
 </div>
 
-<!-- Word Search -->
 <div class="container">
   <h1>WORD SEARCH</h1>
   <div class="game">
@@ -311,7 +312,6 @@
   </div>
 </div>
 
-<!-- Finish Modal -->
 <div id="finishModal" class="modal">
     <div class="content">
         <p>You've found all the words! Press <strong>Submit</strong> to submit the quiz or <strong>Continue</strong> to keep interacting.</p>
@@ -331,7 +331,9 @@
 
     if (timeLeft < 0) {
       clearInterval(interval);
-      document.querySelector(".timer-container").innerHTML = "<h1 style='color:#222'>Time's Up!</h1>";
+      document.getElementById("hours").innerText = "00";
+      document.getElementById("minutes").innerText = "00";
+      document.getElementById("seconds").innerText = "00";
       return;
     }
 
@@ -462,20 +464,18 @@
       li.style.color=color;
       colorIndex++;
 
-      // Show modal if all words found
       if(words.every(w => wordColors[w])) {
         document.getElementById('finishModal').style.display='block';
       }
     }
   }
 
-  // Modal buttons
   document.getElementById('continueBtn').addEventListener('click', () => {
       document.getElementById('finishModal').style.display = 'none';
   });
 
   document.getElementById('submitBtn').addEventListener('click', () => {
-      alert("Quiz submitted!"); // Replace with real submit logic
+      alert("Quiz submitted!");
       document.getElementById('finishModal').style.display = 'none';
   });
 

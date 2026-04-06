@@ -106,7 +106,8 @@
             align-items: center;
             gap: 12px;
             padding: 10px 0;
-            border-bottom: 1px solid #eee;
+            margin-bottom: 10px; /* Adds space between rows instead of line */
+            /* border-bottom: 1px solid #eee; */ /* Removed horizontal line */
         }
 
         .item-number { font-weight: bold; width: 30px; color: #666; }
@@ -200,85 +201,85 @@
 </div>
 
 <script>
-// TIMER SCRIPT
-const countdownDate = new Date().getTime() + (20 * 60 * 1000); 
+    // TIMER SCRIPT
+    const countdownDate = new Date().getTime() + (20 * 60 * 1000); 
 
-function updateCountdown() {
-    const now = new Date().getTime();
-    let timeLeft = countdownDate - now;
+    function updateCountdown() {
+        const now = new Date().getTime();
+        let timeLeft = countdownDate - now;
 
-    if (timeLeft < 0) {
-        clearInterval(interval);
-        document.getElementById("hours").innerText = "00";
-        document.getElementById("minutes").innerText = "00";
-        document.getElementById("seconds").innerText = "00";
-        return;
+        if (timeLeft < 0) {
+            clearInterval(interval);
+            document.getElementById("hours").innerText = "00";
+            document.getElementById("minutes").innerText = "00";
+            document.getElementById("seconds").innerText = "00";
+            return;
+        }
+
+        const h = Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
+        const m = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+        const s = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+        document.getElementById("hours").innerText = h.toString().padStart(2,'0');
+        document.getElementById("minutes").innerText = m.toString().padStart(2,'0');
+        document.getElementById("seconds").innerText = s.toString().padStart(2,'0');
     }
 
-    const h = Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
-    const m = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-    const s = Math.floor((timeLeft % (1000 * 60)) / 1000);
+    const interval = setInterval(updateCountdown, 1000);
+    updateCountdown();
 
-    document.getElementById("hours").innerText = h.toString().padStart(2,'0');
-    document.getElementById("minutes").innerText = m.toString().padStart(2,'0');
-    document.getElementById("seconds").innerText = s.toString().padStart(2,'0');
-}
+    // QUIZ SCRIPT
+    let currentPage = 1;
+    const totalPages = 3;
+    const itemsPerPage = 10;
 
-const interval = setInterval(updateCountdown, 1000);
-updateCountdown();
+    function renderPage() {
+        const itemsContainer = document.getElementById("itemsContainer");
+        itemsContainer.innerHTML = '';
 
-// QUIZ SCRIPT
-let currentPage = 1;
-const totalPages = 3;
-const itemsPerPage = 10;
+        let start = (currentPage - 1) * itemsPerPage + 1;
+        let end = start + itemsPerPage - 1;
 
-function renderPage() {
-    const itemsContainer = document.getElementById("itemsContainer");
-    itemsContainer.innerHTML = '';
-
-    let start = (currentPage - 1) * itemsPerPage + 1;
-    let end = start + itemsPerPage - 1;
-
-    for (let i = start; i <= end; i++) {
-        itemsContainer.innerHTML += ` 
-            <div class="row">
-                <span class="item-number">${i}.</span>
-                <div class="input-container">
-                    <input type="text" class="input-field" placeholder="Spell here">
-                    <i class='bx bx-volume-full'></i>
+        for (let i = start; i <= end; i++) {
+            itemsContainer.innerHTML += ` 
+                <div class="row">
+                    <span class="item-number">${i}.</span>
+                    <div class="input-container">
+                        <input type="text" class="input-field" placeholder="Spell here">
+                        <i class='bx bx-volume-full'></i>
+                    </div>
                 </div>
-            </div>
-        `;
+            `;
+        }
+
+        document.getElementById("page-info").textContent = `Page ${currentPage} of ${totalPages}`;
+        document.getElementById("prevBtn").disabled = (currentPage === 1);
+        
+        const nextBtn = document.getElementById("nextBtn");
+        if (currentPage === totalPages) {
+            nextBtn.textContent = "Finish";
+        } else {
+            nextBtn.textContent = "Next";
+        }
     }
 
-    document.getElementById("page-info").textContent = `Page ${currentPage} of ${totalPages}`;
-    document.getElementById("prevBtn").disabled = (currentPage === 1);
-    
-    const nextBtn = document.getElementById("nextBtn");
-    if (currentPage === totalPages) {
-        nextBtn.textContent = "Finish";
-    } else {
-        nextBtn.textContent = "Next";
+    function nextPage() {
+        if (currentPage < totalPages) {
+            currentPage++;
+            renderPage();
+        } else {
+            alert("Quiz Finished!");
+        }
     }
-}
 
-function nextPage() {
-    if (currentPage < totalPages) {
-        currentPage++;
-        renderPage();
-    } else {
-        alert("Quiz Finished!");
+    function prevPage() {
+        if (currentPage > 1) {
+            currentPage--;
+            renderPage();
+        }
     }
-}
 
-function prevPage() {
-    if (currentPage > 1) {
-        currentPage--;
-        renderPage();
-    }
-}
-
-renderPage();
+    renderPage();
 </script>
 
 </body>
