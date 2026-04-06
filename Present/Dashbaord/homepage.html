@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homepage</title>
+    <style>
+        :root {
+            --bg-blue: #e0f4ff;
+            --accent-yellow: #ffb400;
+            --hot-pink: #d81b60;
+            --text-gray: #666;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-blue);
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        /* Header / Navbar Styles */
+        .navbar {
+            background-color: #111827;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+
+        .navbar span {
+            color: white;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+        }
+
+        .logo img {
+            height: 35px;
+        }
+
+        .header-link {
+            color: #111827;
+            background-color: var(--accent-yellow);
+            text-decoration: none;
+            font-weight: bold;
+            padding: 8px 15px;
+            border-radius: 25px;
+            text-transform: uppercase;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .header-link:hover {
+            background-color: #fff;
+            color: var(--hot-pink);
+        }
+
+        /* Hero Section */
+        .hero {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-around;
+            max-width: 1200px;
+            margin: 20px auto 40px auto;
+            padding: 20px;
+        }
+
+        .hero-text {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .hero-text h1 {
+            font-size: 3rem;
+            color: var(--hot-pink);
+            margin-bottom: 10px;
+            line-height: 1.1;
+        }
+
+        .hero-text p {
+            color: var(--text-gray);
+            max-width: 400px;
+            margin-bottom: 25px;
+        }
+
+        .btn-shop {
+            background-color: var(--accent-yellow);
+            border: none;
+            padding: 12px 35px;
+            border-radius: 25px;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            color: #111827;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .btn-shop:hover {
+            background-color: #fff;
+            color: var(--hot-pink);
+        }
+
+        /* Smaller buttons inside categories */
+        .btn-small {
+            padding: 5px 10px;
+            font-size: 0.7rem;
+            width: 100px;
+        }
+
+        /* Popular Categories Grid */
+        .pop-cat-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto 50px auto;
+        }
+
+        .cat-banner {
+            height: 150px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding-left: 20px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cat-1 { background-color: #ffcccc; color: #333; }
+        .cat-2 { background-color: #333; color: white; }
+        .cat-3 { background-color: #f0f0f0; color: #333; }
+
+        @media (max-width: 1024px) {
+            .pop-cat-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .pop-cat-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar / Header -->
+    <header class="navbar">
+        <div class="logo">
+            <img src="logo.png" alt="Quiz Carnival Logo"> 
+            <span>Quiz Carnival</span>
+        </div>
+        <a href="login.html" class="header-link">Login</a>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-text">
+            <h1>Quiz Carnival</h1>
+            <p>The best website for quizzes for students. It has four different quiz gamemodes.</p>
+            <a href="readmore.md" class="btn-shop">Read More</a>
+        </div>
+    </section>
+
+    <!-- Popular Categories -->
+    <section class="pop-cat-grid">
+        <div class="cat-banner cat-1">
+            <h3>Fill In The Blanks</h3>
+            <a href="fill-in-the-blanks.md" class="btn-shop btn-small">LEARN MORE</a>
+        </div>
+        <div class="cat-banner cat-2">
+            <h3>Hangman</h3>
+            <a href="hangman.md" class="btn-shop btn-small">LEARN MORE</a>
+        </div>
+        <div class="cat-banner cat-3">
+            <h3>Spelling Bee</h3>
+            <a href="spelling-bee.md" class="btn-shop btn-small">LEARN MORE</a>
+        </div>
+        <div class="cat-banner cat-3">
+            <h3>Word Search</h3>
+            <a href="word-search.md" class="btn-shop btn-small">LEARN MORE</a>
+        </div>
+    </section>
+
+</body>
+</html>
