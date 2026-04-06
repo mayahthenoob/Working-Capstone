@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Courses Dashboard</title>
+    <title>My Courses</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
@@ -26,7 +26,6 @@
             display: flex;
             gap: 12px;
             padding-top: 15px;
-            border-top: 1px solid #e0e0e0;
             flex-wrap: wrap;
             align-items: center;
         }
@@ -104,7 +103,6 @@
             color: #0056b3;
         }
 
-        /* ── Course Grid ── */
         .course-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -117,7 +115,6 @@
             display: block;
         }
 
-        /* ── Cards (from first website) ── */
         .card-container {
             width: 100%;
             height: 200px;
@@ -189,7 +186,6 @@
             color: #111;
         }
 
-        /* ── List View overrides ── */
         .course-grid.list-view .card-container {
             height: 80px;
             margin-bottom: 10px;
