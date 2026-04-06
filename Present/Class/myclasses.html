@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Courses</title>
+    <title>My Classes</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
@@ -103,7 +103,7 @@
             color: #0056b3;
         }
 
-        .course-grid {
+        .classes-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 20px;
@@ -111,7 +111,7 @@
             margin: 20px auto 0 auto;
         }
 
-        .course-grid.list-view {
+        .classes-grid.list-view {
             display: block;
         }
 
@@ -186,7 +186,8 @@
             color: #111;
         }
 
-        .course-grid.list-view .card-container {
+        /* List view styles */
+        .classes-grid.list-view .card-container {
             height: 80px;
             margin-bottom: 10px;
             background-image: none !important;
@@ -196,15 +197,15 @@
             border-radius: 12px;
         }
 
-        .course-grid.list-view .card-container:hover {
+        .classes-grid.list-view .card-container:hover {
             transform: none;
         }
 
-        .course-grid.list-view .card-container::before {
+        .classes-grid.list-view .card-container::before {
             display: none;
         }
 
-        .course-grid.list-view .card-content {
+        .classes-grid.list-view .card-content {
             opacity: 1;
             transform: none;
             padding: 15px 20px;
@@ -214,18 +215,18 @@
             align-items: center;
         }
 
-        .course-grid.list-view .card-content p {
+        .classes-grid.list-view .card-content p {
             color: #666;
         }
 
-        .course-grid.list-view .btn-visit {
+        .classes-grid.list-view .btn-visit {
             background: #1d2125;
             color: white;
             border: none;
             margin-top: 0;
         }
 
-        .course-grid.list-view .btn-visit:hover {
+        .classes-grid.list-view .btn-visit:hover {
             background: #333;
             color: white;
         }
@@ -259,7 +260,7 @@
     </div>
 </div>
 
-<div class="course-grid" id="courseGrid">
+<div class="classes-grid" id="classesGrid">
 
     <a href="#" class="card-container" style="background-image: url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=400');">
         <div class="card-content">
@@ -288,7 +289,7 @@
 </div>
 
 <script>
-    const courseGrid = document.getElementById('courseGrid');
+    const classesGrid = document.getElementById('classesGrid');
 
     document.querySelectorAll('.dropdown-trigger').forEach(trigger => {
         trigger.addEventListener('click', (e) => {
@@ -309,10 +310,10 @@
             const trigger = item.closest('.custom-dropdown').querySelector('.dropdown-trigger');
 
             if (viewType === 'list') {
-                courseGrid.classList.add('list-view');
+                classesGrid.classList.add('list-view');
                 trigger.textContent = 'View: List';
             } else {
-                courseGrid.classList.remove('list-view');
+                classesGrid.classList.remove('list-view');
                 trigger.textContent = 'View: Card';
             }
         });
