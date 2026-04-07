@@ -175,7 +175,7 @@
     overflow-x: auto;
     scroll-behavior: smooth;
     padding: 10px 0;
-    justify-content: center; /* Center cards */
+    justify-content: center;
     scrollbar-width: none;
   }
   .course-grid::-webkit-scrollbar { display: none; }
@@ -206,49 +206,128 @@
 
   /* Timeline Styling */
   .timeline-controls {
-    display: flex; justify-content: space-between; align-items: center;
-    flex-wrap: wrap; gap: 15px; margin-top: 20px; margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 20px;
+    margin-bottom: 20px;
   }
   .custom-dropdown { position: relative; width: 160px; }
   .custom-dropdown button {
     width: 100%; background: #f4f7fe; border: 1px solid #e0e5f2;
     border-radius: 12px; padding: 10px 15px; text-align: left;
     font-weight: 600; cursor: pointer; color: var(--text-main);
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .custom-dropdown button::after {
+    content: '\eb79';
+    font-family: 'boxicons';
+    font-size: 16px;
+    color: var(--text-muted);
   }
   .custom-dropdown-content {
     display: none; position: absolute; background: white; min-width: 100%;
     box-shadow: 0 4px 20px rgba(0,0,0,0.1); border-radius: 12px;
-    z-index: 10; margin-top: 5px;
+    z-index: 10; margin-top: 5px; border: 1px solid #e0e5f2;
+    overflow: hidden;
   }
-  .custom-dropdown-content div { padding: 10px 15px; cursor: pointer; }
+  .custom-dropdown-content div {
+    padding: 10px 15px; cursor: pointer; font-size: 14px;
+    color: var(--text-main); transition: 0.2s;
+  }
   .custom-dropdown-content div:hover { background: #f4f7fe; color: var(--primary); }
+  .custom-dropdown-content div.active { background: #eef1ff; color: var(--primary); font-weight: 600; }
 
   .search-bar input {
-    padding: 12px 20px; width: 300px; border-radius: 30px;
+    padding: 10px 20px; width: 300px; border-radius: 30px;
     border: 1px solid #e0e5f2; background: #f4f7fe;
+    font-size: 14px; color: var(--text-main); outline: none;
+    transition: border-color 0.2s;
   }
+  .search-bar input::placeholder { color: var(--text-muted); }
+  .search-bar input:focus { border-color: var(--primary); background: #fff; }
 
-  .date-group { font-weight: 700; font-size: 13px; color: var(--text-muted); margin: 25px 0 15px; text-transform: uppercase; }
+  .date-group { font-weight: 700; font-size: 13px; color: var(--text-muted); margin: 25px 0 15px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .date-group:first-child { margin-top: 0; }
+
   .timeline-item {
     display: flex; align-items: center; gap: 20px; padding: 16px;
     border-radius: 16px; transition: 0.2s; border: 1px solid transparent;
+    animation: fadeSlideIn 0.3s ease forwards;
+    opacity: 0;
+  }
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
   }
   .timeline-item:hover { background: #fbfcfe; border-color: #e0e5f2; }
   .time-label { font-size: 13px; font-weight: 600; color: var(--text-muted); min-width: 50px; }
   .icon-box {
     width: 45px; height: 45px; background: #f4f7fe; border-radius: 12px;
     display: flex; align-items: center; justify-content: center;
-    color: var(--primary); font-size: 20px;
+    color: var(--primary); font-size: 20px; flex-shrink: 0;
   }
   .item-details { flex-grow: 1; }
   .item-title { font-weight: 700; font-size: 15px; color: var(--text-main); }
-  .badge-overdue { background: #fff5f5; color: var(--danger); padding: 2px 8px; border-radius: 6px; font-size: 11px; }
+  .item-subtitle { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+  .badge-overdue { background: #fff5f5; color: var(--danger); padding: 2px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; margin-left: 8px; }
+  .badge-current { background: #f0fdf4; color: #16a34a; padding: 2px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; margin-left: 8px; }
+
+  /* Empty state */
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-muted);
+  }
+  .empty-state i { font-size: 48px; margin-bottom: 12px; display: block; }
+  .empty-state p { font-size: 15px; font-weight: 500; }
+
+  /* Active filter pills */
+  .active-filters {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+    min-height: 0;
+    transition: all 0.3s;
+  }
+  .filter-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #eef1ff;
+    color: var(--primary);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    animation: fadeSlideIn 0.2s ease forwards;
+  }
+  .filter-pill button {
+    background: none;
+    border: none;
+    color: var(--primary);
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+    display: flex;
+  }
+  .filter-pill button:hover { color: var(--danger); }
 
   @media (max-width: 768px) {
     .sidebar { width: 70px; }
     .main { margin-left: 70px; }
     .brand-text, .list-item-text { display: none; }
     .search-bar input { width: 100%; }
+    .timeline-controls { flex-direction: column; align-items: stretch; }
+    .custom-dropdown { width: 100%; }
+    .content { padding: 20px; }
   }
 </style>
 </head>
@@ -268,7 +347,7 @@
   <nav class="sidebar-center">
     <ul class="list">
       <li class="list-item"><a href="create.html"><i class='bx bx-plus'></i><span class="list-item-text">Create</span></a></li>
-      <li class="list-item"><a href="homepage.html"><i class='bx bx-home'></i><span class="list-item-text">Homepage</span></a></li>
+      <li class="list-item"><a href="index.html"><i class='bx bx-home'></i><span class="list-item-text">Homepage</span></a></li>
       <li class="list-item"><a href="dashboard.html"><i class='bx bxs-dashboard'></i><span class="list-item-text">Dashboard</span></a></li>
       <li class="list-item"><a href="myclasses.html"><i class='bx bx-book'></i><span class="list-item-text">My Classes</span></a></li>
       <li class="list-item"><a href="classes.html"><i class='bx bx-library'></i><span class="list-item-text">Classes</span></a></li>
@@ -341,92 +420,360 @@
       <h2>Timeline</h2>
       <div class="timeline-controls">
         <div style="display: flex; gap: 10px;">
-          <div class="custom-dropdown">
-            <button id="dropdownBtn">All Tasks</button>
-            <div class="custom-dropdown-content" id="dropdownContent">
-              <div>All</div><div>Current</div><div>Overdue</div>
+          <div class="custom-dropdown" id="filterDropdown">
+            <button id="filterBtn">All Tasks</button>
+            <div class="custom-dropdown-content" id="filterContent">
+              <div data-value="all" class="active">All Tasks</div>
+              <div data-value="current">Current</div>
+              <div data-value="overdue">Overdue</div>
             </div>
           </div>
-          <div class="custom-dropdown">
+          <div class="custom-dropdown" id="sortDropdown">
             <button id="sortBtn">Sort By</button>
             <div class="custom-dropdown-content" id="sortContent">
-              <div>Date</div><div>Class</div>
+              <div data-value="date" class="active">Date</div>
+              <div data-value="class">Class</div>
             </div>
           </div>
         </div>
         <div class="search-bar">
-          <input type="text" placeholder="Search activity...">
+          <input type="text" id="searchInput" placeholder="Search activity...">
         </div>
       </div>
 
-      <div class="timeline-list">
-        <div class="date-group">Saturday, 4 April 2026</div>
-        <div class="timeline-item">
-          <div class="time-label">04:25</div>
-          <div class="icon-box"><i class='bx bx-search-alt-2'></i></div>
-          <div class="item-details">
-            <div class="item-title">Quiz 1 <span class="badge-overdue">Overdue</span></div>
-            <div class="item-subtitle">Mathematics</div>
-          </div>
-        </div>
+      <!-- Active filter pills -->
+      <div class="active-filters" id="activeFilters"></div>
 
-        <div class="date-group">Thursday, 23 April 2026</div>
-        <div class="timeline-item">
-          <div class="time-label">09:00</div>
-          <div class="icon-box"><i class='bx bx-male'></i></div>
-          <div class="item-details">
-            <div class="item-title">Plants</div>
-            <div class="item-subtitle">Agriculture Science</div>
-          </div>
-        </div>
-      </div>
+      <!-- Timeline renders here -->
+      <div id="timelineList"></div>
     </section>
   </div>
 </div>
 
 <script>
-  // Sidebar Dropdown
+  // ===== TIMELINE DATA =====
+  const timelineData = [
+    {
+      id: 1,
+      date: 'Saturday, 4 April 2026',
+      dateSort: '2026-04-04',
+      time: '04:25',
+      icon: 'bx bx-search-alt-2',
+      title: 'Quiz 1',
+      status: 'overdue',
+      subtitle: 'Mathematics'
+    },
+    {
+      id: 2,
+      date: 'Thursday, 23 April 2026',
+      dateSort: '2026-04-23',
+      time: '09:00',
+      icon: 'bx bx-male',
+      title: 'Plants',
+      status: 'current',
+      subtitle: 'Agriculture Science'
+    },
+    {
+      id: 3,
+      date: 'Friday, 10 April 2026',
+      dateSort: '2026-04-10',
+      time: '11:30',
+      icon: 'bx bx-clipboard',
+      title: 'Midterm Exam',
+      status: 'overdue',
+      subtitle: 'General Science'
+    },
+    {
+      id: 4,
+      date: 'Monday, 27 April 2026',
+      dateSort: '2026-04-27',
+      time: '14:00',
+      icon: 'bx bx-book-open',
+      title: 'Chapter 5 Review',
+      status: 'current',
+      subtitle: 'Mathematics'
+    },
+    {
+      id: 5,
+      date: 'Wednesday, 15 April 2026',
+      dateSort: '2026-04-15',
+      time: '08:45',
+      icon: 'bx bx-book-open',
+      title: 'Lab Report 3',
+      status: 'overdue',
+      subtitle: 'Agriculture Science'
+    },
+    {
+      id: 6,
+      date: 'Tuesday, 28 April 2026',
+      dateSort: '2026-04-28',
+      time: '10:15',
+      icon: 'bx bx-pencil',
+      title: 'Essay Assignment',
+      status: 'current',
+      subtitle: 'General Science'
+    }
+  ];
+
+  // ===== STATE =====
+  let currentFilter = 'all';
+  let currentSort = 'date';
+  let searchQuery = '';
+
+  // ===== DOM REFS =====
+  const filterBtn = document.getElementById('filterBtn');
+  const filterContent = document.getElementById('filterContent');
+  const sortBtn = document.getElementById('sortBtn');
+  const sortContent = document.getElementById('sortContent');
+  const searchInput = document.getElementById('searchInput');
+  const timelineList = document.getElementById('timelineList');
+  const activeFiltersContainer = document.getElementById('activeFilters');
+
+  // ===== PROFILE DROPDOWN =====
   function toggleDropdown() {
     document.getElementById("profileDropdown").classList.toggle("show");
   }
 
-  // Horizontal Scroll
-  const grid = document.getElementById('courseGrid');
+  // ===== HORIZONTAL SCROLL =====
   function scrollGrid(distance) {
-    grid.scrollBy({ left: distance, behavior: 'smooth' });
+    document.getElementById('courseGrid').scrollBy({ left: distance, behavior: 'smooth' });
   }
 
-  // Generic Dropdown Logic for Timeline
-  function setupDropdown(btnId, contentId) {
-    const btn = document.getElementById(btnId);
-    const content = document.getElementById(contentId);
-    if(!btn || !content) return;
-    
+  // ===== GENERIC DROPDOWN TOGGLE =====
+  function setupDropdown(btn, content) {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
+      // Close other dropdowns first
+      document.querySelectorAll('.custom-dropdown-content').forEach(d => {
+        if (d !== content) d.style.display = 'none';
+      });
       content.style.display = content.style.display === 'block' ? 'none' : 'block';
     });
-
-    content.querySelectorAll('div').forEach(item => {
-      item.addEventListener('click', () => {
-        btn.textContent = item.textContent;
-        content.style.display = 'none';
-      });
-    });
   }
 
-  setupDropdown('dropdownBtn', 'dropdownContent');
-  setupDropdown('sortBtn', 'sortContent');
+  setupDropdown(filterBtn, filterContent);
+  setupDropdown(sortBtn, sortContent);
 
-  // Close everything on outside click
-  window.onclick = function(event) {
-    if (!event.target.closest('.profile-container')) {
+  // ===== FILTER DROPDOWN CLICK HANDLER =====
+  filterContent.querySelectorAll('div').forEach(item => {
+    item.addEventListener('click', () => {
+      const value = item.dataset.value;
+      currentFilter = value;
+
+      // Update active state styling
+      filterContent.querySelectorAll('div').forEach(d => d.classList.remove('active'));
+      item.classList.add('active');
+
+      // Update button text
+      filterBtn.textContent = item.textContent;
+
+      // Close dropdown
+      filterContent.style.display = 'none';
+
+      renderTimeline();
+    });
+  });
+
+  // ===== SORT DROPDOWN CLICK HANDLER =====
+  sortContent.querySelectorAll('div').forEach(item => {
+    item.addEventListener('click', () => {
+      const value = item.dataset.value;
+      currentSort = value;
+
+      sortContent.querySelectorAll('div').forEach(d => d.classList.remove('active'));
+      item.classList.add('active');
+
+      sortBtn.textContent = item.textContent === 'Date' ? 'Sort By Date' : 'Sort By Class';
+
+      sortContent.style.display = 'none';
+
+      renderTimeline();
+    });
+  });
+
+  // ===== SEARCH INPUT HANDLER =====
+  let searchTimeout;
+  searchInput.addEventListener('input', (e) => {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+      searchQuery = e.target.value.trim().toLowerCase();
+      renderTimeline();
+    }, 200); // Debounce for smooth typing
+  });
+
+  // ===== RENDER FUNCTION =====
+  function renderTimeline() {
+    // 1. Filter
+    let filtered = timelineData.filter(item => {
+      // Status filter
+      if (currentFilter === 'overdue' && item.status !== 'overdue') return false;
+      if (currentFilter === 'current' && item.status !== 'current') return false;
+
+      // Search filter
+      if (searchQuery) {
+        const matchesTitle = item.title.toLowerCase().includes(searchQuery);
+        const matchesSubtitle = item.subtitle.toLowerCase().includes(searchQuery);
+        const matchesDate = item.date.toLowerCase().includes(searchQuery);
+        if (!matchesTitle && !matchesSubtitle && !matchesDate) return false;
+      }
+
+      return true;
+    });
+
+    // 2. Sort
+    if (currentSort === 'date') {
+      filtered.sort((a, b) => {
+        const dateCompare = a.dateSort.localeCompare(b.dateSort);
+        if (dateCompare !== 0) return dateCompare;
+        return a.time.localeCompare(b.time);
+      });
+    } else if (currentSort === 'class') {
+      filtered.sort((a, b) => a.subtitle.localeCompare(b.subtitle));
+    }
+
+    // 3. Render active filter pills
+    renderActiveFilters(filtered.length);
+
+    // 4. Build HTML
+    if (filtered.length === 0) {
+      timelineList.innerHTML = `
+        <div class="empty-state">
+          <i class='bx bx-search-alt-2'></i>
+          <p>No activities match your filters</p>
+        </div>
+      `;
+      return;
+    }
+
+    let html = '';
+    let lastDate = '';
+
+    filtered.forEach((item, index) => {
+      // Date group header
+      if (item.date !== lastDate) {
+        lastDate = item.date;
+        html += `<div class="date-group">${item.date}</div>`;
+      }
+
+      // Badge HTML
+      let badgeHtml = '';
+      if (item.status === 'overdue') {
+        badgeHtml = `<span class="badge-overdue">Overdue</span>`;
+      } else {
+        badgeHtml = `<span class="badge-current">Current</span>`;
+      }
+
+      // Highlight matching search text
+      const highlightedTitle = highlightMatch(item.title, searchQuery);
+      const highlightedSubtitle = highlightMatch(item.subtitle, searchQuery);
+
+      html += `
+        <div class="timeline-item" style="animation-delay: ${index * 0.05}s">
+          <div class="time-label">${item.time}</div>
+          <div class="icon-box"><i class='${item.icon}'></i></div>
+          <div class="item-details">
+            <div class="item-title">${highlightedTitle}${badgeHtml}</div>
+            <div class="item-subtitle">${highlightedSubtitle}</div>
+          </div>
+        </div>
+      `;
+    });
+
+    timelineList.innerHTML = html;
+  }
+
+  // ===== HIGHLIGHT MATCHING TEXT =====
+  function highlightMatch(text, query) {
+    if (!query) return text;
+    const regex = new RegExp(`(${escapeRegex(query)})`, 'gi');
+    return text.replace(regex, '<mark style="background:#fef08a;padding:0 2px;border-radius:3px;">$1</mark>');
+  }
+
+  function escapeRegex(string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  // ===== RENDER ACTIVE FILTER PILLS =====
+  function renderActiveFilters(resultCount) {
+    let pills = '';
+
+    if (currentFilter !== 'all') {
+      const label = currentFilter === 'overdue' ? 'Overdue' : 'Current';
+      pills += `
+        <span class="filter-pill">
+          Status: ${label}
+          <button onclick="clearFilter()" title="Remove filter">&times;</button>
+        </span>
+      `;
+    }
+
+    if (currentSort !== 'date') {
+      pills += `
+        <span class="filter-pill">
+          Sorted by Class
+          <button onclick="clearSort()" title="Remove sort">&times;</button>
+        </span>
+      `;
+    }
+
+    if (searchQuery) {
+      pills += `
+        <span class="filter-pill">
+          Search: "${searchQuery}"
+          <button onclick="clearSearch()" title="Clear search">&times;</button>
+        </span>
+      `;
+    }
+
+    // Result count
+    if (currentFilter !== 'all' || currentSort !== 'date' || searchQuery) {
+      pills += `
+        <span class="filter-pill" style="background:#f4f6f9;color:var(--text-muted);font-weight:500;">
+          ${resultCount} result${resultCount !== 1 ? 's' : ''}
+        </span>
+      `;
+    }
+
+    activeFiltersContainer.innerHTML = pills;
+  }
+
+  // ===== CLEAR INDIVIDUAL FILTERS =====
+  function clearFilter() {
+    currentFilter = 'all';
+    filterBtn.textContent = 'All Tasks';
+    filterContent.querySelectorAll('div').forEach(d => {
+      d.classList.toggle('active', d.dataset.value === 'all');
+    });
+    renderTimeline();
+  }
+
+  function clearSort() {
+    currentSort = 'date';
+    sortBtn.textContent = 'Sort By';
+    sortContent.querySelectorAll('div').forEach(d => {
+      d.classList.toggle('active', d.dataset.value === 'date');
+    });
+    renderTimeline();
+  }
+
+  function clearSearch() {
+    searchQuery = '';
+    searchInput.value = '';
+    renderTimeline();
+  }
+
+  // ===== CLOSE DROPDOWNS ON OUTSIDE CLICK =====
+  window.addEventListener('click', (e) => {
+    if (!e.target.closest('.profile-container')) {
       document.getElementById("profileDropdown").classList.remove("show");
     }
-    if (!event.target.closest('.custom-dropdown')) {
+    if (!e.target.closest('.custom-dropdown')) {
       document.querySelectorAll('.custom-dropdown-content').forEach(d => d.style.display = 'none');
     }
-  }
+  });
+
+  // ===== INITIAL RENDER =====
+  renderTimeline();
 </script>
 </body>
 </html>
