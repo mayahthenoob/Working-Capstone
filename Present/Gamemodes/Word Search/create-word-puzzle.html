@@ -104,7 +104,9 @@ input:focus, textarea:focus {
     cursor: pointer;
 }
 
-.radio-option input[type="radio"] {
+/* UPDATED: Added checkbox support to the existing radio style */
+.radio-option input[type="radio"],
+.radio-option input[type="checkbox"] {
     margin: 0;
     transform: translateY(1px);
     cursor: pointer;
@@ -279,7 +281,6 @@ input:focus, textarea:focus {
 <div id="designGrid" class="grid-design"></div>
 </div>
 
-<!-- ✅ UPDATED SECTION -->
 <div class="form-group full-width reattempt-group">
 <label>Attempts Allowed</label>
 <div class="radio-group">
@@ -295,6 +296,24 @@ input:focus, textarea:focus {
     <input type="radio" name="reattempt" value="3">
     <label>3</label>
   </div>
+</div>
+</div>
+
+<div class="form-group full-width">
+<label>Grading Criteria</label>
+<div class="radio-group">
+    <div class="radio-option">
+        <input type="checkbox" id="highestScore" name="gradingCriteria" value="highestScore">
+        <label for="highestScore">Highest Score</label>
+    </div>
+    <div class="radio-option">
+        <input type="checkbox" id="fastestTime" name="gradingCriteria" value="fastestTime">
+        <label for="fastestTime">Fastest Time</label>
+    </div>
+    <div class="radio-option">
+        <input type="checkbox" id="highestStreak" name="gradingCriteria" value="highestStreak">
+        <label for="highestStreak">Highest Streak</label>
+    </div>
 </div>
 </div>
 
@@ -432,12 +451,10 @@ const designGrid = document.getElementById("designGrid");
 const gridSize = 10;
 let designMode = "custom";
 
-// Helper: get target cell
 function focusCell(r, c) {
     const target = designGrid.querySelector(`.cell[data-row='${r}'][data-col='${c}']`);
     if (target) {
         target.focus();
-        // Place cursor at the end
         const range = document.createRange();
         const sel = window.getSelection();
         range.selectNodeContents(target);
@@ -447,7 +464,6 @@ function focusCell(r, c) {
     }
 }
 
-// Create grid
 for (let r = 0; r < gridSize; r++) {
     for (let c = 0; c < gridSize; c++) {
         const cell = document.createElement("div");
@@ -457,13 +473,11 @@ for (let r = 0; r < gridSize; r++) {
         cell.contentEditable = true;
         cell.style.textAlign = "center";
 
-        // Input handler: auto-uppercase and advance
         cell.addEventListener("input", (e) => {
             let char = cell.textContent.toUpperCase().replace(/[^A-Z]/g, '');
             char = char.charAt(0) || "";
             cell.textContent = char;
 
-            // Maintain cursor position
             const range = document.createRange();
             const sel = window.getSelection();
             range.selectNodeContents(cell);
@@ -477,7 +491,6 @@ for (let r = 0; r < gridSize; r++) {
             }
         });
 
-        // Keydown handler: Arrow Navigation & Hold-to-Delete Backspace
         cell.addEventListener("keydown", (e) => {
             switch (e.key) {
                 case "ArrowUp":
@@ -497,25 +510,18 @@ for (let r = 0; r < gridSize; r++) {
                     focusCell(r, Math.min(gridSize - 1, c + 1));
                     break;
                 case "Backspace":
-                    // If current cell has text, clear it
                     if (cell.textContent.length > 0) {
                         cell.textContent = "";
-                        // e.preventDefault() not strictly needed here as we want the backspace action
                     } else {
-                        // If cell is already empty, move focus back and clear that cell too
                         e.preventDefault();
                         let prevR = r;
                         let prevC = c - 1;
-
                         if (prevC < 0) {
                             if (r > 0) {
                                 prevR = r - 1;
                                 prevC = gridSize - 1;
-                            } else {
-                                return; // Top of grid
-                            }
+                            } else return;
                         }
-
                         const prevCell = designGrid.querySelector(`.cell[data-row='${prevR}'][data-col='${prevC}']`);
                         if (prevCell) {
                             prevCell.textContent = "";
@@ -530,13 +536,11 @@ for (let r = 0; r < gridSize; r++) {
             }
         });
 
-        // Paste support
         cell.addEventListener("paste", (e) => {
             e.preventDefault();
             let pasteText = (e.clipboardData || window.clipboardData).getData('text');
             pasteText = pasteText.toUpperCase().replace(/[^A-Z]/g, '');
             let currR = r, currC = c;
-
             for (let char of pasteText) {
                 const target = designGrid.querySelector(`.cell[data-row='${currR}'][data-col='${currC}']`);
                 if (!target) break;
@@ -552,7 +556,6 @@ for (let r = 0; r < gridSize; r++) {
     }
 }
 
-// Mode radio buttons
 const modeCustomRadio = document.getElementById("modeCustom");
 const modeDefaultRadio = document.getElementById("modeDefault");
 
@@ -570,8 +573,11 @@ modeDefaultRadio.addEventListener("change", () => {
 
 modeCustomRadio.addEventListener("change", () => { if (modeCustomRadio.checked) designMode = "custom"; });
 
-// Publish data
+// ------------------------
+// Publish Data logic
+// ------------------------
 document.querySelector(".publish-btn").addEventListener("click", () => {
+    // 1. Capture Grid
     const gridData = [];
     for (let r = 0; r < gridSize; r++) {
         const row = [];
@@ -580,7 +586,28 @@ document.querySelector(".publish-btn").addEventListener("click", () => {
         }
         gridData.push(row);
     }
-    console.log("Grid Data:", gridData);
+
+    // 2. Capture Selected Grading Criteria
+    const selectedCriteria = [];
+    document.querySelectorAll("input[name='gradingCriteria']:checked").forEach(cb => {
+        selectedCriteria.push(cb.value);
+    });
+
+    // 3. Compile remaining fields
+    const formData = {
+        title: document.getElementById("title").value,
+        description: document.getElementById("description").value,
+        category: document.getElementById("category").value,
+        amount: document.getElementById("amount").value,
+        reattempts: document.querySelector("input[name='reattempt']:checked")?.value,
+        gradingCriteria: selectedCriteria,
+        opens: document.getElementById("opens").value,
+        closes: document.getElementById("closes").value,
+        timeLimit: document.getElementById("timeLimit").value,
+        grid: gridData
+    };
+
+    console.log("Full Form Data:", formData);
     alert("Data saved to console!");
 });
 </script>
