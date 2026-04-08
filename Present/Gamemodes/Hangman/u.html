@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz Carnival - Hangman Edition</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <style>
+    :root {
+      --primary: #2196f3;
+      --primary-hover: #1976d2;
+      --success: #00ff00;
+      --danger: #ff4500;
+      --dark: #111827;
+      --light: #f8f9fa;
+      --border-color: #ccc;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: #f0f2f5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding-bottom: 40px;
+    }
+
+    /* NAVBAR */
+    .navbar {
+      background-color: var(--dark);
+      height: 60px;
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.2rem;
+      color: white;
+    }
+
+    .logo img {
+      height: 35px;
+      width: auto;
+    }
+
+    /* TIMER STYLES */
+    .timer-wrapper {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 20px;
+        padding-right: 20px;
+        box-sizing: border-box;
+    }
+
+    .timer-container {
+        background-color: #ffffff;
+        padding: 10px 15px;
+        border-radius: 10px;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        border: 1px solid #ddd;
+    }
+
+    .time-box {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-width: 50px;
+    }
+
+    .number { color: #222; font-size: 1.5rem; font-weight: 600; line-height: 1; margin-bottom: 3px; }
+    .label { color: #555; font-size: 0.7rem; font-weight: 400; }
+    .separator { color: #ccc; font-size: 1rem; padding-bottom: 12px; font-weight: bold; }
+
+    /* GAME CARD */
+    .game-container {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+      max-width: 700px;
+      width: 90%;
+      text-align: center;
+    }
+
+    h1 {
+      color: #333;
+      margin-bottom: 20px;
+      font-size: 1.8rem;
+    }
+
+    .game-status {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      font-weight: 600;
+      color: #666;
+    }
+
+    .hangman-container {
+      background: #fdfdfd;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      padding: 10px;
+    }
+
+    .word-display {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin: 25px 0;
+      font-size: 2rem;
+    }
+
+    .word-letter {
+      width: 40px;
+      height: 45px;
+      border-bottom: 3px solid var(--dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    .keyboard {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .keyboard-letter {
+      width: 40px;
+      height: 40px;
+      background: var(--light);
+      border: 1px solid var(--border-color);
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .keyboard-letter.correct { background: #4caf50; color: white; border-color: #4caf50; }
+    .keyboard-letter.wrong { background: #f44336; color: white; border-color: #f44336; }
+    .keyboard-letter.used { opacity: 0.6; cursor: not-allowed; }
+
+    .word-guess {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .word-guess input {
+      padding: 10px;
+      width: 220px;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      text-transform: uppercase;
+      outline: none;
+    }
+
+    .word-guess button {
+      padding: 10px 20px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .nav-controls {
+      margin-top: 20px;
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .nav-btn {
+      padding: 10px 25px;
+      font-size: 1rem;
+      cursor: pointer;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      transition: background 0.2s;
+    }
+
+    .nav-btn:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+
+    #page-info {
+      font-weight: bold;
+      color: #666;
+    }
+
+    @media (max-width: 600px) {
+      .keyboard-letter { width: 30px; height: 30px; font-size: 0.8rem; }
+      .word-letter { width: 30px; height: 35px; font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="logo">
+      <img src="logo.png" alt="Quiz Carnival Logo"> 
+      <span>Quiz Carnival</span>
+    </div>
+  </header>
+
+  <div class="timer-wrapper">
+    <div class="timer-container">
+      <div class="time-box">
+        <span id="hours" class="number">00</span>
+        <span class="label">hours</span>
+      </div>
+      <div class="separator">:</div>
+      <div class="time-box">
+        <span id="minutes" class="number">00</span>
+        <span class="label">minutes</span>
+      </div>
+      <div class="separator">:</div>
+      <div class="time-box">
+        <span id="seconds" class="number">00</span>
+        <span class="label">seconds</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="game-container">
+    <div class="box-header"><h1>Hangman Game</h1></div>
+
+    <div class="game-status">
+      <p id="category">Category: Animals</p>
+      <p id="remaining-guesses">Remaining: 6</p>
+    </div>
+
+    <div class="hangman-container">
+      <svg width="200" height="180">
+        <line x1="20" y1="170" x2="100" y2="170" stroke="#333" stroke-width="4"/>
+        <line x1="60" y1="170" x2="60" y2="10" stroke="#333" stroke-width="4"/>
+        <line x1="60" y1="10" x2="140" y2="10" stroke="#333" stroke-width="4"/>
+        <line x1="140" y1="10" x2="140" y2="30" stroke="#333" stroke-width="4"/>
+
+        <circle id="head" cx="140" cy="50" r="20" stroke="#333" stroke-width="3" fill="transparent" style="display:none"/>
+        <line id="body" x1="140" y1="70" x2="140" y2="120" stroke="#333" stroke-width="3" style="display:none"/>
+        <line id="left-arm" x1="140" y1="90" x2="110" y2="80" stroke="#333" stroke-width="3" style="display:none"/>
+        <line id="right-arm" x1="140" y1="90" x2="170" y2="80" stroke="#333" stroke-width="3" style="display:none"/>
+        <line id="left-leg" x1="140" y1="120" x2="120" y2="150" stroke="#333" stroke-width="3" style="display:none"/>
+        <line id="right-leg" x1="140" y1="120" x2="160" y2="150" stroke="#333" stroke-width="3" style="display:none"/>
+        <g id="face" style="display:none">
+          <line x1="130" y1="45" x2="135" y2="50" stroke="#333" stroke-width="2"/>
+          <line x1="135" y1="45" x2="130" y2="50" stroke="#333" stroke-width="2"/>
+          <line x1="145" y1="45" x2="150" y2="50" stroke="#333" stroke-width="2"/>
+          <line x1="150" y1="45" x2="145" y2="50" stroke="#333" stroke-width="2"/>
+          <path d="M130 60 Q140 70 150 60" stroke="#333" stroke-width="2" fill="transparent"/>
+        </g>
+      </svg>
+    </div>
+
+    <div class="word-display" id="word-display"></div>
+    
+    <div class="keyboard" id="keyboard"></div>
+
+    <div class="word-guess">
+      <input type="text" id="word-input" placeholder="Type full word...">
+      <button id="guess-word-btn">Guess Word</button>
+    </div>
+  </div>
+
+  <div class="nav-controls">
+    <button id="prevBtn" class="nav-btn" onclick="prevPage()">Previous</button>
+    <span id="page-info">Word 1 of 5</span>
+    <button id="nextBtn" class="nav-btn" onclick="nextPage()">Next</button>
+  </div>
+
+  <script>
+    // --- TIMER SCRIPT ---
+    const countdownDate = new Date().getTime() + (20 * 60 * 1000); 
+
+    function updateCountdown() {
+        const now = new Date().getTime();
+        let timeLeft = countdownDate - now;
+
+        if (timeLeft < 0) {
+            clearInterval(interval);
+            document.getElementById("hours").innerText = "00";
+            document.getElementById("minutes").innerText = "00";
+            document.getElementById("seconds").innerText = "00";
+            return;
+        }
+
+        const h = Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
+        const m = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+        const s = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+        document.getElementById("hours").innerText = h.toString().padStart(2,'0');
+        document.getElementById("minutes").innerText = m.toString().padStart(2,'0');
+        document.getElementById("seconds").innerText = s.toString().padStart(2,'0');
+    }
+
+    const interval = setInterval(updateCountdown, 1000);
+    updateCountdown();
+
+    // --- HANGMAN GAME SCRIPT ---
+    const wordCategories = {
+      animals: ['ELEPHANT', 'GIRAFFE', 'KANGAROO', 'DOLPHIN', 'CHEETAH'],
+      countries: ['CANADA', 'BRAZIL', 'JAPAN', 'GERMANY', 'AUSTRALIA'],
+      fruits: ['BANANA', 'WATERMELON', 'PINEAPPLE', 'STRAWBERRY', 'BLUEBERRY']
+    };
+
+    let currentCategory = 'animals'; 
+    let currentWordIndex = 0;
+    let selectedWord = '';
+    let correctLetters = [];
+    let wrongLetters = [];
+    let remainingGuesses = 6;
+    let gameOver = false;
+
+    const hangmanParts = ['head', 'body', 'left-arm', 'right-arm', 'left-leg', 'right-leg', 'face'];
+
+    function initGame() {
+      const words = wordCategories[currentCategory];
+      selectedWord = words[currentWordIndex];
+      correctLetters = [];
+      wrongLetters = [];
+      remainingGuesses = 6;
+      gameOver = false;
+      
+      document.getElementById('category').textContent = `Category: ${currentCategory.charAt(0).toUpperCase() + currentCategory.slice(1)}`;
+      document.getElementById('remaining-guesses').textContent = `Remaining: ${remainingGuesses}`;
+      document.getElementById('page-info').textContent = `Word ${currentWordIndex + 1} of ${words.length}`;
+      document.getElementById('word-input').value = '';
+      
+      document.getElementById('prevBtn').disabled = (currentWordIndex === 0);
+      const nextBtn = document.getElementById('nextBtn');
+      nextBtn.textContent = (currentWordIndex === words.length - 1) ? "Finish" : "Next";
+
+      hangmanParts.forEach(id => document.getElementById(id).style.display = 'none');
+
+      const display = document.getElementById('word-display');
+      display.innerHTML = '';
+      selectedWord.split('').forEach(letter => {
+        const span = document.createElement('div');
+        span.classList.add('word-letter');
+        span.dataset.letter = letter;
+        display.appendChild(span);
+      });
+
+      renderKeyboard();
+    }
+
+    function renderKeyboard() {
+      const kb = document.getElementById('keyboard');
+      kb.innerHTML = '';
+      for (let i = 65; i <= 90; i++) {
+        const letter = String.fromCharCode(i);
+        const btn = document.createElement('button');
+        btn.classList.add('keyboard-letter');
+        btn.textContent = letter;
+        btn.onclick = () => handleGuess(letter);
+        kb.appendChild(btn);
+      }
+    }
+
+    function handleGuess(letter) {
+      if (gameOver || correctLetters.includes(letter) || wrongLetters.includes(letter)) return;
+
+      const keys = document.querySelectorAll('.keyboard-letter');
+      const keyBtn = Array.from(keys).find(btn => btn.textContent === letter);
+
+      if (selectedWord.includes(letter)) {
+        correctLetters.push(letter);
+        keyBtn.classList.add('correct', 'used');
+        updateWordDisplay();
+        if (checkWin()) gameOver = true;
+      } else {
+        wrongLetters.push(letter);
+        keyBtn.classList.add('wrong', 'used');
+        remainingGuesses--;
+        document.getElementById('remaining-guesses').textContent = `Remaining: ${remainingGuesses}`;
+        updateHangmanDrawing();
+        if (remainingGuesses === 0) endGame();
+      }
+    }
+
+    function updateWordDisplay() {
+      const letters = document.querySelectorAll('.word-letter');
+      letters.forEach(el => {
+        if (correctLetters.includes(el.dataset.letter)) {
+          el.textContent = el.dataset.letter;
+        }
+      });
+    }
+
+    function updateHangmanDrawing() {
+      if (wrongLetters.length <= hangmanParts.length) {
+        const partId = hangmanParts[wrongLetters.length - 1];
+        document.getElementById(partId).style.display = 'block';
+      }
+    }
+
+    function checkWin() {
+      return selectedWord.split('').every(l => correctLetters.includes(l));
+    }
+
+    // UPDATED: Now stops game without revealing the word
+    function endGame() {
+      gameOver = true;
+      hangmanParts.forEach(id => document.getElementById(id).style.display = 'block');
+      // Reveal logic removed so the letters stay blank/hidden
+    }
+
+    function nextPage() {
+      const words = wordCategories[currentCategory];
+      if (currentWordIndex < words.length - 1) {
+        currentWordIndex++;
+        initGame();
+      } else {
+        alert("Quiz Carnival - Hangman Finished!");
+      }
+    }
+
+    function prevPage() {
+      if (currentWordIndex > 0) {
+        currentWordIndex--;
+        initGame();
+      }
+    }
+
+    document.getElementById('guess-word-btn').onclick = () => {
+      if (gameOver) return;
+      const guess = document.getElementById('word-input').value.toUpperCase().trim();
+      if (guess === selectedWord) {
+        selectedWord.split('').forEach(l => { if(!correctLetters.includes(l)) correctLetters.push(l); });
+        updateWordDisplay();
+        gameOver = true;
+      } else {
+        remainingGuesses = 0;
+        document.getElementById('remaining-guesses').textContent = `Remaining: ${remainingGuesses}`;
+        endGame();
+      }
+    };
+
+    document.addEventListener('keydown', e => {
+      if (/^[a-z]$/i.test(e.key)) handleGuess(e.key.toUpperCase());
+    });
+
+    initGame();
+  </script>
+</body>
+</html>
