@@ -220,6 +220,15 @@
     border-radius: 12px; padding: 10px 15px; text-align: left;
     font-weight: 600; cursor: pointer; color: var(--text-main);
     font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .custom-dropdown button::after {
+    content: '\eb79';
+    font-family: 'boxicons';
+    font-size: 16px;
+    color: var(--text-muted);
   }
   .custom-dropdown-content {
     display: none; position: absolute; background: white; min-width: 100%;
@@ -534,6 +543,7 @@
   function setupDropdown(btn, content) {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
+      // Close other dropdowns first
       document.querySelectorAll('.custom-dropdown-content').forEach(d => {
         if (d !== content) d.style.display = 'none';
       });
@@ -550,11 +560,14 @@
       const value = item.dataset.value;
       currentFilter = value;
 
+      // Update active state styling
       filterContent.querySelectorAll('div').forEach(d => d.classList.remove('active'));
       item.classList.add('active');
 
+      // Update button text
       filterBtn.textContent = item.textContent;
 
+      // Close dropdown
       filterContent.style.display = 'none';
 
       renderTimeline();
@@ -585,15 +598,18 @@
     searchTimeout = setTimeout(() => {
       searchQuery = e.target.value.trim().toLowerCase();
       renderTimeline();
-    }, 200);
+    }, 200); // Debounce for smooth typing
   });
 
   // ===== RENDER FUNCTION =====
   function renderTimeline() {
+    // 1. Filter
     let filtered = timelineData.filter(item => {
+      // Status filter
       if (currentFilter === 'overdue' && item.status !== 'overdue') return false;
       if (currentFilter === 'current' && item.status !== 'current') return false;
 
+      // Search filter
       if (searchQuery) {
         const matchesTitle = item.title.toLowerCase().includes(searchQuery);
         const matchesSubtitle = item.subtitle.toLowerCase().includes(searchQuery);
@@ -604,6 +620,7 @@
       return true;
     });
 
+    // 2. Sort
     if (currentSort === 'date') {
       filtered.sort((a, b) => {
         const dateCompare = a.dateSort.localeCompare(b.dateSort);
@@ -614,8 +631,10 @@
       filtered.sort((a, b) => a.subtitle.localeCompare(b.subtitle));
     }
 
+    // 3. Render active filter pills
     renderActiveFilters(filtered.length);
 
+    // 4. Build HTML
     if (filtered.length === 0) {
       timelineList.innerHTML = `
         <div class="empty-state">
@@ -630,11 +649,13 @@
     let lastDate = '';
 
     filtered.forEach((item, index) => {
+      // Date group header
       if (item.date !== lastDate) {
         lastDate = item.date;
         html += `<div class="date-group">${item.date}</div>`;
       }
 
+      // Badge HTML
       let badgeHtml = '';
       if (item.status === 'overdue') {
         badgeHtml = `<span class="badge-overdue">Overdue</span>`;
@@ -642,6 +663,7 @@
         badgeHtml = `<span class="badge-current">Current</span>`;
       }
 
+      // Highlight matching search text
       const highlightedTitle = highlightMatch(item.title, searchQuery);
       const highlightedSubtitle = highlightMatch(item.subtitle, searchQuery);
 
@@ -703,6 +725,7 @@
       `;
     }
 
+    // Result count
     if (currentFilter !== 'all' || currentSort !== 'date' || searchQuery) {
       pills += `
         <span class="filter-pill" style="background:#f4f6f9;color:var(--text-muted);font-weight:500;">
