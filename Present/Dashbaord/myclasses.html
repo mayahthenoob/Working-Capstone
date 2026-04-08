@@ -148,6 +148,7 @@
             font-size: 14px;
             color: #495057;
             flex-grow: 1;
+            width: 400px;
             max-width: 320px;
             outline: none;
             height: 40px;
@@ -340,9 +341,9 @@
                     <i class='bx bx-chevron-down'></i>
                 </div>
                 <div class="header-dropdown" id="profileDropdown">
-                    <a href="#" class="header-dropdown-item"><i class='bx bxs-user-circle'></i> Profile</a>
+                    <a href="full-profile.html" class="header-dropdown-item"><i class='bx bxs-user-circle'></i> Profile</a>
                     <a href="#" class="header-dropdown-item"><i class='bx bx-line-chart'></i> Grades</a>
-                    <a href="#" class="header-dropdown-item"><i class='bx bx-calendar'></i> Calendar</a>
+                    <a href="calender.html" class="header-dropdown-item"><i class='bx bx-calendar'></i> Calendar</a>
                     <a href="#" class="header-dropdown-item"><i class='bx bx-message'></i> Messages</a>
                     <a href="#" class="header-dropdown-item"><i class='bx bx-share-alt'></i> Share</a>
                     <hr style="border: 0; border-top: 1px solid #eee; margin: 5px 0;">
@@ -362,16 +363,6 @@
             <div class="search-wrapper">
                 <i class='bx bx-search'></i>
                 <input type="text" class="search-input" placeholder="Search classes...">
-            </div>
-
-            <div class="custom-dropdown" id="sortDropdown">
-                <button class="dropdown-trigger">
-                    <i class='bx bx-sort'></i> Sort By
-                </button>
-                <div class="dropdown-menu">
-                    <div class="dropdown-item" data-sort="date">Date</div>
-                    <div class="dropdown-item" data-sort="class">Class</div>
-                </div>
             </div>
 
             <div class="custom-dropdown" id="viewDropdown">
@@ -448,24 +439,6 @@
                 classesGrid.classList.remove('list-view');
                 trigger.innerHTML = '<i class="bx bx-grid-alt"></i> Card';
             }
-            item.closest('.dropdown-menu').classList.remove('show');
-        });
-    });
-
-    // Sort
-    document.querySelectorAll('#sortDropdown .dropdown-item').forEach(item => {
-        item.addEventListener('click', () => {
-            const sortType = item.getAttribute('data-sort');
-            const trigger = item.closest('.custom-dropdown').querySelector('.dropdown-trigger');
-
-            if (sortType === 'class') {
-                cards.sort((a, b) => a.dataset.title.localeCompare(b.dataset.title));
-                trigger.innerHTML = '<i class="bx bx-sort"></i> Class';
-            } else {
-                cards.sort((a, b) => a.dataset.title.localeCompare(b.dataset.title));
-                trigger.innerHTML = '<i class="bx bx-sort"></i> Date';
-            }
-            cards.forEach(c => classesGrid.appendChild(c));
             item.closest('.dropdown-menu').classList.remove('show');
         });
     });
